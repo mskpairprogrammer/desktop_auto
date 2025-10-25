@@ -73,24 +73,7 @@ def process_window(window_title, tab_num, symbol, folder):
     
     # Click to ensure focus
     pyautogui.click(1280, 800)
-    time.sleep(1)
-    
-    # Click on symbol search field
-    print(f"🖱️  Clicking on symbol search field...")
-    pyautogui.click(1674, 1568)
-    time.sleep(0.5)
-    
-    # Type symbol
-    print(f"⌨️  Typing: {symbol}")
-    pyautogui.write(symbol.lower(), interval=0.1)
-    
-    # Press Enter
-    print("✅ Pressing Enter...")
-    pyautogui.press('enter')
-    
-    # Wait for chart to load
-    print("⏳ Waiting 5 seconds for chart to load...")
-    time.sleep(5)
+    time.sleep(1.5)
     
     # Take screenshot
     print(f"📸 Taking screenshot for Tab {tab_num}...")
@@ -123,11 +106,6 @@ def main():
         if not bring_window_to_front('trend analysis'):
             print("❌ Failed. Please make sure TradingView is open.")
             return
-        
-        # Extra wait and click to ensure window is fully in foreground
-        time.sleep(2)
-        pyautogui.click(1280, 800)
-        time.sleep(1)
         
         # Click on symbol search field
         print(f"\n🖱️  Clicking on symbol search field...")
@@ -173,8 +151,4 @@ def main():
 
 
 if __name__ == "__main__":
-    while True:
-        main()
-        print("\n⏰ Waiting 2 minutes before next run...")
-        print("   (Press Ctrl+C to stop)\n")
-        time.sleep(120)  # Wait 2 minutes (120 seconds)
+    main()
