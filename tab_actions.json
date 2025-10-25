@@ -1,0 +1,337 @@
+[
+  {
+    "type": "click",
+    "x": 1688,
+    "y": 1568,
+    "timestamp": 7.38541054725647
+  },
+  {
+    "type": "click",
+    "x": 248,
+    "y": 327,
+    "timestamp": 10.100642681121826
+  },
+  {
+    "type": "key",
+    "key": "s",
+    "timestamp": 12.107057094573975
+  },
+  {
+    "type": "key",
+    "key": "n",
+    "timestamp": 12.247021675109863
+  },
+  {
+    "type": "key",
+    "key": "a",
+    "timestamp": 12.472864151000977
+  },
+  {
+    "type": "key",
+    "key": "p",
+    "timestamp": 12.838750123977661
+  },
+  {
+    "type": "key",
+    "key": "enter",
+    "timestamp": 13.176451206207275
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 18.816526174545288
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.32995057106018
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.359537839889526
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.389848709106445
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.421560287475586
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.45175528526306
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.484216451644897
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.53015446662903
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.5628399848938
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.59676957130432
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.625630855560303
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.658462285995483
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.688850164413452
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.72219729423523
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.751001596450806
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.78338384628296
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.81529974937439
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.860836505889893
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.893345832824707
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.922627210617065
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.9573495388031
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 19.987869024276733
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.01887607574463
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.051156520843506
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.082334756851196
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.11424946784973
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.145564317703247
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.177997589111328
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.210090398788452
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 20.25564432144165
+  },
+  {
+    "type": "key",
+    "key": null,
+    "timestamp": 20.262816905975342
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 21.302680492401123
+  },
+  {
+    "type": "key",
+    "key": null,
+    "timestamp": 21.71207594871521
+  },
+  {
+    "type": "click",
+    "x": 171,
+    "y": 470,
+    "timestamp": 25.349236726760864
+  },
+  {
+    "type": "key",
+    "key": "s",
+    "timestamp": 27.431044578552246
+  },
+  {
+    "type": "key",
+    "key": "n",
+    "timestamp": 27.57066512107849
+  },
+  {
+    "type": "key",
+    "key": "a",
+    "timestamp": 27.712024927139282
+  },
+  {
+    "type": "key",
+    "key": "p",
+    "timestamp": 28.088271379470825
+  },
+  {
+    "type": "key",
+    "key": "enter",
+    "timestamp": 28.362733602523804
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 32.456812381744385
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 32.97221779823303
+  },
+  {
+    "type": "key",
+    "key": null,
+    "timestamp": 33.00082015991211
+  },
+  {
+    "type": "click",
+    "x": 53,
+    "y": 517,
+    "timestamp": 34.96416735649109
+  },
+  {
+    "type": "key",
+    "key": "s",
+    "timestamp": 37.503357887268066
+  },
+  {
+    "type": "key",
+    "key": "n",
+    "timestamp": 37.66292715072632
+  },
+  {
+    "type": "key",
+    "key": "a",
+    "timestamp": 37.80846405029297
+  },
+  {
+    "type": "key",
+    "key": "p",
+    "timestamp": 38.12890148162842
+  },
+  {
+    "type": "key",
+    "key": "enter",
+    "timestamp": 38.45435857772827
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 40.962451457977295
+  },
+  {
+    "type": "key",
+    "key": null,
+    "timestamp": 41.26131343841553
+  },
+  {
+    "type": "click",
+    "x": 419,
+    "y": 413,
+    "timestamp": 43.12345051765442
+  },
+  {
+    "type": "key",
+    "key": "s",
+    "timestamp": 44.40332317352295
+  },
+  {
+    "type": "key",
+    "key": "n",
+    "timestamp": 44.52661323547363
+  },
+  {
+    "type": "key",
+    "key": "a",
+    "timestamp": 44.78479480743408
+  },
+  {
+    "type": "key",
+    "key": "p",
+    "timestamp": 44.9660701751709
+  },
+  {
+    "type": "key",
+    "key": "enter",
+    "timestamp": 45.190632581710815
+  },
+  {
+    "type": "key",
+    "key": "ctrl_l",
+    "timestamp": 49.60252904891968
+  },
+  {
+    "type": "key",
+    "key": null,
+    "timestamp": 49.915191411972046
+  },
+  {
+    "type": "key",
+    "key": "esc",
+    "timestamp": 52.30636668205261
+  }
+]

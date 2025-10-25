@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Python Script",
+			"type": "shell",
+			"command": "C:/Users/senth/OneDrive/Documents/desktop_auto/.venv/Scripts/python.exe",
+			"args": [
+				"main.py"
+			],
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
