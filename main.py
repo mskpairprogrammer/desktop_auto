@@ -107,22 +107,8 @@ def main():
             print("❌ Failed. Please make sure TradingView is open.")
             return
         
-        # Click on symbol search field
-        print(f"\n🖱️  Clicking on symbol search field...")
-        pyautogui.click(1674, 1568)
-        time.sleep(0.5)
-        
-        # Type symbol
-        print(f"⌨️  Typing: {symbol}")
-        pyautogui.write(symbol.lower(), interval=0.1)
-        
-        # Press Enter
-        print("✅ Pressing Enter...")
-        pyautogui.press('enter')
-        
-        # Wait for chart to load
-        print("⏳ Waiting 7 seconds for chart to load...")
-        time.sleep(7)
+        # Wait for window to settle
+        time.sleep(3)
         
         # Click center to ensure window is fully focused
         pyautogui.click(1280, 800)
