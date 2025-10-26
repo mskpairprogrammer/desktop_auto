@@ -1,0 +1,87 @@
+Combined Screenshot Analysis Report
+============================================================
+Analysis Date: 2025-10-26 17:57:23
+Screenshots Analyzed: 5
+
+Screenshot Sources:
+------------------------------
+- Trend Analysis: ONDS_luxoalgo.png
+- Heiken Ashi: ONDS_heiken.png
+- Volume Layout: ONDS_volume_layout.png
+- Volumeprofile: ONDS_rvol.png
+- Workspace: ONDS_symbolik.png
+
+Trend Change Analysis:
+------------------------------
+📊 Trend Change Probability: 0%
+🎯 Confidence Level: HIGH
+🚨 Alert Status: NO ALERT (INFO)
+📋 Summary: Initial analysis - no prior data
+
+Combined Analysis Results:
+========================================
+**MARKET OVERVIEW**  
+The current price of ONDS is **$7.46**, with a volume surge of +5.67% on the day. The timeframes observed include 1-hour, 4-hour, and daily. The overall market condition is **recovering from a pronounced downtrend**, with several indicators showing tentative stabilization but no strong evidence of a major trend reversal as of this analysis.
+
+---
+
+**KEY VISIBLE INDICATORS**
+
+- **Trend Analysis (Chart 1, 1H):**
+  - **LuxAlgo signals:** Shows previous strong sell signals with a series of lower highs (LH) and lower lows (LL). Most recent structure hints at potential stabilization.
+  - **Price Action Concepts:** LH/LL sequence, possible formation of higher low (HL) at recent pivot, indicating a pause in the downtrend.
+  - **Overlays:** Envelope bands and order blocks suggest resistance between $8.01–$8.50, support in the $6.50–$7.00 area.
+  - **Oscillator Matrix:** Currently near midrange; no strong momentum divergence, but upward inflection noted.
+  - **QQE:** Previously gave a buy, then immediate sell; currently flat to weak.
+
+- **Smoothed Heiken Ashi & Volume Footprint (Chart 2, 4H):**
+  - **Heiken Ashi Candles:** Consecutive strong red candles, indicating sustained bearish pressure.
+  - **HEMA Trend:** Below price and still sloping down, confirming ongoing bearish trend.
+  - **Volume Footprint:** Visible absorption at lower levels ($7.00 vicinity) with large buy volumes, but insufficient to reverse higher timeframe trend.
+  - **No clear bullish divergence or exhaustion visible.**
+
+- **Volume Layout (Chart 3, 1H):**
+  - **Money Flow Profile:** Major distribution between $8.01–$8.50 (red nodes), with signs of accumulation at $6.99–$6.34.
+  - **CVD Divergence Oscillator:** Remains deeply negative (-51M), showing aggressive selling dominance. No recent +RD or -RD signal found.
+  - **SQZMOM_LB:** Slight bullish momentum increase, but still below zero (no squeeze fire).
+  - **MA Distance with StdDev Bands:** Deep negative reading, approaching -20, indicating price far below average—potential mean reversion zone.
+
+- **Volume Profile (Chart 4, 1H):**
+  - **RVOL:** Below 1 (0.68), indicating volume is lower than average—moves are less likely to sustain.
+  - **VOLD Ratio:** Negative (-1.09), reinforcing the ongoing selling pressure.
+  - **MS (Matrix Mod):** Slightly recovering from oversold conditions (-233), but not yet indicating overbought/reversal zone.
+  - **TTOB Order Blocks:** Multiple bearish sweep signals near $7.75–$7.50 zone with POC now compressing towards $7.31.
+
+- **Symbolik Workspace (Chart 5, 4H):**
+  - **ATM Chart Lines:** Current price ($7.46) is sitting just above a significant ATM support line (~$6.47) but below prior resistance lines at $8.15, $9.70, $10.87.
+  - **ATM Elliott Wave:** Final waves of a downward sequence—recently completed a wave 5, with potential early stabilization.
+  - **ATM Pressure Alert:** No fresh bullish pressure alert visible.
+  - **Variable Aggressive Sequential:** No new 9 or 13 signals shown at the current price level.
+  - **TKT Score:** Oscillating near neutral-to-low—no strong opportunity signal.
+
+---
+
+**CRITICAL SIGNALS**
+- **No new +RD or -RD divergence** detected in CVD or related oscillators.
+- **MS (Matrix Mod) indicates recently oversold conditions**, now slowly recovering.
+- **ATM Chart Line alignment:** Price is hovering above a major support ($6.47); breakdown would be highly bearish.
+- **Bearish volume sweeps and VOLD ratio** showing distribution remains in control.
+- **No new Demark Sequential 9 or 13** signals suggest price exhaustion; prior 13s marked tops, but none appear at current lows.
+- **Strong resistance** between $8.01–$8.50 verified by both Money Flow Profile and price action.
+
+---
+
+**TRADING DECISION**
+
+**HOLD / CAUTIOUS WATCH**  
+- Not a buy yet: There is no confirmed reversal or strong bullish divergence.  
+- Not a sell: The stock is approaching or sitting on a major multi-system support zone ($6.47–$7.00), and momentum indicators are deeply stretched.
+- Only consider aggressive long entries **IF** you see a clean intraday reclaim above $7.75 with volume, or new bullish divergences on CVD/momentum.  
+- Wait for confirmation: A break below $6.47 would invalidate support and turn this into a high-conviction sell signal.
+
+---
+
+**TREND CHANGE EVALUATION**
+
+Downward momentum is decelerating but **not reversed**. Several oversold signals (MS Matrix Mod, MA distance) are presenting, but neither volume nor buy-side divergences confirm a bottom. Watch for support holding above $6.47 and look for strengthening order flow (e.g., reducing selling on VOLD ratio, positive CVD reversal, buy-side volume absorption) **before expecting a full trend change**.
+
