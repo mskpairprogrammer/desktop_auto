@@ -1,8 +1,8 @@
-# Desktop Auto - TradingView & Symbolik Automation with AI Analysis# Desktop Auto - TradingView & Symbolik Automation with AI Analysis
+# Desktop Automation - TradingView & Symbolik Automation with AI Analysis# 
 
 
 
-A Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals.A Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and email alerts.
+A Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals.
 
 
 
