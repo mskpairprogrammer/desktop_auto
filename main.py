@@ -61,7 +61,7 @@ def bring_window_to_front(window_title_keyword):
         return False
 
 
-def process_window(window_title, tab_num, symbol, folder, wait_time=5):
+def process_window(window_title, tab_num, symbol, folder, window_settle_delay, focus_click_delay, chart_load_delay):
     """Process a single TradingView window."""
     print(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
@@ -69,11 +69,11 @@ def process_window(window_title, tab_num, symbol, folder, wait_time=5):
         return False
     
     # Wait for window to settle
-    time.sleep(3)
+    time.sleep(window_settle_delay)
     
     # Click to ensure focus
     pyautogui.click(1280, 800)
-    time.sleep(1.5)
+    time.sleep(focus_click_delay)
     
     # Type symbol directly
     print(f"⌨️  Typing: {symbol}")
@@ -84,8 +84,8 @@ def process_window(window_title, tab_num, symbol, folder, wait_time=5):
     pyautogui.press('enter')
     
     # Wait for chart to load
-    print(f"⏳ Waiting {wait_time} seconds for chart to load...")
-    time.sleep(wait_time)
+    print(f"⏳ Waiting {chart_load_delay} seconds for chart to load...")
+    time.sleep(chart_load_delay)
     
     # Take screenshot
     print(f"📸 Taking screenshot for Tab {tab_num}...")
@@ -96,6 +96,56 @@ def process_window(window_title, tab_num, symbol, folder, wait_time=5):
     screenshot.save(filepath)
     print(f"✅ Saved: {filepath}")
     return True
+
+
+def process_symbolik(symbol, folder, symbolik_wait_delay):
+    """Process symbolik.com navigation and screenshot."""
+    
+    print(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
+    
+    # Bring browser window to front
+    if not bring_window_to_front("workspace"):
+        print("  ⚠️  Please open the browser with 'workspace' in the title")
+        return False
+    
+    # Wait for window to settle
+    time.sleep(2)
+    
+    # Click in the center to focus
+    print(f"  🖱️  Clicking to focus...")
+    pyautogui.click(1280, 800)
+    time.sleep(1)
+    
+    # Type the symbol with .bz suffix in the search/input field
+    symbol_query = f"{symbol.lower()}.bz"
+    print(f"  ⌨️  Typing symbol: {symbol_query}")
+    pyautogui.write(symbol_query, interval=0.1)
+    time.sleep(0.5)
+    
+    # Wait for dropdown to appear and select first item
+    print(f"  ⬇️  Selecting from dropdown...")
+    time.sleep(1)  # Wait for dropdown to appear
+    pyautogui.press('down')  # Select first item in dropdown
+    time.sleep(0.3)
+    
+    # Press Enter
+    print(f"  ✅ Pressing Enter...")
+    pyautogui.press('enter')
+    
+    # Wait for page to load
+    print(f"⏳ Waiting {symbolik_wait_delay} seconds for page to load...")
+    time.sleep(symbolik_wait_delay)
+    
+    # Take screenshot
+    print(f"📸 Taking screenshot for Symbolik.com...")
+    filename = f"{symbol}_symbolik.png"
+    filepath = os.path.join(folder, filename)
+    
+    screenshot = pyautogui.screenshot()
+    screenshot.save(filepath)
+    print(f"✅ Saved: {filepath}")
+    return True
+
 
 
 def main():
@@ -110,6 +160,15 @@ def main():
         symbols_str = os.getenv('STOCK_SYMBOLS', 'QBTS')
         symbols = [s.strip() for s in symbols_str.split(',')]
         
+        # Get timing parameters from .env
+        tradingview_enabled = os.getenv('TRADINGVIEW_ENABLED', 'True').lower() == 'true'
+        window_settle_delay = float(os.getenv('WINDOW_SETTLE_DELAY', '3.0'))
+        focus_click_delay = float(os.getenv('FOCUS_CLICK_DELAY', '1.5'))
+        chart_load_delay_tabs1_3 = float(os.getenv('CHART_LOAD_DELAY_TAB1_3', '5.0'))
+        chart_load_delay_tab4 = float(os.getenv('CHART_LOAD_DELAY_TAB4', '15.0'))
+        symbolik_enabled = os.getenv('SYMBOLIK_ENABLED', 'True').lower() == 'true'
+        symbolik_wait_delay = float(os.getenv('SYMBOLIK_WAIT_DELAY', '5.0'))
+        
         print(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
         
         for symbol in symbols:
@@ -121,44 +180,53 @@ def main():
             folder = f"screenshots/{symbol}"
             os.makedirs(folder, exist_ok=True)
             
-            # Tab 1: Trend analysis window - Type symbol
-            print("\n🎯 Tab 1: Bringing 'Trend analysis' window to foreground...")
-            if not bring_window_to_front('trend analysis'):
-                print("❌ Failed. Please make sure TradingView is open.")
-                return
+            # Process TradingView windows if enabled
+            if tradingview_enabled:
+                # Tab 1: Trend analysis window - Type symbol
+                print("\n🎯 Tab 1: Bringing 'Trend analysis' window to foreground...")
+                if not bring_window_to_front('trend analysis'):
+                    print("❌ Failed. Please make sure TradingView is open.")
+                    return
+                
+                # Wait for window to settle
+                time.sleep(window_settle_delay)
+                
+                # Click center to ensure window is fully focused
+                pyautogui.click(1280, 800)
+                time.sleep(focus_click_delay)
+                
+                # Type symbol directly
+                print(f"⌨️  Typing: {symbol}")
+                pyautogui.write(symbol.lower(), interval=0.1)
+                
+                # Press Enter
+                print("✅ Pressing Enter...")
+                pyautogui.press('enter')
+                
+                # Wait for chart to load
+                print(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
+                time.sleep(chart_load_delay_tabs1_3)
+                
+                # Take screenshot for tab 1
+                print(f"📸 Taking screenshot for Tab 1...")
+                filename = f"{symbol}_tab1.png"
+                filepath = os.path.join(folder, filename)
+                
+                screenshot = pyautogui.screenshot()
+                screenshot.save(filepath)
+                print(f"✅ Saved: {filepath}")
+                
+                # Process remaining windows
+                process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder, 
+                              window_settle_delay, focus_click_delay, chart_load_delay_tabs1_3)
+                process_window('volume layout', 3, symbol, folder,
+                              window_settle_delay, focus_click_delay, chart_load_delay_tabs1_3)
+                process_window('volumeprofile', 4, symbol, folder,
+                              window_settle_delay, focus_click_delay, chart_load_delay_tab4)
             
-            # Wait for window to settle
-            time.sleep(3)
-            
-            # Click center to ensure window is fully focused
-            pyautogui.click(1280, 800)
-            time.sleep(1)
-            
-            # Type symbol directly
-            print(f"⌨️  Typing: {symbol}")
-            pyautogui.write(symbol.lower(), interval=0.1)
-            
-            # Press Enter
-            print("✅ Pressing Enter...")
-            pyautogui.press('enter')
-            
-            # Wait for chart to load
-            print("⏳ Waiting 5 seconds for chart to load...")
-            time.sleep(5)
-            
-            # Take screenshot for tab 1
-            print(f"📸 Taking screenshot for Tab 1...")
-            filename = f"{symbol}_tab1.png"
-            filepath = os.path.join(folder, filename)
-            
-            screenshot = pyautogui.screenshot()
-            screenshot.save(filepath)
-            print(f"✅ Saved: {filepath}")
-            
-            # Process remaining windows
-            process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder)
-            process_window('volume layout', 3, symbol, folder)
-            process_window('volumeprofile', 4, symbol, folder, wait_time=15)
+            # Process symbolik.com if enabled
+            if symbolik_enabled:
+                process_symbolik(symbol, folder, symbolik_wait_delay)
             
             print(f"\n✅ Completed processing {symbol}!")
         
