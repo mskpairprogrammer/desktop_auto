@@ -272,6 +272,26 @@ Pay special attention to:
 
 """
         
+        if 'volumeprofile' in window_types:
+            chart_context += """
+CHART CONTEXT - Volume Profile Window:
+This chart displays the following technical indicators:
+- RVOL: Relative Volume indicator showing volume compared to average
+- VOLD Ratio: Volume Delta ratio showing buying vs selling pressure
+- MS (Matrix Mod): Matrix momentum indicator with overbought/oversold levels
+- TTOB (Trapped Trader Order Blocks): Identifies trapped trader zones and order blocks
+
+Pay special attention to:
+- RVOL levels (high relative volume confirms moves)
+- VOLD ratio (positive = buying pressure, negative = selling pressure)
+- **MS Matrix Mod overbought/oversold conditions**: If the MS indicator shows overbought or oversold conditions, clearly indicate this in the analysis as it signals potential reversal zones
+- TTOB order blocks (support/resistance from trapped traders)
+- Volume profile distribution (high volume nodes, value area)
+- Point of Control (POC) levels
+- Volume confirmation of price movements
+
+"""
+        
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
@@ -286,10 +306,11 @@ List specific indicators visible:
 - For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
 - For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
 - For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
+- For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks
 - Moving averages, oscillators, volume data, support/resistance levels
 
 **CRITICAL SIGNALS**
-Most important actionable signals (include any +RD or -RD formations if present)
+Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions if present)
 
 **TRADING DECISION**
 Clear BUY/SELL/HOLD with rationale
