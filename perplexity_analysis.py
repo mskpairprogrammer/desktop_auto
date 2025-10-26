@@ -219,9 +219,27 @@ class PerplexityAnalyzer:
         symbol_text = f" for {stock_symbol}" if stock_symbol else ""
         email_threshold = int(os.getenv('EMAIL_ALERT_THRESHOLD', '60'))
         
+        # Create chart-specific context
+        chart_context = ""
+        if 'trend_analysis' in window_types:
+            chart_context += """
+CHART CONTEXT - Trend Analysis Window:
+This chart displays LuxAlgo technical indicators. Use the following documentation to analyze it:
+- LuxAlgo Signals & Overlays: https://docs.luxalgo.com/docs/algos/signals-overlays/signals
+- LuxAlgo Price Action Concepts: https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction
+
+Pay special attention to:
+- Signal Quality (Strong Buy/Sell signals)
+- Price Action Concepts (Support/Resistance levels, market structure)
+- Overlay indicators (trend direction, strength)
+- Signal confirmations and divergences
+
+"""
+        
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
+{chart_context}
 ANALYSIS FORMAT:
 
 **MARKET OVERVIEW** (2-3 sentences)
@@ -229,6 +247,7 @@ Current price, timeframe, and overall market condition.
 
 **KEY VISIBLE INDICATORS**
 List specific indicators visible:
+- For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
 - Moving averages, oscillators, volume data, support/resistance levels
 
 **CRITICAL SIGNALS**
