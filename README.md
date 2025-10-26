@@ -1,12 +1,12 @@
-# 📊 Desktop Auto - TradingView & Symbolik Automation with AI Analysis# 
+# 📊 Desktop Auto - AI-Powered TradingView & Symbolik Automation# 📊 Desktop Auto - TradingView & Symbolik Automation with AI Analysis# 
 
 
 
-> **Automated screenshot capture, AI-powered analysis, and email alerts for stock trading workflows**
+> **Professional multi-chart screenshot automation with comprehensive Perplexity AI analysis, chart-specific indicator recognition, and intelligent email alerts for stock trading workflows**
 
 
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)A Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals and timestamp logging.
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)> **Automated screenshot capture, AI-powered analysis, and email alerts for stock trading workflows**
 
 [![License](https://img.shields.io/badge/license-Personal%20Use-green.svg)](LICENSE)
 
@@ -14,7 +14,239 @@
 
 
 
-A sophisticated Python-based desktop automation tool that captures screenshots from multiple TradingView chart windows and Symbolik.com, performs AI-powered analysis using Perplexity, and sends intelligent email alerts. Features market hours scheduling, timestamp logging, and LuxAlgo indicator integration.## 🚀 FeaturesA Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals.
+---[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)A Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals and timestamp logging.
+
+
+
+## 🎯 Overview[![License](https://img.shields.io/badge/license-Personal%20Use-green.svg)](LICENSE)
+
+
+
+**Desktop Auto** is a sophisticated Python-based desktop automation tool that captures screenshots from multiple TradingView chart windows and Symbolik.com, then performs advanced AI-powered analysis using Perplexity AI with chart-specific indicator recognition. The system understands each chart's unique technical indicators and provides comprehensive multi-indicator analysis with intelligent email alerts.[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+
+
+
+### Key Capabilities
+
+
+
+- **5 Chart Windows**: Automated screenshot capture from 4 TradingView windows + 1 Symbolik browser windowA sophisticated Python-based desktop automation tool that captures screenshots from multiple TradingView chart windows and Symbolik.com, performs AI-powered analysis using Perplexity, and sends intelligent email alerts. Features market hours scheduling, timestamp logging, and LuxAlgo indicator integration.## 🚀 FeaturesA Python-based desktop automation tool for capturing screenshots from multiple TradingView chart windows and Symbolik.com, with integrated Perplexity AI analysis for trend detection and automated email alerts. Runs continuously during market hours with configurable intervals.
+
+- **Chart-Specific AI Analysis**: Perplexity AI recognizes and analyzes indicators specific to each chart layout
+
+- **Multi-Symbol Processing**: Process multiple stock symbols sequentially with organized storage
+
+- **Market Hours Scheduling**: Intelligent scheduling that runs only during trading hours with configurable intervals
+
+- **Email Alert System**: Automatic notifications based on trend change probability thresholds---
+
+- **Indicator-Aware Analysis**: AI understands 25+ technical indicators across all chart windows
+
+
+
+---
+
+## ✨ Key Features### Screenshot Automation
+
+## 📊 Chart Windows & Indicators
+
+
+
+Desktop Auto captures and analyzes 5 specialized chart windows, each with unique technical indicators:
+
+### 🖥️ Multi-Window Screenshot Automation- ✅ Automatically switches between 4 separate TradingView windows
+
+### 🔵 Window 1: Trend Analysis
+
+**Purpose**: Primary trend identification and signal detection- **4 TradingView Windows**: Automatically cycles through separate chart layouts
+
+
+
+**Technical Indicators**:- **Symbolik.com Integration**: Browser automation with dropdown search- ✅ Processes multiple stock symbols from a configurable list## Features## Features
+
+- **LuxAlgo Signals & Overlays**: Professional signal quality and strength analysis
+
+- **LuxAlgo Price Action Concepts**: Support/Resistance levels and market structure- **Smart Window Detection**: Windows API for reliable window management
+
+- **Trend Direction Indicators**: Overlay indicators showing trend strength
+
+- **Signal Confirmations**: Multi-indicator convergence validation- **Multi-Symbol Support**: Process multiple stock symbols sequentially- ✅ Captures screenshots from Symbolik.com browser
+
+
+
+**AI Analysis Focus**:- **Organized Storage**: Screenshots saved by symbol in dedicated folders
+
+- Signal quality (Strong Buy/Sell signals)
+
+- Price action structure and key levels- ✅ Types each symbol in all chart layouts
+
+- Trend direction and strength
+
+- Signal confirmations and divergences### 🤖 AI-Powered Analysis (Perplexity)
+
+
+
+**Documentation**: [LuxAlgo Signals](https://docs.luxalgo.com/docs/algos/signals-overlays/signals) | [Price Action](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)- **Intelligent Chart Analysis**: AI examines all screenshots together- ✅ Organizes screenshots by symbol in separate folders
+
+
+
+---- **LuxAlgo Integration**: Uses official documentation for trend analysis
+
+
+
+### 🟢 Window 2: Smoothed Heiken Ashi Candles  - [Signals & Overlays](https://docs.luxalgo.com/docs/algos/signals-overlays/signals)- ✅ Uses Windows API for reliable window management### Screenshot Automation
+
+**Purpose**: Trend-following analysis with smoothed price action
+
+  - [Price Action Concepts](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)
+
+**Technical Indicators**:
+
+- **Smoothed Heiken Ashi Candles**: Trend-following candles that smooth out price noise- **Trend Change Detection**: 0-100% probability scoring
+
+- **AlgoAlpha HEMA Trend**: Hybrid Exponential Moving Average for trend identification
+
+- **Divergence Indicators**: Price vs indicator divergences for reversal signals- **Historical Comparison**: Compares with previous analysis
+
+
+
+**AI Analysis Focus**:- **Confidence Ratings**: Very High, High, Medium, Low### TradingView Chart Layouts- Automatically switches between 4 separate TradingView windows
+
+- Heiken Ashi candle colors (bullish/bearish trends)
+
+- HEMA trend direction and crossovers- **Comprehensive Reports**: Detailed market analysis saved as text
+
+- Divergence signals (bullish/bearish)
+
+- Trend strength and momentum1. **Trend Analysis** (Tab 1) - LuxAlgo indicators
+
+- Reversal patterns indicated by divergences
+
+### 📧 Smart Email Alerts
+
+---
+
+- **Automatic Notifications**: Triggered by trend change probability2. **Smoothed Heiken Ashi Candles** (Tab 2)- Processes multiple stock symbols from a configurable list- Automatically switches between 4 separate TradingView windows
+
+### 🟡 Window 3: Volume Layout
+
+**Purpose**: Volume-based analysis and divergence detection- **Customizable Threshold**: Set minimum probability (default 35%)
+
+
+
+**Technical Indicators**:- **Priority Levels**: 🚨 Critical, ⚠️ High, 📊 Medium, 📈 Low3. **Volume Layout** (Tab 3)
+
+- **LuxAlgo Money Flow Profile**: Institutional money flow and buying/selling pressure zones
+
+- **CVD Divergence Oscillator**: Cumulative Volume Delta divergences for trend reversals- **Rich Content**: Includes probability, changes, and full analysis
+
+- **SQZMOM_LB**: Squeeze Momentum indicator with LazyBear modifications
+
+- **MA Distance with StdDev Bands**: Moving average distance with standard deviation bands- **Gmail Integration**: Secure App Password authentication4. **Volume Profile** (Tab 4 - with extended 15s load time)- Captures screenshots from Symbolik.com browser
+
+
+
+**AI Analysis Focus**:
+
+- Money flow profile (accumulation/distribution zones)
+
+- CVD divergence signals (bullish/bearish divergences)### ⏰ Market Hours Scheduling
+
+- SQZMOM_LB squeeze conditions and momentum direction
+
+- MA distance extremes and standard deviation bands- **Timezone Aware**: Configurable timezone (default: US/Eastern)
+
+- **🚨 CRITICAL**: +RD (Positive Reversal Divergence) or -RD (Negative Reversal Divergence) formations
+
+- Volume patterns confirming or diverging from price action- **Automatic Start/Stop**: Only runs during trading hours### Symbolik.com Integration- Types each symbol in all chart layouts- Processes multiple stock symbols from a configurable list
+
+
+
+---- **Flexible Intervals**: Hourly, 30min, 15min, or custom
+
+
+
+### 🟠 Window 4: Volume Profile- **Outside Hours Handling**: Sleeps and checks every 5 minutes- ✅ Automated browser window detection
+
+**Purpose**: Volume distribution and trapped trader analysis
+
+- **Continuous Operation**: Runs in loop with run counting
+
+**Technical Indicators**:
+
+- **RVOL**: Relative Volume indicator showing volume compared to average- **Timestamp Logging**: All messages include date/time- ✅ Dropdown selection for stock search- Organizes screenshots by symbol in separate folders
+
+- **VOLD Ratio**: Volume Delta ratio showing buying vs selling pressure
+
+- **MS (Matrix Mod)**: Matrix momentum indicator with overbought/oversold levels
+
+- **TTOB (Trapped Trader Order Blocks)**: Identifies trapped trader zones and order blocks
+
+---- ✅ Automatic .bz suffix handling
+
+**AI Analysis Focus**:
+
+- RVOL levels (high relative volume confirms moves)
+
+- VOLD ratio (positive = buying pressure, negative = selling pressure)
+
+- **🚨 MS Matrix Mod overbought/oversold conditions**: Signals potential reversal zones## 📋 Table of Contents- ✅ Configurable wait delays- Uses Windows API for reliable window management- Types each symbol in all 4 chart layouts## Features## Getting Started
+
+- TTOB order blocks (support/resistance from trapped traders)
+
+- Volume profile distribution (high volume nodes, value area)
+
+- Point of Control (POC) levels
+
+- Volume confirmation of price movements- [Prerequisites](#-prerequisites)
+
+
+
+---- [Quick Start](#-quick-start)
+
+
+
+### 🔴 Window 5: Symbolik Workspace- [Configuration](#-configuration)### Perplexity AI Analysis
+
+**Purpose**: Advanced algorithmic trading analysis with Elliott Wave and sequential indicators
+
+- [Usage](#-usage)
+
+**Technical Indicators**:
+
+- **ATM Chart Lines**: Algorithmic Trading Model support/resistance lines- [TradingView Setup](#-tradingview-setup)- 🤖 **Automated Screenshot Analysis**: AI analyzes all captured screenshots together
+
+- **ATM Elliott Projections**: Elliott Wave price projections and targets
+
+- **ATM Elliott Waves**: Elliott Wave count and structure analysis- [AI Analysis](#-ai-analysis)
+
+- **ATM Pressure Alert**: Market pressure and momentum alerts
+
+- **TKT Analysis**: Technical Knowledge Trading analysis framework- [Scheduling](#-scheduling)- 📊 **Trend Change Detection**: Calculates probability (0-100%) of trend changes### TradingView Chart Layouts- Captures screenshots from all chart layouts:
+
+- **TKT Score**: Quantified trading opportunity score
+
+- **Variable Aggressive Sequential**: Demark Sequential buy/sell setup and countdown signals- [Troubleshooting](#-troubleshooting)
+
+
+
+**AI Analysis Focus**:- [Project Structure](#-project-structure)- 📈 **Prior Analysis Comparison**: Compares with previous analysis to detect changes
+
+- **🚨 ATM Chart Lines alignment**: When price is on/near ATM lines (key support/resistance)
+
+- ATM Elliott Wave count and current wave structure position- [Examples](#-examples)
+
+- ATM Elliott projections for price targets
+
+- ATM Pressure alerts (bullish/bearish pressure signals)- [Changelog](#-changelog)- 📝 **Comprehensive Reports**: Generates detailed market analysis reports1. **Trend analysis** (Tab 1) - Luxo Algo indicators
+
+- TKT analysis signals and market structure
+
+- TKT score value (higher scores = stronger opportunities)
+
+- Variable Aggressive Sequential setup and countdown (9s and 13s are critical)
+
+- Demark Sequential buy/sell signals at exhaustion points---- 📧 **Email Alerts**: Automatic notifications for significant trend changes
 
 
 
@@ -22,729 +254,1244 @@ A sophisticated Python-based desktop automation tool that captures screenshots f
 
 
 
-## ✨ Key Features### Screenshot Automation
+## 🤖 AI-Powered Analysis## 🔧 Prerequisites- 🎯 **Confidence Levels**: very_high, high, medium, low ratings2. **Smoothed Heiken Ashi Candles** (Tab 2)  1. Trend analysis
 
 
 
-### 🖥️ Multi-Window Screenshot Automation- ✅ Automatically switches between 4 separate TradingView windows
+### Perplexity AI Integration
 
-- **4 TradingView Windows**: Automatically cycles through separate chart layouts
 
-- **Symbolik.com Integration**: Browser automation with dropdown search- ✅ Processes multiple stock symbols from a configurable list## Features## Features
 
-- **Smart Window Detection**: Windows API for reliable window management
+Desktop Auto uses **Perplexity AI** with chart-specific context to provide professional-grade analysis:| Requirement | Description |- 🚨 **Alert Levels**: critical, high, medium, low priority
 
-- **Multi-Symbol Support**: Process multiple stock symbols sequentially- ✅ Captures screenshots from Symbolik.com browser
 
-- **Organized Storage**: Screenshots saved by symbol in dedicated folders
 
-- ✅ Types each symbol in all chart layouts
+**Analysis Process**:|------------|-------------|
 
-### 🤖 AI-Powered Analysis (Perplexity)
+1. **Screenshot Capture**: All 5 chart windows captured for each symbol
 
-- **Intelligent Chart Analysis**: AI examines all screenshots together- ✅ Organizes screenshots by symbol in separate folders
+2. **Base64 Encoding**: Images converted for API transmission| **Operating System** | Windows 10/11 (uses `win32gui` API) |- ⚙️ **LuxAlgo Integration**: Uses official documentation for trend analysis charts3. **Volume layout** (Tab 3)
 
-- **LuxAlgo Integration**: Uses official documentation for trend analysis
+3. **Chart-Specific Context**: AI receives detailed indicator descriptions for each window
 
-  - [Signals & Overlays](https://docs.luxalgo.com/docs/algos/signals-overlays/signals)- ✅ Uses Windows API for reliable window management### Screenshot Automation
+4. **Multi-Image Analysis**: Single API call analyzes all charts together| **Python** | Version 3.8 or higher |
 
-  - [Price Action Concepts](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)
+5. **Prior Comparison**: Compares with previous analysis to detect changes
 
-- **Trend Change Detection**: 0-100% probability scoring
+6. **Trend Change Probability**: Calculates 0-100% probability score| **TradingView** | Account with 4 separate chart windows |- 🔧 **Customizable Threshold**: Set minimum probability for email alerts (default 35%)
 
-- **Historical Comparison**: Compares with previous analysis
+7. **Comprehensive Report**: Generates detailed market analysis
 
-- **Confidence Ratings**: Very High, High, Medium, Low### TradingView Chart Layouts- Automatically switches between 4 separate TradingView windows
+8. **Email Alerts**: Sends notifications when probability exceeds threshold| **Perplexity API** | API key from [perplexity.ai](https://www.perplexity.ai/) *(optional)* |
 
-- **Comprehensive Reports**: Detailed market analysis saved as text
 
-1. **Trend Analysis** (Tab 1) - LuxAlgo indicators
 
-### 📧 Smart Email Alerts
+### Analysis Report Structure| **Gmail Account** | For email alerts with App Password *(optional)* |4. **Volumeprofile** (Tab 4 - with extended 15s load time)  2. Smoothed Heiken Ashi Candles
 
-- **Automatic Notifications**: Triggered by trend change probability2. **Smoothed Heiken Ashi Candles** (Tab 2)- Processes multiple stock symbols from a configurable list- Automatically switches between 4 separate TradingView windows
 
-- **Customizable Threshold**: Set minimum probability (default 35%)
 
-- **Priority Levels**: 🚨 Critical, ⚠️ High, 📊 Medium, 📈 Low3. **Volume Layout** (Tab 3)
+```
 
-- **Rich Content**: Includes probability, changes, and full analysis
+Combined Screenshot Analysis Report
 
-- **Gmail Integration**: Secure App Password authentication4. **Volume Profile** (Tab 4 - with extended 15s load time)- Captures screenshots from Symbolik.com browser
+====================================---### Market Hours Scheduling
 
+Analysis Date: 2025-10-26 14:30:00
 
+Screenshots Analyzed: 5
 
-### ⏰ Market Hours Scheduling
-
-- **Timezone Aware**: Configurable timezone (default: US/Eastern)
-
-- **Automatic Start/Stop**: Only runs during trading hours### Symbolik.com Integration- Types each symbol in all chart layouts- Processes multiple stock symbols from a configurable list
-
-- **Flexible Intervals**: Hourly, 30min, 15min, or custom
-
-- **Outside Hours Handling**: Sleeps and checks every 5 minutes- ✅ Automated browser window detection
-
-- **Continuous Operation**: Runs in loop with run counting
-
-- **Timestamp Logging**: All messages include date/time- ✅ Dropdown selection for stock search- Organizes screenshots by symbol in separate folders
-
-
-
----- ✅ Automatic .bz suffix handling
-
-
-
-## 📋 Table of Contents- ✅ Configurable wait delays- Uses Windows API for reliable window management- Types each symbol in all 4 chart layouts## Features## Getting Started
-
-
-
-- [Prerequisites](#-prerequisites)
-
-- [Quick Start](#-quick-start)
-
-- [Configuration](#-configuration)### Perplexity AI Analysis
-
-- [Usage](#-usage)
-
-- [TradingView Setup](#-tradingview-setup)- 🤖 **Automated Screenshot Analysis**: AI analyzes all captured screenshots together
-
-- [AI Analysis](#-ai-analysis)
-
-- [Scheduling](#-scheduling)- 📊 **Trend Change Detection**: Calculates probability (0-100%) of trend changes### TradingView Chart Layouts- Captures screenshots from all chart layouts:
-
-- [Troubleshooting](#-troubleshooting)
-
-- [Project Structure](#-project-structure)- 📈 **Prior Analysis Comparison**: Compares with previous analysis to detect changes
-
-- [Examples](#-examples)
-
-- [Changelog](#-changelog)- 📝 **Comprehensive Reports**: Generates detailed market analysis reports1. **Trend analysis** (Tab 1) - Luxo Algo indicators
-
-
-
----- 📧 **Email Alerts**: Automatic notifications for significant trend changes
-
-
-
-## 🔧 Prerequisites- 🎯 **Confidence Levels**: very_high, high, medium, low ratings2. **Smoothed Heiken Ashi Candles** (Tab 2)  1. Trend analysis
-
-
-
-| Requirement | Description |- 🚨 **Alert Levels**: critical, high, medium, low priority
-
-|------------|-------------|
-
-| **Operating System** | Windows 10/11 (uses `win32gui` API) |- ⚙️ **LuxAlgo Integration**: Uses official documentation for trend analysis charts3. **Volume layout** (Tab 3)
-
-| **Python** | Version 3.8 or higher |
-
-| **TradingView** | Account with 4 separate chart windows |- 🔧 **Customizable Threshold**: Set minimum probability for email alerts (default 35%)
-
-| **Perplexity API** | API key from [perplexity.ai](https://www.perplexity.ai/) *(optional)* |
-
-| **Gmail Account** | For email alerts with App Password *(optional)* |4. **Volumeprofile** (Tab 4 - with extended 15s load time)  2. Smoothed Heiken Ashi Candles
-
-
-
----### Market Hours Scheduling
-
-
+Symbol: QBTS
 
 ## 🚀 Quick Start- ⏰ **Automatic Market Hours Detection**: Only runs during configured trading hours
 
+Screenshot Sources:
+
+- Trend Analysis: QBTS_luxoalgo.png
+
+- Heiken Ashi: QBTS_heiken.png
+
+- Volume Layout: QBTS_volume_layout.png### 1️⃣ Installation- 🔄 **Hourly Intervals**: Captures screenshots and analysis every hour (configurable)
+
+- Volume Profile: QBTS_rvol.png
+
+- Symbolik Workspace: QBTS_symbolik.png
 
 
-### 1️⃣ Installation- 🔄 **Hourly Intervals**: Captures screenshots and analysis every hour (configurable)
+
+Trend Change Analysis:```bash- 🌍 **Timezone Support**: Configurable timezone (default: US/Eastern for NYSE/NASDAQ)### Symbolik.com Integration  3. Volume layout- Automatically switches between 4 separate TradingView windows### Prerequisites
+
+📊 Trend Change Probability: 78%
+
+🎯 Confidence Level: HIGH# Clone the repository
+
+🚨 Alert Status: ALERT (HIGH)
+
+📋 Summary: Strong bullish reversal signals detectedgit clone https://github.com/mskpairprogrammer/desktop_auto.git- 🔁 **Continuous Operation**: Runs in loop, sleeping outside market hours
 
 
 
-```bash- 🌍 **Timezone Support**: Configurable timezone (default: US/Eastern for NYSE/NASDAQ)### Symbolik.com Integration  3. Volume layout- Automatically switches between 4 separate TradingView windows### Prerequisites
+Combined Analysis Results:cd desktop_auto
 
-# Clone the repository
-
-git clone https://github.com/mskpairprogrammer/desktop_auto.git- 🔁 **Continuous Operation**: Runs in loop, sleeping outside market hours
-
-cd desktop_auto
+=========================================
 
 - ⚙️ **Flexible Scheduling**: Configurable start/stop times and intervals- Automated browser window detection
 
-# Create virtual environment
+**MARKET OVERVIEW**
 
-python -m venv .venv- 📅 **Timestamp Logging**: All messages include date/time stamps
+QBTS is trading at $2.45 on the 1-hour timeframe, showing strong # Create virtual environment
+
+bullish momentum with multiple confirming indicators across all 
+
+chart windows. Price has broken above key resistance levels.python -m venv .venv- 📅 **Timestamp Logging**: All messages include date/time stamps
 
 
 
-# Activate virtual environment- Dropdown selection for stock search  4. Volumeprofile (with extended 15s load time)
+**KEY VISIBLE INDICATORS**
 
-.venv\Scripts\activate
+- Trend Analysis: LuxAlgo showing Strong Buy signal with confirming 
 
-## 📋 Prerequisites
+  price action concepts# Activate virtual environment- Dropdown selection for stock search  4. Volumeprofile (with extended 15s load time)
 
-# Install dependencies
+- Heiken Ashi: Green candles with HEMA trend bullish crossover
 
-pip install -r requirements.txt- Automatic .bz suffix handling
+- Volume Layout: +RD formed recently, CVD showing bullish divergence, .venv\Scripts\activate
 
-```
+  SQZMOM_LB momentum increasing
 
-- **Windows OS** (uses win32gui for window management)
+- Volume Profile: RVOL at 3.2x average, VOLD ratio strongly positive, ## 📋 Prerequisites
 
-### 2️⃣ Configuration
+  MS indicator approaching overbought
+
+- Symbolik Workspace: Price sitting on ATM chart line support, # Install dependencies
+
+  Elliott Wave in Wave 3, TKT Score: 85/100, Demark Sequential 
+
+  showing buy setup completionpip install -r requirements.txt- Automatic .bz suffix handling
+
+
+
+**CRITICAL SIGNALS**```
+
+- +RD (Positive Reversal Divergence) formed on Volume Layout chart
+
+- Price aligned with ATM chart line (key support)- **Windows OS** (uses win32gui for window management)
+
+- MS Matrix Mod showing overbought conditions (potential pullback)
+
+- Demark Sequential buy setup 9 completed### 2️⃣ Configuration
+
+- High RVOL (3.2x) confirms strong institutional participation
 
 - **Python 3.8+**- Configurable wait delays- Organizes screenshots by symbol in separate folders- Updates symbol on the first chart (Trend analysis)
 
-Create a `.env` file in the project root:
+**TRADING DECISION**
 
-- **TradingView account** with 4 separate chart windows open
+BUY - Multiple bullish confirmations across all indicators with Create a `.env` file in the project root:
 
-```bash
+high-probability setup. Entry: $2.45, Target: $2.80 (ATM Elliott 
 
-# Stock Symbols- **Perplexity API key** (optional, for AI analysis) - Get from [Perplexity](https://www.perplexity.ai/)
+projection), Stop: $2.30 (below ATM chart line). Risk/Reward: 1:2.3- **TradingView account** with 4 separate chart windows open
 
-STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
 
-- **Gmail account** (optional, for email alerts with App Password)
+
+**TREND CHANGE EVALUATION**```bash
+
+Strong probability (78%) of continued uptrend based on:
+
+- Multiple indicator convergence# Stock Symbols- **Perplexity API key** (optional, for AI analysis) - Get from [Perplexity](https://www.perplexity.ai/)
+
+- Volume confirmation with +RD signal
+
+- Elliott Wave structure in bullish Wave 3STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
+
+- ATM chart line support holding
+
+- High TKT score validation- **Gmail account** (optional, for email alerts with App Password)
+
+```
 
 # TradingView Windows
 
+### Email Alert Levels
+
 TRADINGVIEW_ENABLED=True### Perplexity AI Analysis- Uses Windows API for reliable window management
 
-TRADINGVIEW_WINDOW1=trend analysis
+| Alert Level | Probability | Icon | Description |
 
-TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles## 🔧 Installation
+|------------|-------------|------|-------------|TRADINGVIEW_WINDOW1=trend analysis
 
-TRADINGVIEW_WINDOW3=volume layout
+| **CRITICAL** | 81-100% | 🚨 | Immediate action recommended - Very high confidence |
 
-TRADINGVIEW_WINDOW4=volumeprofile- **Automated Screenshot Analysis**: AI analyzes all captured screenshots together
+| **HIGH** | 61-80% | ⚠️ | Strong trend change signals - High confidence |TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles## 🔧 Installation
 
+| **MEDIUM** | 41-60% | 📊 | Mixed signals - Monitor closely |
 
-
-# Symbolik.com### 1. Clone the repository
-
-SYMBOLIK_ENABLED=True
-
-SYMBOLIK_WINDOW=workspace```bash- **Trend Change Detection**: Calculates probability (0-100%) of trend changes- Captures screenshots from all 4 chart layouts:- Python 3.8 or higher
+| **LOW** | 21-40% | 📈 | Minor changes detected - Low confidence |TRADINGVIEW_WINDOW3=volume layout
 
 
 
-# Perplexity AIgit clone https://github.com/mskpairprogrammer/desktop_auto.git
-
-PERPLEXITY_ENABLED=True
-
-PERPLEXITY_API_KEY=your_api_key_herecd desktop_auto- **Prior Analysis Comparison**: Compares with previous analysis to detect changes
+---TRADINGVIEW_WINDOW4=volumeprofile- **Automated Screenshot Analysis**: AI analyzes all captured screenshots together
 
 
 
-# Email Alerts```
+## 🚀 Features
 
-EMAIL_USER=your_email@gmail.com
 
-EMAIL_PASSWORD=your_app_password- **Comprehensive Reports**: Generates detailed market analysis reports## Prerequisites
+
+### ✅ Screenshot Automation# Symbolik.com### 1. Clone the repository
+
+- **4 TradingView Windows**: Automatically cycles through separate chart layouts
+
+- **1 Symbolik Browser**: Browser automation with dropdown searchSYMBOLIK_ENABLED=True
+
+- **Multi-Symbol Processing**: Handles multiple stock symbols sequentially
+
+- **Smart Window Detection**: Uses Windows API for reliable window managementSYMBOLIK_WINDOW=workspace```bash- **Trend Change Detection**: Calculates probability (0-100%) of trend changes- Captures screenshots from all 4 chart layouts:- Python 3.8 or higher
+
+- **Organized Storage**: Screenshots saved by symbol in dedicated folders
+
+- **No Timestamp Filenames**: Overwrites previous screenshots for consistent naming
+
+
+
+### ✅ AI-Powered Analysis# Perplexity AIgit clone https://github.com/mskpairprogrammer/desktop_auto.git
+
+- **Chart-Specific Context**: AI understands unique indicators in each window
+
+- **25+ Technical Indicators**: Comprehensive coverage across all chart typesPERPLEXITY_ENABLED=True
+
+- **Multi-Chart Synthesis**: Analyzes all 5 charts together for holistic view
+
+- **Prior Analysis Comparison**: Detects changes from previous analysisPERPLEXITY_API_KEY=your_api_key_herecd desktop_auto- **Prior Analysis Comparison**: Compares with previous analysis to detect changes
+
+- **Trend Change Probability**: 0-100% probability scoring with confidence levels
+
+- **Critical Signal Detection**: Highlights +RD/-RD, MS conditions, ATM alignments, Demark 9s/13s
+
+
+
+### ✅ Email Alert System# Email Alerts```
+
+- **Automatic Notifications**: Triggered by trend change probability threshold
+
+- **Customizable Threshold**: Set minimum probability (default: 35%)EMAIL_USER=your_email@gmail.com
+
+- **Priority Levels**: Critical, High, Medium, Low alert categories
+
+- **Rich Content**: Includes probability, confidence, changes, and full analysisEMAIL_PASSWORD=your_app_password- **Comprehensive Reports**: Generates detailed market analysis reports## Prerequisites
+
+- **Gmail Integration**: Secure App Password authentication via SMTP
 
 EMAIL_TO=recipient@email.com
 
-EMAIL_ALERT_THRESHOLD=35### 2. Create and activate virtual environment
+### ✅ Market Hours Scheduling
 
+- **Timezone Aware**: Configurable timezone (default: US/Eastern)EMAIL_ALERT_THRESHOLD=35### 2. Create and activate virtual environment
 
+- **Automatic Start/Stop**: Only runs during trading hours (9:30 AM - 4:00 PM)
 
-# Scheduling```bash- **Email Alerts**: Automatic notifications for significant trend changes
+- **Flexible Intervals**: Hourly, 30min, 15min, or custom intervals
+
+- **Outside Hours Handling**: Sleeps and checks every 5 minutes
+
+- **Continuous Operation**: Runs in loop with run counting# Scheduling```bash- **Email Alerts**: Automatic notifications for significant trend changes
+
+- **Timestamp Logging**: All messages include [YYYY-MM-DD HH:MM:SS] format
 
 SCHEDULE_ENABLED=True
 
+---
+
 CAPTURE_START_TIME=09:30python -m venv .venv
+
+## 📋 Prerequisites
 
 CAPTURE_STOP_TIME=16:00
 
-CAPTURE_TIMEZONE=US/Eastern.venv\Scripts\activate- **Confidence Levels**: very_high, high, medium, low confidence ratings  1. Trend analysis- VS Code with Python extension
+| Requirement | Description |
 
-CAPTURE_INTERVAL_SECONDS=3600
+|------------|-------------|CAPTURE_TIMEZONE=US/Eastern.venv\Scripts\activate- **Confidence Levels**: very_high, high, medium, low confidence ratings  1. Trend analysis- VS Code with Python extension
 
-``````
+| **Operating System** | Windows 10/11 (uses `win32gui` API) |
+
+| **Python** | Version 3.8 or higher |CAPTURE_INTERVAL_SECONDS=3600
+
+| **TradingView** | Account with 4 separate chart windows configured |
+
+| **Symbolik Account** | Access to symbolik.com with workspace chart |``````
+
+| **Perplexity API** | API key from [perplexity.ai](https://www.perplexity.ai/) |
+
+| **Gmail Account** | For email alerts with App Password *(optional)* |
 
 
 
-### 3️⃣ Gmail App Password Setup- **Alert Levels**: critical, high, medium, low priority alerts
+---### 3️⃣ Gmail App Password Setup- **Alert Levels**: critical, high, medium, low priority alerts
 
 
 
-1. Go to [Google Account Security](https://myaccount.google.com/security)### 3. Install dependencies
+## 🔧 Installation
 
-2. Enable **2-Step Verification** (if not already enabled)
 
-3. Navigate to **Security** → **App passwords**```bash- **Customizable Threshold**: Set minimum probability for email alerts (default 35%)- Windows OS (uses win32gui for window management)
+
+### 1️⃣ Clone Repository1. Go to [Google Account Security](https://myaccount.google.com/security)### 3. Install dependencies
+
+
+
+```bash2. Enable **2-Step Verification** (if not already enabled)
+
+git clone https://github.com/mskpairprogrammer/desktop_auto.git
+
+cd desktop_auto3. Navigate to **Security** → **App passwords**```bash- **Customizable Threshold**: Set minimum probability for email alerts (default 35%)- Windows OS (uses win32gui for window management)
+
+```
 
 4. Generate password for **Mail**
 
+### 2️⃣ Create Virtual Environment
+
 5. Copy 16-character password to `EMAIL_PASSWORD` in `.env`pip install -r requirements.txt
 
+```bash
 
+# Create virtual environment
+
+python -m venv .venv
 
 ### 4️⃣ Run```
 
+# Activate virtual environment
 
+.venv\Scripts\activate
+
+```
 
 ```bash
+
+### 3️⃣ Install Dependencies
 
 python main.py
 
-```### 4. Configure environment variables### Market Hours Scheduling (NEW!)- Python 3.8+  2. Smoothed Heiken Ashi Candles
-
-
-
----Create a `.env` file with your settings:
-
-
-
-## ⚙️ Configuration- **Automatic Market Hours Detection**: Only runs during configured trading hours
-
-
-
-### 📊 Stock Symbols```bash
-
 ```bash
 
-STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL# Required Settings- **Hourly Intervals**: Captures screenshots and analysis every hour (configurable)- TradingView account with 4 separate chart windows open
+pip install -r requirements.txt```### 4. Configure environment variables### Market Hours Scheduling (NEW!)- Python 3.8+  2. Smoothed Heiken Ashi Candles
 
 ```
 
-Comma-separated list of symbols to process.STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
+
+
+**Required Packages**:
+
+- `pyautogui>=0.9.54` - Desktop automation and screenshots---Create a `.env` file with your settings:
+
+- `pillow>=10.0.0` - Image processing
+
+- `pywin32>=306` - Windows API integration
+
+- `python-dotenv>=1.0.0` - Environment configuration
+
+- `pynput` - Mouse/keyboard input## ⚙️ Configuration- **Automatic Market Hours Detection**: Only runs during configured trading hours
+
+- `openai>=1.0.0` - Perplexity API client
+
+- `pytz>=2023.3` - Timezone support for scheduling
 
 
 
-### 🪟 TradingView Windows- **Timezone Support**: Configurable timezone (default: US/Eastern for NYSE/NASDAQ)
+### 4️⃣ Configure Environment### 📊 Stock Symbols```bash
+
+
+
+Create `.env` file in project root:```bash
+
+
+
+```bashSTOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL# Required Settings- **Hourly Intervals**: Captures screenshots and analysis every hour (configurable)- TradingView account with 4 separate chart windows open
+
+# Stock Symbols (comma-separated)
+
+STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL```
+
+
+
+# TradingView Windows (keywords to find windows)Comma-separated list of symbols to process.STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
+
+TRADINGVIEW_ENABLED=True
+
+TRADINGVIEW_WINDOW1=trend analysis
+
+TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles
+
+TRADINGVIEW_WINDOW3=volume layout### 🪟 TradingView Windows- **Timezone Support**: Configurable timezone (default: US/Eastern for NYSE/NASDAQ)
+
+TRADINGVIEW_WINDOW4=volumeprofile
 
 ```bash
 
-TRADINGVIEW_ENABLED=True# TradingView Windows (customize based on your window titles)
+# Symbolik.com
+
+SYMBOLIK_ENABLED=TrueTRADINGVIEW_ENABLED=True# TradingView Windows (customize based on your window titles)
+
+SYMBOLIK_WINDOW=workspace
 
 TRADINGVIEW_WINDOW1=trend analysis        # Window 1 keyword
 
-TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi  # Window 2 keywordTRADINGVIEW_ENABLED=True- **Continuous Operation**: Runs in loop, sleeping outside market hours  3. Volume layout### Installation
+# Perplexity AI
+
+PERPLEXITY_ENABLED=TrueTRADINGVIEW_WINDOW2=Smoothed Heiken Ashi  # Window 2 keywordTRADINGVIEW_ENABLED=True- **Continuous Operation**: Runs in loop, sleeping outside market hours  3. Volume layout### Installation
+
+PERPLEXITY_API_KEY=your_api_key_here
 
 TRADINGVIEW_WINDOW3=volume layout         # Window 3 keyword
 
-TRADINGVIEW_WINDOW4=volumeprofile         # Window 4 keywordTRADINGVIEW_WINDOW1=trend analysis
+# Email Alerts (optional)
 
-```
+EMAIL_USER=your_email@gmail.comTRADINGVIEW_WINDOW4=volumeprofile         # Window 4 keywordTRADINGVIEW_WINDOW1=trend analysis
+
+EMAIL_PASSWORD=your_16_char_app_password
+
+EMAIL_TO=recipient@email.com```
+
+EMAIL_ALERT_THRESHOLD=35
 
 Keywords to identify each TradingView window. Run `python list_windows.py` to see available windows.TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles- **Flexible Scheduling**: Configurable start/stop times and intervals
 
+# Scheduling
 
+SCHEDULE_ENABLED=True
 
-### ⏱️ Timing SettingsTRADINGVIEW_WINDOW3=volume layout
+CAPTURE_START_TIME=09:30
 
-```bash
+CAPTURE_STOP_TIME=16:00### ⏱️ Timing SettingsTRADINGVIEW_WINDOW3=volume layout
 
-WINDOW_SETTLE_DELAY=3.0        # Wait after window focus (seconds)TRADINGVIEW_WINDOW4=volumeprofile## Setup
+CAPTURE_TIMEZONE=US/Eastern
 
-FOCUS_CLICK_DELAY=1.5          # Wait after clicking (seconds)
-
-CHART_LOAD_DELAY_TAB1_3=5.0    # Chart load time for tabs 1-3
-
-CHART_LOAD_DELAY_TAB4=15.0     # Extended load time for volumeprofile
-
-SYMBOLIK_WAIT_DELAY=10.0       # Symbolik chart load time# Symbolik Settings## Prerequisites
+CAPTURE_INTERVAL_SECONDS=3600```bash
 
 ```
 
+WINDOW_SETTLE_DELAY=3.0        # Wait after window focus (seconds)TRADINGVIEW_WINDOW4=volumeprofile## Setup
+
+### 5️⃣ Gmail App Password Setup
+
+FOCUS_CLICK_DELAY=1.5          # Wait after clicking (seconds)
+
+1. Go to [Google Account Security](https://myaccount.google.com/security)
+
+2. Enable **2-Step Verification** (if not already enabled)CHART_LOAD_DELAY_TAB1_3=5.0    # Chart load time for tabs 1-3
+
+3. Navigate to **Security** → **App passwords**
+
+4. Generate password for **Mail**CHART_LOAD_DELAY_TAB4=15.0     # Extended load time for volumeprofile
+
+5. Copy 16-character password to `EMAIL_PASSWORD` in `.env`
+
+SYMBOLIK_WAIT_DELAY=10.0       # Symbolik chart load time# Symbolik Settings## Prerequisites
+
+---
+
+```
+
+## 🎯 Usage
+
 Adjust if charts load slower on your system.SYMBOLIK_ENABLED=True
 
+### Scheduled Mode (Recommended)
 
+
+
+Run continuously during market hours:
 
 ### 📸 Screenshot NamingSYMBOLIK_WINDOW=workspace  4. Volumeprofile
 
 ```bash
 
+python main.py```bash
+
+```
+
 SCREENSHOT_DIR=screenshots
 
-SCREENSHOT_NAME_TAB1={symbol}_luxoalgo.png
+**With `SCHEDULE_ENABLED=True`**:
 
-SCREENSHOT_NAME_TAB2={symbol}_heiken.png# Perplexity AI Analysis (optional)- **Windows OS** (uses win32gui for window management)
+- ✅ Checks if within market hours (9:30 AM - 4:00 PM ET)SCREENSHOT_NAME_TAB1={symbol}_luxoalgo.png
+
+- ✅ Captures screenshots from all 5 windows
+
+- ✅ Performs AI analysis with chart-specific contextSCREENSHOT_NAME_TAB2={symbol}_heiken.png# Perplexity AI Analysis (optional)- **Windows OS** (uses win32gui for window management)
+
+- ✅ Sends email alerts if threshold met
+
+- ✅ Waits for interval (default: 1 hour)SCREENSHOT_NAME_TAB3={symbol}_volume_layout.png
+
+- ✅ Repeats during market hours
+
+- ✅ Sleeps outside market hours (checks every 5 minutes)SCREENSHOT_NAME_TAB4={symbol}_rvol.pngPERPLEXITY_ENABLED=True
+
+
+
+**Example Output**:SCREENSHOT_NAME_SYMBOLIK={symbol}_symbolik.png
+
+```
+
+[2025-10-26 09:30:15] 🕐 SCHEDULED MODE ENABLED```PERPLEXITY_API_KEY=your_perplexity_api_key_here- **Python 3.8+**1. Clone the repository:
+
+[2025-10-26 09:30:15] Market Hours: 09:30 - 16:00 US/Eastern
+
+[2025-10-26 09:30:15] Interval: 3600s (60 minutes)Use `{symbol}` placeholder for dynamic naming.
+
+[2025-10-26 09:30:18] 🚀 RUN #1 - 2025-10-26 09:30:18 EDT
+
+[2025-10-26 09:30:18] 📊 Processing 2 symbols: QBTS, SNAP
+
+[2025-10-26 09:30:20] ✅ Found window: TradingView - trend analysis
+
+[2025-10-26 09:30:25] 📸 Taking screenshot for Tab 1...### 🤖 Perplexity AI
+
+[2025-10-26 09:30:45] 🤖 Starting Perplexity AI analysis for QBTS...
+
+[2025-10-26 09:30:52] 🚨 HIGH ALERT: Strong bullish reversal detected```bash# Email Alerts (optional)- **TradingView account** with 4 separate chart windows open
+
+[2025-10-26 09:30:52] 📊 Trend Change Probability: 78%
+
+[2025-10-26 09:30:53] 📧 Email alert sent to user@email.comPERPLEXITY_ENABLED=True
+
+[2025-10-26 09:31:30] ✅ Completed processing QBTS!
+
+```PERPLEXITY_API_KEY=pplx-xxxxxxxxxxxxxxxxxxxxxEMAIL_USER=your_email@gmail.com
+
+
+
+### Single Run Mode```
+
+
+
+Run once and exit:Get your API key from [Perplexity](https://www.perplexity.ai/).EMAIL_PASSWORD=your_app_password_here- **Perplexity API key** (optional, for AI analysis) - Get from [Perplexity](https://www.perplexity.ai/)   ```bash- Saves screenshots without timestamps (overwrites previous versions)1. Clone or download this project
+
+
+
+```bash
+
+# Set in .env
+
+SCHEDULE_ENABLED=False### 📧 Email AlertsEMAIL_TO=recipient@email.com
+
+
+
+# Run```bash
+
+python main.py
+
+```EMAIL_USER=your_email@gmail.comSMTP_SERVER=smtp.gmail.com- **Gmail account** (optional, for email alerts with App Password)
+
+
+
+### Utility ScriptsEMAIL_PASSWORD=your_16_char_app_password
+
+
+
+**List Available Windows**:EMAIL_TO=recipient@email.comSMTP_PORT=587
+
+```bash
+
+python list_windows.pySMTP_SERVER=smtp.gmail.com
+
+```
+
+Shows all window titles to help configure `.env` window keywords.SMTP_PORT=587EMAIL_ALERT_THRESHOLD=35   git clone https://github.com/mskpairprogrammer/desktop_auto.git
+
+
+
+**Test Symbolik Automation**:EMAIL_ALERT_THRESHOLD=35
+
+```bash
+
+python test_symbolik.py```
+
+```
+
+Tests browser automation separately.Alert threshold is minimum probability (%) to trigger email.
+
+
+
+---# Scheduling Settings## Setup
+
+
+
+## ⚙️ Configuration Reference### 📅 Scheduling
+
+
+
+### Stock Symbols```bashSCHEDULE_ENABLED=True
+
+```bash
+
+STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPLSCHEDULE_ENABLED=True
+
+```
+
+Comma-separated list of symbols to process.CAPTURE_START_TIME=09:30       # Market open (HH:MM)CAPTURE_START_TIME=09:30   cd desktop_auto- Uses Windows API for reliable window management2. Open the project in VS Code
+
+
+
+### TradingView WindowsCAPTURE_STOP_TIME=16:00        # Market close (HH:MM)
+
+```bash
+
+TRADINGVIEW_WINDOW1=trend analysisCAPTURE_TIMEZONE=US/EasternCAPTURE_STOP_TIME=16:00
+
+TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles
+
+TRADINGVIEW_WINDOW3=volume layoutCAPTURE_INTERVAL_SECONDS=3600  # 1 hour
+
+TRADINGVIEW_WINDOW4=volumeprofile
+
+``````CAPTURE_TIMEZONE=US/Eastern1. Clone the repository:
+
+Keywords to identify each TradingView window. Use `list_windows.py` to find exact titles.
+
+
+
+### Timing Settings
+
+```bash**Common intervals:**CAPTURE_INTERVAL_SECONDS=3600
+
+WINDOW_SETTLE_DELAY=3.0        # Wait after window focus (seconds)
+
+FOCUS_CLICK_DELAY=1.5          # Wait after clicking (seconds)- `3600` = 1 hour *(recommended)*
+
+CHART_LOAD_DELAY_TAB1_3=5.0    # Chart load time for tabs 1-3
+
+CHART_LOAD_DELAY_TAB4=15.0     # Extended load time for volumeprofile- `1800` = 30 minutes```   ```bash   ```
+
+SYMBOLIK_WAIT_DELAY=10.0       # Symbolik chart load time
+
+```- `900` = 15 minutes
+
+Adjust if charts load slower on your system.
+
+- `300` = 5 minutes
+
+### Screenshot Naming
+
+```bash
+
+SCREENSHOT_DIR=screenshots
+
+SCREENSHOT_NAME_TAB1={symbol}_luxoalgo.png---### 5. Gmail App Password Setup (for Email Alerts)   git clone https://github.com/mskpairprogrammer/desktop_auto.git
+
+SCREENSHOT_NAME_TAB2={symbol}_heiken.png
 
 SCREENSHOT_NAME_TAB3={symbol}_volume_layout.png
 
-SCREENSHOT_NAME_TAB4={symbol}_rvol.pngPERPLEXITY_ENABLED=True
+SCREENSHOT_NAME_TAB4={symbol}_rvol.png
 
-SCREENSHOT_NAME_SYMBOLIK={symbol}_symbolik.png
+SCREENSHOT_NAME_SYMBOLIK={symbol}_symbolik.png## 🎯 Usage
 
-```PERPLEXITY_API_KEY=your_perplexity_api_key_here- **Python 3.8+**1. Clone the repository:
+```
 
 Use `{symbol}` placeholder for dynamic naming.
 
 
 
-### 🤖 Perplexity AI
-
-```bash# Email Alerts (optional)- **TradingView account** with 4 separate chart windows open
-
-PERPLEXITY_ENABLED=True
-
-PERPLEXITY_API_KEY=pplx-xxxxxxxxxxxxxxxxxxxxxEMAIL_USER=your_email@gmail.com
-
-```
-
-Get your API key from [Perplexity](https://www.perplexity.ai/).EMAIL_PASSWORD=your_app_password_here- **Perplexity API key** (optional, for AI analysis) - Get from [Perplexity](https://www.perplexity.ai/)   ```bash- Saves screenshots without timestamps (overwrites previous versions)1. Clone or download this project
-
-
-
-### 📧 Email AlertsEMAIL_TO=recipient@email.com
+### Scheduling### Scheduled Mode (Continuous)1. Go to your Google Account settings   cd desktop_auto3. Install dependencies:
 
 ```bash
-
-EMAIL_USER=your_email@gmail.comSMTP_SERVER=smtp.gmail.com- **Gmail account** (optional, for email alerts with App Password)
-
-EMAIL_PASSWORD=your_16_char_app_password
-
-EMAIL_TO=recipient@email.comSMTP_PORT=587
-
-SMTP_SERVER=smtp.gmail.com
-
-SMTP_PORT=587EMAIL_ALERT_THRESHOLD=35   git clone https://github.com/mskpairprogrammer/desktop_auto.git
-
-EMAIL_ALERT_THRESHOLD=35
-
-```
-
-Alert threshold is minimum probability (%) to trigger email.
-
-# Scheduling Settings## Setup
-
-### 📅 Scheduling
-
-```bashSCHEDULE_ENABLED=True
 
 SCHEDULE_ENABLED=True
 
-CAPTURE_START_TIME=09:30       # Market open (HH:MM)CAPTURE_START_TIME=09:30   cd desktop_auto- Uses Windows API for reliable window management2. Open the project in VS Code
+CAPTURE_START_TIME=09:30       # Market open (HH:MM)
 
-CAPTURE_STOP_TIME=16:00        # Market close (HH:MM)
+CAPTURE_STOP_TIME=16:00        # Market close (HH:MM)```bash2. Navigate to Security → 2-Step Verification (enable if not already)
 
-CAPTURE_TIMEZONE=US/EasternCAPTURE_STOP_TIME=16:00
+CAPTURE_TIMEZONE=US/Eastern
 
-CAPTURE_INTERVAL_SECONDS=3600  # 1 hour
+CAPTURE_INTERVAL_SECONDS=3600  # 1 hourpython main.py
 
-```CAPTURE_TIMEZONE=US/Eastern1. Clone the repository:
-
-
-
-**Common intervals:**CAPTURE_INTERVAL_SECONDS=3600
-
-- `3600` = 1 hour *(recommended)*
-
-- `1800` = 30 minutes```   ```bash   ```
-
-- `900` = 15 minutes
-
-- `300` = 5 minutes
-
-
-
----### 5. Gmail App Password Setup (for Email Alerts)   git clone https://github.com/mskpairprogrammer/desktop_auto.git
-
-
-
-## 🎯 Usage
-
-
-
-### Scheduled Mode (Continuous)1. Go to your Google Account settings   cd desktop_auto3. Install dependencies:
-
-
-
-```bash2. Navigate to Security → 2-Step Verification (enable if not already)
-
-python main.py
+```
 
 ```3. Navigate to Security → App passwords   ```
 
+**Common intervals**:
 
+- `3600` = 1 hour *(recommended)*
 
-With `SCHEDULE_ENABLED=True`:4. Generate a new app password for "Mail"
+- `1800` = 30 minutes
+
+- `900` = 15 minutesWith `SCHEDULE_ENABLED=True`:4. Generate a new app password for "Mail"
+
+- `300` = 5 minutes
 
 1. ✅ Checks if within market hours (9:30 AM - 4:00 PM ET)
 
-2. ✅ Captures screenshots from all windows5. Copy the 16-character password to `EMAIL_PASSWORD` in `.env`2. Create a virtual environment:
+**Supported timezones**:
 
-3. ✅ Performs AI analysis with Perplexity
+- `US/Eastern` - NYSE/NASDAQ (New York)2. ✅ Captures screenshots from all windows5. Copy the 16-character password to `EMAIL_PASSWORD` in `.env`2. Create a virtual environment:
 
-4. ✅ Sends email alerts if threshold met
+- `US/Pacific` - PSX (Los Angeles)
 
-5. ✅ Waits for interval (e.g., 1 hour)
+- `Europe/London` - LSE (London)3. ✅ Performs AI analysis with Perplexity
 
-6. ✅ Repeats steps 1-5## 📊 TradingView Setup2. Create and activate virtual environment:
+- `Asia/Tokyo` - TSE (Tokyo)
 
-7. ✅ Outside market hours: sleeps and checks every 5 minutes
+- `Asia/Hong_Kong` - HKEX (Hong Kong)4. ✅ Sends email alerts if threshold met
 
 
 
-**Example output:**
+---5. ✅ Waits for interval (e.g., 1 hour)
 
-```Open 4 separate TradingView windows (**not tabs!**) with these chart layouts:   ```bash   ```bash## Prerequisites   ```bash
 
-[2025-10-26 09:30:15] 🕐 SCHEDULED MODE ENABLED
 
-[2025-10-26 09:30:15] Market Hours: 09:30 - 16:00 US/Eastern
+## 🛠️ Troubleshooting6. ✅ Repeats steps 1-5## 📊 TradingView Setup2. Create and activate virtual environment:
 
-[2025-10-26 09:30:15] Interval: 3600s (60 minutes)
 
-[2025-10-26 09:30:18] 🚀 RUN #1 - 2025-10-26 09:30:18 EDT1. **Trend Analysis** - Your main trend analysis chart with LuxAlgo indicators   python -m venv .venv
 
-[2025-10-26 09:30:18] 📊 Processing 2 symbols: QBTS, SNAP
+### ❌ Windows Not Found7. ✅ Outside market hours: sleeps and checks every 5 minutes
 
-[2025-10-26 09:30:20] ✅ Found window: TradingView - trend analysis2. **Smoothed Heiken Ashi Candles** - Heiken Ashi candle view
 
-[2025-10-26 09:30:25] 📸 Taking screenshot for Tab 1...
+
+**Symptoms**: `Window with 'X' not found`
+
+
+
+**Solutions**:**Example output:**
+
+1. ✅ Ensure all 4 TradingView windows are open
+
+2. ✅ Run `python list_windows.py` to see available windows```Open 4 separate TradingView windows (**not tabs!**) with these chart layouts:   ```bash   ```bash## Prerequisites   ```bash
+
+3. ✅ Update `.env` with exact window title keywords
+
+4. ✅ Verify window titles contain configured keywords[2025-10-26 09:30:15] 🕐 SCHEDULED MODE ENABLED
+
+
+
+### 📸 Blank Screenshots[2025-10-26 09:30:15] Market Hours: 09:30 - 16:00 US/Eastern
+
+
+
+**Symptoms**: Screenshots are black or show wrong content[2025-10-26 09:30:15] Interval: 3600s (60 minutes)
+
+
+
+**Solutions**:[2025-10-26 09:30:18] 🚀 RUN #1 - 2025-10-26 09:30:18 EDT1. **Trend Analysis** - Your main trend analysis chart with LuxAlgo indicators   python -m venv .venv
+
+1. ✅ Increase load delays in `.env`:
+
+   ```bash[2025-10-26 09:30:18] 📊 Processing 2 symbols: QBTS, SNAP
+
+   CHART_LOAD_DELAY_TAB1_3=7.0  # Instead of 5.0
+
+   CHART_LOAD_DELAY_TAB4=20.0   # Instead of 15.0[2025-10-26 09:30:20] ✅ Found window: TradingView - trend analysis2. **Smoothed Heiken Ashi Candles** - Heiken Ashi candle view
+
+   ```
+
+2. ✅ Ensure windows are maximized[2025-10-26 09:30:25] 📸 Taking screenshot for Tab 1...
+
+3. ✅ Check screen resolution matches click coordinates
 
 [2025-10-26 09:30:45] 🤖 Starting Perplexity AI analysis for QBTS...3. **Volume Layout** - Volume-focused chart   .venv\Scripts\activate   python -m venv .venv
 
+### 🤖 AI Analysis Fails
+
 [2025-10-26 09:30:52] 🚨 HIGH ALERT: Strong bullish reversal detected
 
-[2025-10-26 09:30:52] 📊 Trend Change Probability: 78%4. **Volume Profile** - Volume profile analysis
+**Error: 401 Unauthorized**
+
+- Invalid API key[2025-10-26 09:30:52] 📊 Trend Change Probability: 78%4. **Volume Profile** - Volume profile analysis
+
+- Solution: Check `PERPLEXITY_API_KEY` in `.env`
 
 [2025-10-26 09:30:53] 📧 Email alert sent to user@email.com
 
-[2025-10-26 09:31:30] ✅ Completed processing QBTS!   ```
+**Error: 429 Too Many Requests**
+
+- Rate limit exceeded[2025-10-26 09:31:30] ✅ Completed processing QBTS!   ```
+
+- Solution: Reduce capture frequency or wait
 
 ```
 
-The window titles must contain the keywords specified in your `.env` file for the automation to find them.
+**Error: 500 Server Error**
+
+- Perplexity service issueThe window titles must contain the keywords specified in your `.env` file for the automation to find them.
+
+- Solution: Wait and retry later
 
 ### Single Run Mode
 
+### 📧 Email Not Sending
+
    ```   pip install -r requirements.txt
 
-Set `SCHEDULE_ENABLED=False` in `.env`:
+**Checklist**:
 
-```bash## 🎯 Usage
+1. ✅ Verify `EMAIL_USER`, `EMAIL_PASSWORD`, `EMAIL_TO` are setSet `SCHEDULE_ENABLED=False` in `.env`:
 
-python main.py
+2. ✅ Use Gmail **App Password**, not regular password
 
-```3. Install dependencies:
+3. ✅ Enable 2-Step Verification on Gmail account```bash## 🎯 Usage
 
-Runs once and exits.
+4. ✅ Check firewall allows SMTP port 587
 
-### Scheduled Mode (Recommended)
+5. ✅ Check spam/junk folderpython main.py
+
+
+
+**Test email configuration**:```3. Install dependencies:
+
+```python
+
+from perplexity_analysis import EmailAlertManagerRuns once and exits.
+
+email = EmailAlertManager()
+
+print(f"Email configured: {email.is_configured}")### Scheduled Mode (Recommended)
+
+```
 
 ### List Available Windows
 
+### ⏰ Scheduling Issues
+
    ```bash
 
-```bash
+**"Outside market hours" during trading day:**
+
+- Check `CAPTURE_TIMEZONE` matches your market```bash
+
+- Verify system time is correct
 
 python list_windows.pyRun continuously during market hours:
 
-```
+**Not running at expected times:**
+
+- Verify `CAPTURE_START_TIME` format (HH:MM, 24-hour)```
+
+- Check `CAPTURE_STOP_TIME` is after start time
 
 Shows all window titles for configuration.```bash   pip install -r requirements.txt
 
-
-
-### Test Symbolik Automationpython main.py
-
-
-
-```bash```   ```3. Activate the virtual environment:- Windows OS (uses win32gui for window management)   ```
-
-python test_symbolik.py
-
-```
-
-Tests browser automation separately.
-
-With `SCHEDULE_ENABLED=True`, the program will:
-
----
-
-- ✅ Check if current time is within market hours (9:30 AM - 4:00 PM ET)
-
-## 📊 TradingView Setup
-
-- ✅ Run screenshot capture and AI analysis4. Configure environment variables in `.env`:   ```bash
-
-Open **4 separate TradingView windows** (not tabs):
-
-- ✅ Wait for the configured interval (default: 1 hour)
-
-| Window | Purpose | Indicators |
-
-|--------|---------|-----------|- ✅ Repeat during market hours   ```bash
-
-| **1. Trend Analysis** | Main analysis chart | LuxAlgo Signals, Overlays, Price Action |
-
-| **2. Heiken Ashi** | Smoothed candle view | Smoothed Heiken Ashi Candles |- ✅ Sleep and check every 5 minutes when outside market hours
-
-| **3. Volume Layout** | Volume patterns | Volume analysis indicators |
-
-| **4. Volume Profile** | Volume distribution | Volume profile chart |   # Required Settings   .venv\Scripts\activate- Python 3.8+4. Copy the environment template and configure:
-
-
-
-**Important:** Window titles must contain the keywords specified in your `.env` file.**Example output:**
-
-
-
-**Example Setup:**```   STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
-
-- Window 1 title: `TradingView - trend analysis - QBTS`
-
-- Window 2 title: `TradingView - Smoothed Heiken Ashi Candles`[2025-10-26 09:30:15] 🕐 SCHEDULED MODE ENABLED
-
-- Window 3 title: `TradingView - volume layout`
-
-- Window 4 title: `TradingView - volumeprofile`[2025-10-26 09:30:15] Market Hours: 09:30 - 16:00 US/Eastern      ```
-
-
-
----[2025-10-26 09:30:15] Interval: 3600s (60 minutes)
-
-
-
-## 🤖 AI Analysis[2025-10-26 09:30:18] 🚀 RUN #1 - 2025-10-26 09:30:18 EDT   # TradingView Windows (customize based on your window titles)
-
-
-
-### How It Works[2025-10-26 09:30:18] 📊 Processing 2 symbols: QBTS, SNAP
-
-
-
-1. **Screenshot Capture**: All 5 windows captured for each symbol```   TRADINGVIEW_ENABLED=True- TradingView account with 4 separate chart windows open   ```bash
-
-2. **Base64 Encoding**: Images converted for API transmission
-
-3. **AI Prompt Creation**:
-
-   - Includes chart-specific context
-
-   - References LuxAlgo documentation for Window 1### Single Run Mode   TRADINGVIEW_WINDOW1=trend analysis
-
-   - Includes prior analysis for comparison
-
-4. **Perplexity API Call**: Single request with all images
-
-5. **Response Parsing**: Extracts analysis text and trend JSON
-
-6. **Report Generation**: Saves to `combined_analysis_latest.txt`Set `SCHEDULE_ENABLED=False` in `.env` to run once and exit:   TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles4. Install dependencies:
-
-7. **Email Alert**: Sends if probability ≥ threshold
+**pytz errors:**
 
 ```bash
 
-### LuxAlgo Integration
+pip install pytz
 
-python main.py   TRADINGVIEW_WINDOW3=volume layout
+```### Test Symbolik Automationpython main.py
 
-For **Trend Analysis** (Window 1), Perplexity uses:
 
-- **Signals & Overlays**: [Documentation](https://docs.luxalgo.com/docs/algos/signals-overlays/signals)```
 
-- **Price Action Concepts**: [Documentation](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)
+---
 
-   TRADINGVIEW_WINDOW4=volumeprofile   ```bash   copy .env.example .env
 
-This ensures accurate analysis based on LuxAlgo's methodology.
 
-## 🔄 Workflow
+## 📁 Project Structure```bash```   ```3. Activate the virtual environment:- Windows OS (uses win32gui for window management)   ```
 
-### Analysis Report Structure
 
-   
+
+```python test_symbolik.py
+
+desktop_auto/
+
+│```
+
+├── 📄 main.py                      # Main automation orchestrator
+
+├── 📄 perplexity_analysis.py       # AI analysis with chart-specific contextTests browser automation separately.
+
+├── 📄 list_windows.py              # Window discovery utility
+
+├── 📄 test_symbolik.py             # Symbolik automation testWith `SCHEDULE_ENABLED=True`, the program will:
+
+├── 📄 requirements.txt             # Python dependencies
+
+├── 📄 .env                         # Configuration (gitignored)---
+
+├── 📄 .env.example                 # Configuration template
+
+├── 📄 .gitignore                   # Git ignore rules- ✅ Check if current time is within market hours (9:30 AM - 4:00 PM ET)
+
+├── 📄 README.md                    # This file
+
+│## 📊 TradingView Setup
+
+├── 📁 .venv/                       # Virtual environment
+
+├── 📁 .vscode/                     # VS Code tasks- ✅ Run screenshot capture and AI analysis4. Configure environment variables in `.env`:   ```bash
+
+├── 📁 .github/                     # GitHub configuration
+
+│Open **4 separate TradingView windows** (not tabs):
+
+└── 📁 screenshots/                 # Screenshot storage
+
+    ├── 📁 QBTS/- ✅ Wait for the configured interval (default: 1 hour)
+
+    │   ├── 📸 QBTS_luxoalgo.png
+
+    │   ├── 📸 QBTS_heiken.png| Window | Purpose | Indicators |
+
+    │   ├── 📸 QBTS_volume_layout.png
+
+    │   ├── 📸 QBTS_rvol.png|--------|---------|-----------|- ✅ Repeat during market hours   ```bash
+
+    │   ├── 📸 QBTS_symbolik.png
+
+    │   └── 📄 combined_analysis_latest.txt| **1. Trend Analysis** | Main analysis chart | LuxAlgo Signals, Overlays, Price Action |
+
+    ├── 📁 SNAP/
+
+    ├── 📁 TSLA/| **2. Heiken Ashi** | Smoothed candle view | Smoothed Heiken Ashi Candles |- ✅ Sleep and check every 5 minutes when outside market hours
+
+    └── 📁 AAPL/
+
+```| **3. Volume Layout** | Volume patterns | Volume analysis indicators |
+
+
+
+---| **4. Volume Profile** | Volume distribution | Volume profile chart |   # Required Settings   .venv\Scripts\activate- Python 3.8+4. Copy the environment template and configure:
+
+
+
+## 💡 Usage Examples
+
+
+
+### Example 1: Hourly During Market Hours**Important:** Window titles must contain the keywords specified in your `.env` file.**Example output:**
+
+
+
+```bash
+
+# .env
+
+SCHEDULE_ENABLED=True**Example Setup:**```   STOCK_SYMBOLS=QBTS,SNAP,TSLA,AAPL
+
+CAPTURE_START_TIME=09:30
+
+CAPTURE_STOP_TIME=16:00- Window 1 title: `TradingView - trend analysis - QBTS`
+
+CAPTURE_INTERVAL_SECONDS=3600
+
+- Window 2 title: `TradingView - Smoothed Heiken Ashi Candles`[2025-10-26 09:30:15] 🕐 SCHEDULED MODE ENABLED
+
+# Run
+
+python main.py- Window 3 title: `TradingView - volume layout`
 
 ```
 
-Combined Screenshot Analysis ReportFor each symbol in `STOCK_SYMBOLS`:
+**Result**: Runs at 9:30 AM, 10:30 AM, 11:30 AM, ..., 4:00 PM ET- Window 4 title: `TradingView - volumeprofile`[2025-10-26 09:30:15] Market Hours: 09:30 - 16:00 US/Eastern      ```
 
-====================================
+
+
+### Example 2: Every 30 Minutes Extended Hours
+
+
+
+```bash---[2025-10-26 09:30:15] Interval: 3600s (60 minutes)
+
+# .env
+
+CAPTURE_START_TIME=08:00
+
+CAPTURE_STOP_TIME=18:00
+
+CAPTURE_INTERVAL_SECONDS=1800## 🤖 AI Analysis[2025-10-26 09:30:18] 🚀 RUN #1 - 2025-10-26 09:30:18 EDT   # TradingView Windows (customize based on your window titles)
+
+
+
+# Run
+
+python main.py
+
+```### How It Works[2025-10-26 09:30:18] 📊 Processing 2 symbols: QBTS, SNAP
+
+**Result**: Runs every 30 minutes from 8:00 AM to 6:00 PM
+
+
+
+### Example 3: Single Run (On-Demand)
+
+1. **Screenshot Capture**: All 5 windows captured for each symbol```   TRADINGVIEW_ENABLED=True- TradingView account with 4 separate chart windows open   ```bash
+
+```bash
+
+# .env2. **Base64 Encoding**: Images converted for API transmission
+
+SCHEDULE_ENABLED=False
+
+3. **AI Prompt Creation**:
+
+# Run
+
+python main.py   - Includes chart-specific context
+
+```
+
+**Result**: Runs once immediately and exits   - References LuxAlgo documentation for Window 1### Single Run Mode   TRADINGVIEW_WINDOW1=trend analysis
+
+
+
+### Example 4: High-Frequency Monitoring   - Includes prior analysis for comparison
+
+
+
+```bash4. **Perplexity API Call**: Single request with all images
+
+# .env
+
+CAPTURE_INTERVAL_SECONDS=300   # 5 minutes5. **Response Parsing**: Extracts analysis text and trend JSON
+
+EMAIL_ALERT_THRESHOLD=50       # More selective alerts
+
+6. **Report Generation**: Saves to `combined_analysis_latest.txt`Set `SCHEDULE_ENABLED=False` in `.env` to run once and exit:   TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles4. Install dependencies:
+
+# Run
+
+python main.py7. **Email Alert**: Sends if probability ≥ threshold
+
+```
+
+**Result**: Runs every 5 minutes, only sends alerts for ≥50% probability```bash
+
+
+
+---### LuxAlgo Integration
+
+
+
+## 📚 Technical Indicator Referencepython main.py   TRADINGVIEW_WINDOW3=volume layout
+
+
+
+### Chart-Specific Indicators SummaryFor **Trend Analysis** (Window 1), Perplexity uses:
+
+
+
+| Chart Window | Indicators Count | Key Indicators |- **Signals & Overlays**: [Documentation](https://docs.luxalgo.com/docs/algos/signals-overlays/signals)```
+
+|-------------|------------------|----------------|
+
+| Trend Analysis | 3 | LuxAlgo Signals, Price Action Concepts, Overlays |- **Price Action Concepts**: [Documentation](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)
+
+| Heiken Ashi | 3 | Smoothed HA Candles, HEMA Trend, Divergences |
+
+| Volume Layout | 4 | Money Flow, CVD, SQZMOM_LB, MA Distance, +RD/-RD |   TRADINGVIEW_WINDOW4=volumeprofile   ```bash   copy .env.example .env
+
+| Volume Profile | 4 | RVOL, VOLD, MS Matrix Mod, TTOB |
+
+| Symbolik Workspace | 7 | ATM Lines/Waves/Projections, TKT, Demark Sequential |This ensures accurate analysis based on LuxAlgo's methodology.
+
+
+
+**Total Indicators Recognized**: 21 unique technical indicators## 🔄 Workflow
+
+
+
+---### Analysis Report Structure
+
+
+
+## 🔗 Resources   
+
+
+
+- **GitHub Repository**: [mskpairprogrammer/desktop_auto](https://github.com/mskpairprogrammer/desktop_auto)```
+
+- **LuxAlgo Signals**: [Documentation](https://docs.luxalgo.com/docs/algos/signals-overlays/signals)
+
+- **LuxAlgo Price Action**: [Documentation](https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction)Combined Screenshot Analysis ReportFor each symbol in `STOCK_SYMBOLS`:
+
+- **Perplexity AI**: [Website](https://www.perplexity.ai/)
+
+- **TradingView**: [Platform](https://www.tradingview.com/)====================================
+
+- **Symbolik**: [Platform](https://symbolik.com/)
 
 Analysis Date: 2025-10-26 09:30:52   # Symbolik Settings   pip install -r requirements.txt
 
+---
+
 Screenshots Analyzed: 5
+
+## 📝 License
 
 ### 1. TradingView Processing (if enabled)
 
+This project is for **personal use** only.
+
 Screenshot Sources:
+
+---
 
 - Trend Analysis: QBTS_luxoalgo.png- Switches to each of the 4 windows   SYMBOLIK_ENABLED=True
 
+## 📅 Changelog
+
 - Heiken Ashi: QBTS_heiken.png
 
-- Volume Layout: QBTS_volume_layout.png- Clicks center of screen for focus
+### v3.0.0 - Complete Chart Context Integration (2025-10-26)
 
-- Volume Profile: QBTS_rvol.png
+- ✅ **Heiken Ashi Context**: Added Smoothed HA candles, HEMA trend, divergence analysis- Volume Layout: QBTS_volume_layout.png- Clicks center of screen for focus
 
-- Workspace: QBTS_symbolik.png- Types the symbol   SYMBOLIK_WINDOW=workspace   ```## Setup   ```
+- ✅ **Volume Layout Context**: Money Flow Profile, CVD, SQZMOM_LB, +RD/-RD detection
+
+- ✅ **Volume Profile Context**: RVOL, VOLD ratio, MS Matrix Mod overbought/oversold, TTOB- Volume Profile: QBTS_rvol.png
+
+- ✅ **Symbolik Workspace Context**: ATM chart lines/waves/projections, TKT, Demark Sequential
+
+- ✅ **Critical Signal Detection**: +RD/-RD, MS conditions, ATM alignments, Demark 9s/13s- Workspace: QBTS_symbolik.png- Types the symbol   SYMBOLIK_WINDOW=workspace   ```## Setup   ```
+
+- ✅ **Comprehensive Documentation**: Detailed README with all indicators explained
 
 
 
-Trend Change Analysis:- Presses Enter
+### v2.2.0 - LuxAlgo Integration & Logging (2025-10-26)
 
-📊 Trend Change Probability: 78%
+- ✅ **LuxAlgo Integration**: Added documentation references for Perplexity AITrend Change Analysis:- Presses Enter
+
+- ✅ **Timestamp Logging**: All messages now include [YYYY-MM-DD HH:MM:SS]
+
+- ✅ **Enhanced Analysis**: Official LuxAlgo methodology for trend charts📊 Trend Change Probability: 78%
+
+- ✅ **Better Debugging**: Date/time stamped logs for troubleshooting
 
 🎯 Confidence Level: HIGH- Waits for chart to load (5s for Tabs 1-3, 15s for Tab 4)   
 
-🚨 Alert Status: ALERT (HIGH)
+### v2.1.0 - Market Hours Scheduling (2025-10-26)
 
-📋 Summary: Strong bullish reversal signals detected- Takes screenshot and saves as `screenshots/SYMBOL/SYMBOL_tab#.png`
+- ✅ **Scheduled Mode**: Continuous operation during market hours🚨 Alert Status: ALERT (HIGH)
+
+- ✅ **Timezone Support**: Configurable timezone with pytz
+
+- ✅ **Flexible Intervals**: Hourly, 30min, 15min, or custom📋 Summary: Strong bullish reversal signals detected- Takes screenshot and saves as `screenshots/SYMBOL/SYMBOL_tab#.png`
+
+- ✅ **Auto Sleep**: Automatically sleeps outside market hours
+
+- ✅ **Run Tracking**: Displays run count and next execution time
 
 
 
-Combined Analysis Results:   # Perplexity AI Analysis (optional)
+### v2.0.0 - AI Analysis Integration (2025-10-25)Combined Analysis Results:   # Perplexity AI Analysis (optional)
 
-=========================================
+- ✅ **Perplexity AI**: Automated screenshot analysis
 
-### 2. Symbolik Processing (if enabled)
+- ✅ **Trend Detection**: 0-100% probability scoring=========================================
+
+- ✅ **Email Alerts**: Configurable threshold notifications
+
+- ✅ **Analysis Reports**: Comprehensive market analysis### 2. Symbolik Processing (if enabled)
+
+- ✅ **Historical Comparison**: Compares with prior analysis
 
 **MARKET OVERVIEW**
 
-QBTS showing strong bullish momentum with price at $2.45...- Brings Symbolik browser window to front   PERPLEXITY_ENABLED=True
+### v1.1.0 - Symbolik Integration (2025-10-24)
+
+- ✅ **Browser Automation**: Symbolik.com screenshot captureQBTS showing strong bullish momentum with price at $2.45...- Brings Symbolik browser window to front   PERPLEXITY_ENABLED=True
+
+- ✅ **Dropdown Search**: Automated stock symbol search
+
+- ✅ **Auto .bz Suffix**: Automatic suffix handling
 
 
 
-**KEY VISIBLE INDICATORS**- Clicks search dropdown
+### v1.0.0 - Initial Release (2025-10-23)**KEY VISIBLE INDICATORS**- Clicks search dropdown
 
-- LuxAlgo Signal: Strong Buy (confirmed)
+- ✅ **Multi-Window**: 4 TradingView window automation
 
-- Price broke above resistance at $2.40- Types symbol with .bz suffix   PERPLEXITY_API_KEY=your_perplexity_api_key_here5. Create a `.env` file based on `.env.example`:   Then edit `.env` with your specific settings.
+- ✅ **Multi-Symbol**: Process multiple stocks- LuxAlgo Signal: Strong Buy (confirmed)
 
-- Volume spike: 3x average
+- ✅ **Screenshot Capture**: Organized storage
 
-...- Waits for chart to load
-
-```
-
-- Takes screenshot and saves as `screenshots/SYMBOL/SYMBOL_symbolik.png`   
-
-### Trend Change JSON
+- ✅ **Parameterized Config**: .env configuration- Price broke above resistance at $2.40- Types symbol with .bz suffix   PERPLEXITY_API_KEY=your_perplexity_api_key_here5. Create a `.env` file based on `.env.example`:   Then edit `.env` with your specific settings.
 
 
 
-```json
+---- Volume spike: 3x average
 
-{### 3. AI Analysis (if enabled)   # Email Alerts (optional)   ```bash
 
-  "send_email": true,
 
-  "alert_level": "high",- Encodes all screenshots to base64
+## 🤝 Contributing...- Waits for chart to load
 
-  "trend_change_probability": 78,
+
+
+Contributions are welcome!```
+
+
+
+1. Fork the repository- Takes screenshot and saves as `screenshots/SYMBOL/SYMBOL_symbolik.png`   
+
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)### Trend Change JSON
+
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+
+5. Open a Pull Request
+
+
+
+---```json
+
+
+
+## 📞 Support{### 3. AI Analysis (if enabled)   # Email Alerts (optional)   ```bash
+
+
+
+Need help?  "send_email": true,
+
+
+
+1. **Check Documentation**: Review this README thoroughly  "alert_level": "high",- Encodes all screenshots to base64
+
+2. **Troubleshooting Section**: See [Troubleshooting](#-troubleshooting) above
+
+3. **GitHub Issues**: [Open an issue](https://github.com/mskpairprogrammer/desktop_auto/issues)  "trend_change_probability": 78,
+
+4. **Include Logs**: Provide timestamp logs when reporting issues
 
   "confidence_level": "high",- Sends to Perplexity AI for analysis with LuxAlgo context   EMAIL_USER=your_email@gmail.com
 
-  "summary": "Strong bullish reversal signals detected",
+**When reporting issues, include**:
 
-  "key_changes": [- Compares with prior analysis (if exists)
+- Python version (`python --version`)  "summary": "Strong bullish reversal signals detected",
 
-    "Price broke above resistance at $2.40",
+- Operating system version
 
-    "LuxAlgo signals confirm strong buy",- Calculates trend change probability   EMAIL_PASSWORD=your_app_password_here   copy .env.example .env1. Clone the repository:
+- Relevant `.env` settings (redact sensitive data)  "key_changes": [- Compares with prior analysis (if exists)
 
-    "Volume spike 3x average confirms momentum"
+- Console output with timestamps
 
-  ],- Generates comprehensive analysis report
+- Screenshots if applicable    "Price broke above resistance at $2.40",
 
-  "probability_reasoning": "Multiple indicators align with high confidence"
 
-}- Saves to `screenshots/SYMBOL/combined_analysis_latest.txt`   EMAIL_TO=recipient@email.com
 
-```
+---    "LuxAlgo signals confirm strong buy",- Calculates trend change probability   EMAIL_PASSWORD=your_app_password_here   copy .env.example .env1. Clone the repository:
+
+
+
+## ⭐ Star This Repository    "Volume spike 3x average confirms momentum"
+
+
+
+If you find this project useful, please consider giving it a star on GitHub!  ],- Generates comprehensive analysis report
+
+
+
+[![GitHub stars](https://img.shields.io/github/stars/mskpairprogrammer/desktop_auto.svg?style=social&label=Star)](https://github.com/mskpairprogrammer/desktop_auto)  "probability_reasoning": "Multiple indicators align with high confidence"
+
+
+
+---}- Saves to `screenshots/SYMBOL/combined_analysis_latest.txt`   EMAIL_TO=recipient@email.com
+
+
+
+**Made with ❤️ for automated stock trading analysis**```
+
 
 - Sends email alert if probability >= threshold
 
