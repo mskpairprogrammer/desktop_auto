@@ -324,6 +324,8 @@ Pay special attention to:
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
+CRITICAL INSTRUCTION: Only analyze what you can clearly see in the screenshots. If a chart window appears blank, contains no data, or is not loaded properly, explicitly state "Chart not loaded" or "No data visible" for that window. DO NOT make assumptions or provide analysis for charts that are not visible or contain no data.
+
 {chart_context}
 ANALYSIS FORMAT:
 
