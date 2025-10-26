@@ -1,4 +1,4 @@
-# 📊 Desktop Auto - Intelligent TradingView Automation# Desktop Auto - TradingView & Symbolik Automation with AI Analysis# Desktop Automation - TradingView & Symbolik Automation with AI Analysis# 
+# 📊 Desktop Auto - Intelligent TradingView Automation# Desktop Auto - TradingView & Symbolik Automation with AI Analysis# 
 
 
 
