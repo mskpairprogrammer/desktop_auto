@@ -61,7 +61,7 @@ def bring_window_to_front(window_title_keyword):
         return False
 
 
-def process_window(window_title, tab_num, symbol, folder):
+def process_window(window_title, tab_num, symbol, folder, wait_time=5):
     """Process a single TradingView window."""
     print(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
@@ -74,6 +74,18 @@ def process_window(window_title, tab_num, symbol, folder):
     # Click to ensure focus
     pyautogui.click(1280, 800)
     time.sleep(1.5)
+    
+    # Type symbol directly
+    print(f"⌨️  Typing: {symbol}")
+    pyautogui.write(symbol.lower(), interval=0.1)
+    
+    # Press Enter
+    print("✅ Pressing Enter...")
+    pyautogui.press('enter')
+    
+    # Wait for chart to load
+    print(f"⏳ Waiting {wait_time} seconds for chart to load...")
+    time.sleep(wait_time)
     
     # Take screenshot
     print(f"📸 Taking screenshot for Tab {tab_num}...")
@@ -114,6 +126,18 @@ def main():
         pyautogui.click(1280, 800)
         time.sleep(1)
         
+        # Type symbol directly
+        print(f"⌨️  Typing: {symbol}")
+        pyautogui.write(symbol.lower(), interval=0.1)
+        
+        # Press Enter
+        print("✅ Pressing Enter...")
+        pyautogui.press('enter')
+        
+        # Wait for chart to load
+        print("⏳ Waiting 5 seconds for chart to load...")
+        time.sleep(5)
+        
         # Take screenshot for tab 1
         print(f"📸 Taking screenshot for Tab 1...")
         filename = f"{symbol}_tab1.png"
@@ -123,10 +147,10 @@ def main():
         screenshot.save(filepath)
         print(f"✅ Saved: {filepath}")
         
-        # Process remaining windows (no typing needed)
+        # Process remaining windows
         process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder)
         process_window('volume layout', 3, symbol, folder)
-        process_window('volumeprofile', 4, symbol, folder)
+        process_window('volumeprofile', 4, symbol, folder, wait_time=15)
         
         print("\n✅ DONE! All 4 windows processed.")
         
