@@ -253,6 +253,25 @@ Pay special attention to:
 
 """
         
+        if 'volume_layout' in window_types:
+            chart_context += """
+CHART CONTEXT - Volume Layout Window:
+This chart displays the following technical indicators:
+- LuxAlgo Money Flow Profile: Shows institutional money flow and buying/selling pressure
+- CVD Divergence Oscillator: Cumulative Volume Delta divergences for trend reversals
+- SQZMOM_LB: Squeeze Momentum indicator with LazyBear modifications
+- MA Distance with StdDev Bands: Moving average distance with standard deviation bands
+
+Pay special attention to:
+- Money flow profile (accumulation/distribution zones)
+- CVD divergence signals (bullish/bearish divergences)
+- SQZMOM_LB squeeze conditions and momentum direction
+- MA distance from price and standard deviation extremes
+- **CRITICAL**: If a +RD (Positive Reversal Divergence) or -RD (Negative Reversal Divergence) was formed recently, clearly indicate this in the analysis as it signals potential trend reversal
+- Volume patterns confirming or diverging from price action
+
+"""
+        
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
@@ -266,10 +285,11 @@ Current price, timeframe, and overall market condition.
 List specific indicators visible:
 - For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
 - For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
+- For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
 - Moving averages, oscillators, volume data, support/resistance levels
 
 **CRITICAL SIGNALS**
-Most important actionable signals
+Most important actionable signals (include any +RD or -RD formations if present)
 
 **TRADING DECISION**
 Clear BUY/SELL/HOLD with rationale
