@@ -5,8 +5,15 @@ Desktop Auto Project - TradingView Automation for 4 Separate Windows
 import pyautogui
 import time
 import os
-from datetime import datetime
+from datetime import datetime, time as dt_time
 from dotenv import load_dotenv
+
+try:
+    import pytz
+    PYTZ_AVAILABLE = True
+except ImportError:
+    print("⚠️ pytz not available. Install with: pip install pytz")
+    PYTZ_AVAILABLE = False
 
 try:
     import win32gui
@@ -15,8 +22,56 @@ try:
 except ImportError:
     WIN32_AVAILABLE = False
 
+try:
+    from perplexity_analysis import PerplexityAnalyzer, EmailAlertManager
+    PERPLEXITY_AVAILABLE = True
+except ImportError:
+    print("⚠️ Perplexity analysis module not available. Install with: pip install openai")
+    PERPLEXITY_AVAILABLE = False
+
 # Load environment variables
 load_dotenv()
+
+
+def is_within_market_hours():
+    """Check if current time is within configured market hours."""
+    schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
+    
+    if not schedule_enabled:
+        return True  # Always run if scheduling is disabled
+    
+    if not PYTZ_AVAILABLE:
+        print("⚠️ pytz not available - cannot check market hours. Running anyway.")
+        return True
+    
+    try:
+        # Get timezone and market hours from env
+        timezone_str = os.getenv('CAPTURE_TIMEZONE', 'US/Eastern')
+        start_time_str = os.getenv('CAPTURE_START_TIME', '09:30')
+        stop_time_str = os.getenv('CAPTURE_STOP_TIME', '16:00')
+        
+        # Parse timezone
+        tz = pytz.timezone(timezone_str)
+        current_time = datetime.now(tz)
+        
+        # Parse start and stop times
+        start_hour, start_min = map(int, start_time_str.split(':'))
+        stop_hour, stop_min = map(int, stop_time_str.split(':'))
+        
+        start_time = dt_time(start_hour, start_min)
+        stop_time = dt_time(stop_hour, stop_min)
+        
+        current_time_only = current_time.time()
+        
+        # Check if within market hours
+        if start_time <= current_time_only <= stop_time:
+            return True
+        else:
+            return False
+            
+    except Exception as e:
+        print(f"⚠️ Error checking market hours: {e}. Running anyway.")
+        return True
 
 
 def bring_window_to_front(window_title_keyword):
@@ -61,7 +116,7 @@ def bring_window_to_front(window_title_keyword):
         return False
 
 
-def process_window(window_title, tab_num, symbol, folder, window_settle_delay, focus_click_delay, chart_load_delay):
+def process_window(window_title, tab_num, symbol, folder, screenshot_name, window_settle_delay, focus_click_delay, chart_load_delay):
     """Process a single TradingView window."""
     print(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
@@ -89,7 +144,7 @@ def process_window(window_title, tab_num, symbol, folder, window_settle_delay, f
     
     # Take screenshot
     print(f"📸 Taking screenshot for Tab {tab_num}...")
-    filename = f"{symbol}_tab{tab_num}.png"
+    filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     
     screenshot = pyautogui.screenshot()
@@ -98,14 +153,14 @@ def process_window(window_title, tab_num, symbol, folder, window_settle_delay, f
     return True
 
 
-def process_symbolik(symbol, folder, symbolik_wait_delay):
+def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name):
     """Process symbolik.com navigation and screenshot."""
     
     print(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
     
     # Bring browser window to front
-    if not bring_window_to_front("workspace"):
-        print("  ⚠️  Please open the browser with 'workspace' in the title")
+    if not bring_window_to_front(symbolik_window):
+        print(f"  ⚠️  Please open the browser with '{symbolik_window}' in the title")
         return False
     
     # Wait for window to settle
@@ -138,7 +193,7 @@ def process_symbolik(symbol, folder, symbolik_wait_delay):
     
     # Take screenshot
     print(f"📸 Taking screenshot for Symbolik.com...")
-    filename = f"{symbol}_symbolik.png"
+    filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     
     screenshot = pyautogui.screenshot()
@@ -162,11 +217,22 @@ def main():
         
         # Get timing parameters from .env
         tradingview_enabled = os.getenv('TRADINGVIEW_ENABLED', 'True').lower() == 'true'
+        tradingview_window1 = os.getenv('TRADINGVIEW_WINDOW1', 'trend analysis')
+        tradingview_window2 = os.getenv('TRADINGVIEW_WINDOW2', 'Smoothed Heiken Ashi Candles')
+        tradingview_window3 = os.getenv('TRADINGVIEW_WINDOW3', 'volume layout')
+        tradingview_window4 = os.getenv('TRADINGVIEW_WINDOW4', 'volumeprofile')
         window_settle_delay = float(os.getenv('WINDOW_SETTLE_DELAY', '3.0'))
         focus_click_delay = float(os.getenv('FOCUS_CLICK_DELAY', '1.5'))
         chart_load_delay_tabs1_3 = float(os.getenv('CHART_LOAD_DELAY_TAB1_3', '5.0'))
         chart_load_delay_tab4 = float(os.getenv('CHART_LOAD_DELAY_TAB4', '15.0'))
+        screenshot_dir = os.getenv('SCREENSHOT_DIR', 'screenshots')
+        screenshot_name_tab1 = os.getenv('SCREENSHOT_NAME_TAB1', '{symbol}_tab1.png')
+        screenshot_name_tab2 = os.getenv('SCREENSHOT_NAME_TAB2', '{symbol}_tab2.png')
+        screenshot_name_tab3 = os.getenv('SCREENSHOT_NAME_TAB3', '{symbol}_tab3.png')
+        screenshot_name_tab4 = os.getenv('SCREENSHOT_NAME_TAB4', '{symbol}_tab4.png')
+        screenshot_name_symbolik = os.getenv('SCREENSHOT_NAME_SYMBOLIK', '{symbol}_symbolik.png')
         symbolik_enabled = os.getenv('SYMBOLIK_ENABLED', 'True').lower() == 'true'
+        symbolik_window = os.getenv('SYMBOLIK_WINDOW', 'workspace')
         symbolik_wait_delay = float(os.getenv('SYMBOLIK_WAIT_DELAY', '5.0'))
         
         print(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
@@ -177,14 +243,14 @@ def main():
             print(f"{'='*60}")
             
             # Create screenshot folder
-            folder = f"screenshots/{symbol}"
+            folder = f"{screenshot_dir}/{symbol}"
             os.makedirs(folder, exist_ok=True)
             
             # Process TradingView windows if enabled
             if tradingview_enabled:
                 # Tab 1: Trend analysis window - Type symbol
-                print("\n🎯 Tab 1: Bringing 'Trend analysis' window to foreground...")
-                if not bring_window_to_front('trend analysis'):
+                print(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
+                if not bring_window_to_front(tradingview_window1):
                     print("❌ Failed. Please make sure TradingView is open.")
                     return
                 
@@ -209,7 +275,7 @@ def main():
                 
                 # Take screenshot for tab 1
                 print(f"📸 Taking screenshot for Tab 1...")
-                filename = f"{symbol}_tab1.png"
+                filename = screenshot_name_tab1.format(symbol=symbol)
                 filepath = os.path.join(folder, filename)
                 
                 screenshot = pyautogui.screenshot()
@@ -217,16 +283,54 @@ def main():
                 print(f"✅ Saved: {filepath}")
                 
                 # Process remaining windows
-                process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder, 
+                process_window(tradingview_window2, 2, symbol, folder, screenshot_name_tab2,
                               window_settle_delay, focus_click_delay, chart_load_delay_tabs1_3)
-                process_window('volume layout', 3, symbol, folder,
+                process_window(tradingview_window3, 3, symbol, folder, screenshot_name_tab3,
                               window_settle_delay, focus_click_delay, chart_load_delay_tabs1_3)
-                process_window('volumeprofile', 4, symbol, folder,
+                process_window(tradingview_window4, 4, symbol, folder, screenshot_name_tab4,
                               window_settle_delay, focus_click_delay, chart_load_delay_tab4)
             
             # Process symbolik.com if enabled
             if symbolik_enabled:
-                process_symbolik(symbol, folder, symbolik_wait_delay)
+                process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name_symbolik)
+            
+            # Perform AI analysis if enabled
+            perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
+            if perplexity_enabled and PERPLEXITY_AVAILABLE:
+                try:
+                    print(f"\n🤖 Starting Perplexity AI analysis for {symbol}...")
+                    
+                    # Build screenshot data dictionary
+                    screenshot_data = {}
+                    
+                    if tradingview_enabled:
+                        # Map TradingView windows to analysis types
+                        screenshot_data['trend_analysis'] = os.path.join(folder, screenshot_name_tab1.format(symbol=symbol))
+                        screenshot_data['heiken_ashi'] = os.path.join(folder, screenshot_name_tab2.format(symbol=symbol))
+                        screenshot_data['volume_layout'] = os.path.join(folder, screenshot_name_tab3.format(symbol=symbol))
+                        screenshot_data['volumeprofile'] = os.path.join(folder, screenshot_name_tab4.format(symbol=symbol))
+                    
+                    if symbolik_enabled:
+                        screenshot_data['workspace'] = os.path.join(folder, screenshot_name_symbolik.format(symbol=symbol))
+                    
+                    # Initialize analyzer
+                    analyzer = PerplexityAnalyzer()
+                    
+                    # Analyze with trend alerts
+                    analysis, change_analysis = analyzer.analyze_with_trend_alerts(
+                        screenshot_data, folder, symbol
+                    )
+                    
+                    # Save analysis report if successful
+                    if analysis:
+                        analyzer.save_combined_analysis_report(
+                            screenshot_data, analysis, folder, change_analysis
+                        )
+                    
+                except Exception as e:
+                    print(f"   ⚠️ Analysis failed: {e}")
+            elif perplexity_enabled and not PERPLEXITY_AVAILABLE:
+                print(f"\n⚠️ Perplexity analysis is enabled but module not available. Install: pip install openai")
             
             print(f"\n✅ Completed processing {symbol}!")
         
@@ -238,5 +342,68 @@ def main():
         print(f"\n❌ Error: {e}")
 
 
+def run_scheduled():
+    """Run the automation on a schedule during market hours."""
+    schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
+    
+    if not schedule_enabled:
+        print("📍 Running once (SCHEDULE_ENABLED=False)")
+        main()
+        return
+    
+    # Get scheduling parameters
+    interval_seconds = int(os.getenv('CAPTURE_INTERVAL_SECONDS', '3600'))
+    timezone_str = os.getenv('CAPTURE_TIMEZONE', 'US/Eastern')
+    start_time_str = os.getenv('CAPTURE_START_TIME', '09:30')
+    stop_time_str = os.getenv('CAPTURE_STOP_TIME', '16:00')
+    
+    print(f"\n{'='*60}")
+    print(f"🕐 SCHEDULED MODE ENABLED")
+    print(f"{'='*60}")
+    print(f"Market Hours: {start_time_str} - {stop_time_str} {timezone_str}")
+    print(f"Interval: {interval_seconds}s ({interval_seconds//60} minutes)")
+    print(f"{'='*60}\n")
+    
+    run_count = 0
+    
+    while True:
+        try:
+            if is_within_market_hours():
+                run_count += 1
+                current_time = datetime.now()
+                if PYTZ_AVAILABLE:
+                    tz = pytz.timezone(timezone_str)
+                    current_time = datetime.now(tz)
+                
+                print(f"\n{'='*60}")
+                print(f"🚀 RUN #{run_count} - {current_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+                print(f"{'='*60}")
+                
+                main()
+                
+                print(f"\n⏰ Next run in {interval_seconds//60} minutes...")
+                print(f"   Sleeping until {(datetime.now() + timedelta(seconds=interval_seconds)).strftime('%H:%M:%S')}")
+                time.sleep(interval_seconds)
+            else:
+                current_time = datetime.now()
+                if PYTZ_AVAILABLE:
+                    tz = pytz.timezone(timezone_str)
+                    current_time = datetime.now(tz)
+                
+                print(f"\n⏸️  Outside market hours - {current_time.strftime('%H:%M:%S %Z')}")
+                print(f"   Market hours: {start_time_str} - {stop_time_str}")
+                print(f"   Checking again in 5 minutes...")
+                time.sleep(300)  # Check every 5 minutes when outside market hours
+                
+        except KeyboardInterrupt:
+            print(f"\n\n👋 Stopped by user after {run_count} runs")
+            break
+        except Exception as e:
+            print(f"\n❌ Error in scheduled run: {e}")
+            print(f"   Waiting {interval_seconds//60} minutes before retry...")
+            time.sleep(interval_seconds)
+
+
 if __name__ == "__main__":
-    main()
+    from datetime import timedelta
+    run_scheduled()

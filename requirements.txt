@@ -11,6 +11,13 @@ psutil>=5.9.0
 pywin32>=306
 pynput
 
+# AI Analysis
+openai>=1.0.0
+
+# Scheduling
+pytz>=2023.3
+
 # For example:
 # requests>=2.28.0
 # pandas>=1.4.0
+
