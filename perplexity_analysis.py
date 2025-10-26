@@ -292,6 +292,30 @@ Pay special attention to:
 
 """
         
+        if 'workspace' in window_types:
+            chart_context += """
+CHART CONTEXT - Symbolik Workspace Window:
+This chart displays the following technical indicators:
+- ATM Chart Lines: Algorithmic Trading Model support/resistance lines
+- ATM Elliott Projections: Elliott Wave price projections and targets
+- ATM Elliott Waves: Elliott Wave count and structure analysis
+- ATM Pressure Alert: Market pressure and momentum alerts
+- TKT Analysis: Technical Knowledge Trading analysis framework
+- TKT Score: Quantified trading opportunity score
+- Variable Aggressive Sequential (Demark Sequential): TD Sequential buy/sell setup and countdown signals
+
+Pay special attention to:
+- **ATM Chart Lines alignment**: If the current price is sitting on or near an ATM chart line, clearly indicate this in the analysis as it represents a key support/resistance level
+- ATM Elliott Wave count and current position in the wave structure
+- ATM Elliott projections for price targets
+- ATM Pressure alerts (bullish/bearish pressure signals)
+- TKT analysis signals and overall market structure
+- TKT score value (higher scores indicate stronger opportunities)
+- Variable Aggressive Sequential setup and countdown numbers (9s and 13s are critical)
+- Demark Sequential buy/sell signals at exhaustion points
+
+"""
+        
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
@@ -307,10 +331,11 @@ List specific indicators visible:
 - For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
 - For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
 - For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks
+- For Symbolik Workspace chart: ATM chart lines, ATM Elliott Waves/Projections, ATM Pressure alerts, TKT analysis/score, Variable Aggressive Sequential (Demark)
 - Moving averages, oscillators, volume data, support/resistance levels
 
 **CRITICAL SIGNALS**
-Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions if present)
+Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions, ATM chart line alignments, Demark Sequential 9s or 13s if present)
 
 **TRADING DECISION**
 Clear BUY/SELL/HOLD with rationale
