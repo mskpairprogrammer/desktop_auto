@@ -236,6 +236,23 @@ Pay special attention to:
 
 """
         
+        if 'heiken_ashi' in window_types:
+            chart_context += """
+CHART CONTEXT - Smoothed Heiken Ashi Candles Window:
+This chart displays the following technical indicators:
+- Smoothed Heiken Ashi Candles: Trend-following candles that smooth out price action
+- AlgoAlpha HEMA Trend: Hybrid Exponential Moving Average for trend identification
+- Divergence Indicators: Price vs indicator divergences for reversal signals
+
+Pay special attention to:
+- Smoothed Heiken Ashi candle colors (bullish/bearish trends)
+- HEMA trend direction and crossovers
+- Divergence signals (bullish/bearish divergences)
+- Trend strength and momentum
+- Reversal patterns indicated by divergences
+
+"""
+        
         base_prompt = f"""
 You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
 
@@ -248,6 +265,7 @@ Current price, timeframe, and overall market condition.
 **KEY VISIBLE INDICATORS**
 List specific indicators visible:
 - For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
+- For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
 - Moving averages, oscillators, volume data, support/resistance levels
 
 **CRITICAL SIGNALS**
