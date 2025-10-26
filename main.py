@@ -106,53 +106,63 @@ def main():
         time.sleep(1)
     
     try:
-        # Get symbol from .env
-        symbol = os.getenv('DEFAULT_SYMBOL', 'SNAP')
+        # Get stock symbols from .env
+        symbols_str = os.getenv('STOCK_SYMBOLS', 'QBTS')
+        symbols = [s.strip() for s in symbols_str.split(',')]
         
-        # Create screenshot folder
-        folder = f"screenshots/{symbol}"
-        os.makedirs(folder, exist_ok=True)
+        print(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
         
-        # Tab 1: Trend analysis window - Type symbol
-        print("\n🎯 Tab 1: Bringing 'Trend analysis' window to foreground...")
-        if not bring_window_to_front('trend analysis'):
-            print("❌ Failed. Please make sure TradingView is open.")
-            return
+        for symbol in symbols:
+            print(f"\n{'='*60}")
+            print(f"Processing symbol: {symbol}")
+            print(f"{'='*60}")
+            
+            # Create screenshot folder
+            folder = f"screenshots/{symbol}"
+            os.makedirs(folder, exist_ok=True)
+            
+            # Tab 1: Trend analysis window - Type symbol
+            print("\n🎯 Tab 1: Bringing 'Trend analysis' window to foreground...")
+            if not bring_window_to_front('trend analysis'):
+                print("❌ Failed. Please make sure TradingView is open.")
+                return
+            
+            # Wait for window to settle
+            time.sleep(3)
+            
+            # Click center to ensure window is fully focused
+            pyautogui.click(1280, 800)
+            time.sleep(1)
+            
+            # Type symbol directly
+            print(f"⌨️  Typing: {symbol}")
+            pyautogui.write(symbol.lower(), interval=0.1)
+            
+            # Press Enter
+            print("✅ Pressing Enter...")
+            pyautogui.press('enter')
+            
+            # Wait for chart to load
+            print("⏳ Waiting 5 seconds for chart to load...")
+            time.sleep(5)
+            
+            # Take screenshot for tab 1
+            print(f"📸 Taking screenshot for Tab 1...")
+            filename = f"{symbol}_tab1.png"
+            filepath = os.path.join(folder, filename)
+            
+            screenshot = pyautogui.screenshot()
+            screenshot.save(filepath)
+            print(f"✅ Saved: {filepath}")
+            
+            # Process remaining windows
+            process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder)
+            process_window('volume layout', 3, symbol, folder)
+            process_window('volumeprofile', 4, symbol, folder, wait_time=15)
+            
+            print(f"\n✅ Completed processing {symbol}!")
         
-        # Wait for window to settle
-        time.sleep(3)
-        
-        # Click center to ensure window is fully focused
-        pyautogui.click(1280, 800)
-        time.sleep(1)
-        
-        # Type symbol directly
-        print(f"⌨️  Typing: {symbol}")
-        pyautogui.write(symbol.lower(), interval=0.1)
-        
-        # Press Enter
-        print("✅ Pressing Enter...")
-        pyautogui.press('enter')
-        
-        # Wait for chart to load
-        print("⏳ Waiting 5 seconds for chart to load...")
-        time.sleep(5)
-        
-        # Take screenshot for tab 1
-        print(f"📸 Taking screenshot for Tab 1...")
-        filename = f"{symbol}_tab1.png"
-        filepath = os.path.join(folder, filename)
-        
-        screenshot = pyautogui.screenshot()
-        screenshot.save(filepath)
-        print(f"✅ Saved: {filepath}")
-        
-        # Process remaining windows
-        process_window('Smoothed Heiken Ashi Candles', 2, symbol, folder)
-        process_window('volume layout', 3, symbol, folder)
-        process_window('volumeprofile', 4, symbol, folder, wait_time=15)
-        
-        print("\n✅ DONE! All 4 windows processed.")
+        print("\n✅ DONE! All symbols and windows processed.")
         
     except KeyboardInterrupt:
         print("\n👋 Cancelled by user")
