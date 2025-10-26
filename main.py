@@ -12,7 +12,7 @@ try:
     import pytz
     PYTZ_AVAILABLE = True
 except ImportError:
-    print("⚠️ pytz not available. Install with: pip install pytz")
+    log("⚠️ pytz not available. Install with: pip install pytz")
     PYTZ_AVAILABLE = False
 
 try:
@@ -26,11 +26,17 @@ try:
     from perplexity_analysis import PerplexityAnalyzer, EmailAlertManager
     PERPLEXITY_AVAILABLE = True
 except ImportError:
-    print("⚠️ Perplexity analysis module not available. Install with: pip install openai")
+    log("⚠️ Perplexity analysis module not available. Install with: pip install openai")
     PERPLEXITY_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
+
+
+def log(message):
+    """Print message with timestamp."""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(f"[{timestamp}] {message}")
 
 
 def is_within_market_hours():
@@ -41,7 +47,7 @@ def is_within_market_hours():
         return True  # Always run if scheduling is disabled
     
     if not PYTZ_AVAILABLE:
-        print("⚠️ pytz not available - cannot check market hours. Running anyway.")
+        log("⚠️ pytz not available - cannot check market hours. Running anyway.")
         return True
     
     try:
@@ -70,14 +76,14 @@ def is_within_market_hours():
             return False
             
     except Exception as e:
-        print(f"⚠️ Error checking market hours: {e}. Running anyway.")
+        log(f"⚠️ Error checking market hours: {e}. Running anyway.")
         return True
 
 
 def bring_window_to_front(window_title_keyword):
     """Find and bring a window to foreground by title keyword."""
     if not WIN32_AVAILABLE:
-        print("❌ win32gui not available")
+        log("❌ win32gui not available")
         return False
     
     try:
@@ -89,7 +95,7 @@ def bring_window_to_front(window_title_keyword):
                 title = win32gui.GetWindowText(hwnd)
                 if window_title_keyword.lower() in title.lower():
                     window_hwnd = hwnd
-                    print(f"✅ Found window: {title}")
+                    log(f"✅ Found window: {title}")
             return True
         
         win32gui.EnumWindows(enum_callback, None)
@@ -105,22 +111,22 @@ def bring_window_to_front(window_title_keyword):
             except:
                 pass
             
-            print(f"✅ Window maximized and brought to foreground")
+            log(f"✅ Window maximized and brought to foreground")
             return True
         else:
-            print(f"❌ Window with '{window_title_keyword}' not found")
+            log(f"❌ Window with '{window_title_keyword}' not found")
             return False
             
     except Exception as e:
-        print(f"⚠️  Error: {e}")
+        log(f"⚠️  Error: {e}")
         return False
 
 
 def process_window(window_title, tab_num, symbol, folder, screenshot_name, window_settle_delay, focus_click_delay, chart_load_delay):
     """Process a single TradingView window."""
-    print(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
+    log(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
-        print(f"❌ Window not found. Skipping tab {tab_num}.")
+        log(f"❌ Window not found. Skipping tab {tab_num}.")
         return False
     
     # Wait for window to settle
@@ -131,83 +137,83 @@ def process_window(window_title, tab_num, symbol, folder, screenshot_name, windo
     time.sleep(focus_click_delay)
     
     # Type symbol directly
-    print(f"⌨️  Typing: {symbol}")
+    log(f"⌨️  Typing: {symbol}")
     pyautogui.write(symbol.lower(), interval=0.1)
     
     # Press Enter
-    print("✅ Pressing Enter...")
+    log("✅ Pressing Enter...")
     pyautogui.press('enter')
     
     # Wait for chart to load
-    print(f"⏳ Waiting {chart_load_delay} seconds for chart to load...")
+    log(f"⏳ Waiting {chart_load_delay} seconds for chart to load...")
     time.sleep(chart_load_delay)
     
     # Take screenshot
-    print(f"📸 Taking screenshot for Tab {tab_num}...")
+    log(f"📸 Taking screenshot for Tab {tab_num}...")
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     
     screenshot = pyautogui.screenshot()
     screenshot.save(filepath)
-    print(f"✅ Saved: {filepath}")
+    log(f"✅ Saved: {filepath}")
     return True
 
 
 def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name):
     """Process symbolik.com navigation and screenshot."""
     
-    print(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
+    log(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
     
     # Bring browser window to front
     if not bring_window_to_front(symbolik_window):
-        print(f"  ⚠️  Please open the browser with '{symbolik_window}' in the title")
+        log(f"  ⚠️  Please open the browser with '{symbolik_window}' in the title")
         return False
     
     # Wait for window to settle
     time.sleep(2)
     
     # Click in the center to focus
-    print(f"  🖱️  Clicking to focus...")
+    log(f"  🖱️  Clicking to focus...")
     pyautogui.click(1280, 800)
     time.sleep(1)
     
     # Type the symbol with .bz suffix in the search/input field
     symbol_query = f"{symbol.lower()}.bz"
-    print(f"  ⌨️  Typing symbol: {symbol_query}")
+    log(f"  ⌨️  Typing symbol: {symbol_query}")
     pyautogui.write(symbol_query, interval=0.1)
     time.sleep(0.5)
     
     # Wait for dropdown to appear and select first item
-    print(f"  ⬇️  Selecting from dropdown...")
+    log(f"  ⬇️  Selecting from dropdown...")
     time.sleep(1)  # Wait for dropdown to appear
     pyautogui.press('down')  # Select first item in dropdown
     time.sleep(0.3)
     
     # Press Enter
-    print(f"  ✅ Pressing Enter...")
+    log(f"  ✅ Pressing Enter...")
     pyautogui.press('enter')
     
     # Wait for page to load
-    print(f"⏳ Waiting {symbolik_wait_delay} seconds for page to load...")
+    log(f"⏳ Waiting {symbolik_wait_delay} seconds for page to load...")
     time.sleep(symbolik_wait_delay)
     
     # Take screenshot
-    print(f"📸 Taking screenshot for Symbolik.com...")
+    log(f"📸 Taking screenshot for Symbolik.com...")
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     
     screenshot = pyautogui.screenshot()
     screenshot.save(filepath)
-    print(f"✅ Saved: {filepath}")
+    log(f"✅ Saved: {filepath}")
     return True
 
 
 
 def main():
     """Main function."""
-    print("\n⏰ Starting in 3 seconds...")
+    log("\n⏰ Starting in 3 seconds...")
     for i in range(3, 0, -1):
-        print(f"   {i}...")
+        log(f"   {i}...")
         time.sleep(1)
     
     try:
@@ -235,12 +241,12 @@ def main():
         symbolik_window = os.getenv('SYMBOLIK_WINDOW', 'workspace')
         symbolik_wait_delay = float(os.getenv('SYMBOLIK_WAIT_DELAY', '5.0'))
         
-        print(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
+        log(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
         
         for symbol in symbols:
-            print(f"\n{'='*60}")
-            print(f"Processing symbol: {symbol}")
-            print(f"{'='*60}")
+            log(f"\n{'='*60}")
+            log(f"Processing symbol: {symbol}")
+            log(f"{'='*60}")
             
             # Create screenshot folder
             folder = f"{screenshot_dir}/{symbol}"
@@ -249,9 +255,9 @@ def main():
             # Process TradingView windows if enabled
             if tradingview_enabled:
                 # Tab 1: Trend analysis window - Type symbol
-                print(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
+                log(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
                 if not bring_window_to_front(tradingview_window1):
-                    print("❌ Failed. Please make sure TradingView is open.")
+                    log("❌ Failed. Please make sure TradingView is open.")
                     return
                 
                 # Wait for window to settle
@@ -262,25 +268,25 @@ def main():
                 time.sleep(focus_click_delay)
                 
                 # Type symbol directly
-                print(f"⌨️  Typing: {symbol}")
+                log(f"⌨️  Typing: {symbol}")
                 pyautogui.write(symbol.lower(), interval=0.1)
                 
                 # Press Enter
-                print("✅ Pressing Enter...")
+                log("✅ Pressing Enter...")
                 pyautogui.press('enter')
                 
                 # Wait for chart to load
-                print(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
+                log(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
                 time.sleep(chart_load_delay_tabs1_3)
                 
                 # Take screenshot for tab 1
-                print(f"📸 Taking screenshot for Tab 1...")
+                log(f"📸 Taking screenshot for Tab 1...")
                 filename = screenshot_name_tab1.format(symbol=symbol)
                 filepath = os.path.join(folder, filename)
                 
                 screenshot = pyautogui.screenshot()
                 screenshot.save(filepath)
-                print(f"✅ Saved: {filepath}")
+                log(f"✅ Saved: {filepath}")
                 
                 # Process remaining windows
                 process_window(tradingview_window2, 2, symbol, folder, screenshot_name_tab2,
@@ -298,7 +304,7 @@ def main():
             perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
             if perplexity_enabled and PERPLEXITY_AVAILABLE:
                 try:
-                    print(f"\n🤖 Starting Perplexity AI analysis for {symbol}...")
+                    log(f"\n🤖 Starting Perplexity AI analysis for {symbol}...")
                     
                     # Build screenshot data dictionary
                     screenshot_data = {}
@@ -328,18 +334,18 @@ def main():
                         )
                     
                 except Exception as e:
-                    print(f"   ⚠️ Analysis failed: {e}")
+                    log(f"   ⚠️ Analysis failed: {e}")
             elif perplexity_enabled and not PERPLEXITY_AVAILABLE:
-                print(f"\n⚠️ Perplexity analysis is enabled but module not available. Install: pip install openai")
+                log(f"\n⚠️ Perplexity analysis is enabled but module not available. Install: pip install openai")
             
-            print(f"\n✅ Completed processing {symbol}!")
+            log(f"\n✅ Completed processing {symbol}!")
         
-        print("\n✅ DONE! All symbols and windows processed.")
+        log("\n✅ DONE! All symbols and windows processed.")
         
     except KeyboardInterrupt:
-        print("\n👋 Cancelled by user")
+        log("\n👋 Cancelled by user")
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        log(f"\n❌ Error: {e}")
 
 
 def run_scheduled():
@@ -347,7 +353,7 @@ def run_scheduled():
     schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
     
     if not schedule_enabled:
-        print("📍 Running once (SCHEDULE_ENABLED=False)")
+        log("📍 Running once (SCHEDULE_ENABLED=False)")
         main()
         return
     
@@ -357,12 +363,12 @@ def run_scheduled():
     start_time_str = os.getenv('CAPTURE_START_TIME', '09:30')
     stop_time_str = os.getenv('CAPTURE_STOP_TIME', '16:00')
     
-    print(f"\n{'='*60}")
-    print(f"🕐 SCHEDULED MODE ENABLED")
-    print(f"{'='*60}")
-    print(f"Market Hours: {start_time_str} - {stop_time_str} {timezone_str}")
-    print(f"Interval: {interval_seconds}s ({interval_seconds//60} minutes)")
-    print(f"{'='*60}\n")
+    log(f"\n{'='*60}")
+    log(f"🕐 SCHEDULED MODE ENABLED")
+    log(f"{'='*60}")
+    log(f"Market Hours: {start_time_str} - {stop_time_str} {timezone_str}")
+    log(f"Interval: {interval_seconds}s ({interval_seconds//60} minutes)")
+    log(f"{'='*60}\n")
     
     run_count = 0
     
@@ -375,14 +381,14 @@ def run_scheduled():
                     tz = pytz.timezone(timezone_str)
                     current_time = datetime.now(tz)
                 
-                print(f"\n{'='*60}")
-                print(f"🚀 RUN #{run_count} - {current_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
-                print(f"{'='*60}")
+                log(f"\n{'='*60}")
+                log(f"🚀 RUN #{run_count} - {current_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+                log(f"{'='*60}")
                 
                 main()
                 
-                print(f"\n⏰ Next run in {interval_seconds//60} minutes...")
-                print(f"   Sleeping until {(datetime.now() + timedelta(seconds=interval_seconds)).strftime('%H:%M:%S')}")
+                log(f"\n⏰ Next run in {interval_seconds//60} minutes...")
+                log(f"   Sleeping until {(datetime.now() + timedelta(seconds=interval_seconds)).strftime('%H:%M:%S')}")
                 time.sleep(interval_seconds)
             else:
                 current_time = datetime.now()
@@ -390,20 +396,21 @@ def run_scheduled():
                     tz = pytz.timezone(timezone_str)
                     current_time = datetime.now(tz)
                 
-                print(f"\n⏸️  Outside market hours - {current_time.strftime('%H:%M:%S %Z')}")
-                print(f"   Market hours: {start_time_str} - {stop_time_str}")
-                print(f"   Checking again in 5 minutes...")
+                log(f"\n⏸️  Outside market hours - {current_time.strftime('%H:%M:%S %Z')}")
+                log(f"   Market hours: {start_time_str} - {stop_time_str}")
+                log(f"   Checking again in 5 minutes...")
                 time.sleep(300)  # Check every 5 minutes when outside market hours
                 
         except KeyboardInterrupt:
-            print(f"\n\n👋 Stopped by user after {run_count} runs")
+            log(f"\n\n👋 Stopped by user after {run_count} runs")
             break
         except Exception as e:
-            print(f"\n❌ Error in scheduled run: {e}")
-            print(f"   Waiting {interval_seconds//60} minutes before retry...")
+            log(f"\n❌ Error in scheduled run: {e}")
+            log(f"   Waiting {interval_seconds//60} minutes before retry...")
             time.sleep(interval_seconds)
 
 
 if __name__ == "__main__":
     from datetime import timedelta
     run_scheduled()
+
