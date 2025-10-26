@@ -243,6 +243,7 @@ This chart displays the following technical indicators:
 - Smoothed Heiken Ashi Candles: Trend-following candles that smooth out price action
 - AlgoAlpha HEMA Trend: Hybrid Exponential Moving Average for trend identification
 - Divergence Indicators: Price vs indicator divergences for reversal signals
+- Volume Footprint: Order flow analysis showing buy/sell volume at each price level
 
 Pay special attention to:
 - Smoothed Heiken Ashi candle colors (bullish/bearish trends)
@@ -250,6 +251,10 @@ Pay special attention to:
 - Divergence signals (bullish/bearish divergences)
 - Trend strength and momentum
 - Reversal patterns indicated by divergences
+- Volume Footprint Analysis:
+  * Absorption: Large volume at price level with minimal price movement indicates strong institutional support/resistance
+  * Exhaustion: Decreasing volume as price extends signals trend weakness and potential reversal
+  * Bid/ask imbalances at key levels for order flow confirmation
 
 """
         
