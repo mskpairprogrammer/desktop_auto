@@ -1,0 +1,92 @@
+Combined Screenshot Analysis Report
+============================================================
+Analysis Date: 2025-10-26 17:59:36
+Screenshots Analyzed: 5
+
+Screenshot Sources:
+------------------------------
+- Trend Analysis: ASST_luxoalgo.png
+- Heiken Ashi: ASST_heiken.png
+- Volume Layout: ASST_volume_layout.png
+- Volumeprofile: ASST_rvol.png
+- Workspace: ASST_symbolik.png
+
+Trend Change Analysis:
+------------------------------
+📊 Trend Change Probability: 0%
+🎯 Confidence Level: HIGH
+🚨 Alert Status: NO ALERT (INFO)
+📋 Summary: Initial analysis - no prior data
+
+Combined Analysis Results:
+========================================
+**MARKET OVERVIEW**  
+Current price is **$1.10**, timeframe context spans intraday (1h, 4h) to multi-month. Market has endured a persistent downtrend with periods of extreme volatility, but there is evidence of a short-term bounce or relief rally underway.
+
+---
+
+**KEY VISIBLE INDICATORS**
+
+- **Trend Analysis Window (LuxAlgo, 1h):**
+  - Recent **Buy signal** after pronounced downtrend.
+  - **Price Action:** Structure shows lower lows and a break of structure (BOS); new high-low formation appears to be in development.
+  - **Trend ribbon overlays:** Price recently transitioned from under the red (bearish) cloud into/above the green (bullish) support zone.
+  - **Oscillator:** QQE and trend matrix turning bullish.
+
+- **Smoothed Heiken Ashi Candles Window (4h):**
+  - Heiken Ashi candles remain **solid red** most recently, confirming strong previous bearish momentum, though the last 2-3 candles shrink and "wick" as the move stalls and price bases.
+  - **HEMA Trend**: Still downward but with a possible flattening at the latest point.
+  - **Divergence indicators:** Recent bullish markers printed near lows (RSI/MOM 3 label visible).
+  - **Volume footprint:** Large absorption visible around $0.80–$0.90 on volume clusters—potential base/support.
+
+- **Volume Layout Window (1h):**
+  - **Money Flow Profile:** Highest volume node and liquidity clustered at $0.87 and $1.06, price rebounding toward higher-value area following large prior selloff.
+  - **CVD Divergence Oscillator:** Reads deep negative, but sharp positive green bars just printed, suggest building bullish divergence.
+  - **SQZMOM_LB:** Bearish momentum waning, histogram snaps positive on last bar.
+  - **MA Distance/Bands:** Price is moving rapidly toward upper bands after a prolonged period below.
+
+- **Volume Profile Window (1h):**
+  - **RVOL**: Below 1 (0.70), but last bar shows volume surge. Not at extreme, but confirming fresh activity.
+  - **VOLD Ratio:** Recent reading of **-1.09** (mildly negative but shifting less negative), hints at drying sell pressure.
+  - **MS (Matrix Mod):** Climbs upward and turns positive today, confirming move out of oversold.
+  - **TTOB:** POC migration higher after sharp fall; two new TTOB levels created near current price.
+
+- **Symbolik Workspace Window (4h/long-term):**
+  - **ATM Chart Lines:** Price sits just above a major support. $1.10 is a key level overlapping an ATM line.
+  - **ATM Elliott Projections/Waves:** Multiple completed sell cycles and countdown 13s near local lows; no new bullish wave confirmed, but prior buy exhaustion count evident.
+  - **ATM Pressure Alert:** Most recent period neutral—no high conviction buying or selling pressure alert.
+  - **TKT Analysis:** Mixed to improving (recent transition from red to orange/yellow on TKT indicator bars).
+  - **TKT Score:** Current level low (18.75) but rising from recent extremely depressed readings.
+  - **Demark Sequential:** Recent '13' buy setup triggered at lows.
+
+---
+
+**CRITICAL SIGNALS**
+- **Trend Analysis:** Fresh LuxAlgo Buy signal and short-term market structure break after persistent selloff.
+- **Divergence/Volume (Heiken Ashi & Volume Layout):** Bullish divergences visible (RSI/MOM 3), absorption at lows on volume, positive shift in CVD and SQZMOM momentum.
+- **Volume Profile:** MS Matrix Mod shifts upward from oversold, TTOB order block at/near current price.
+- **Symbolik/DeMark:** Demark Sequential '13' printed at recent low, signifying potential exhaustion of bearish trend. Price is sitting on a major ATM support/resistance line (~$1.10).
+- **NO strong +RD/-RD or extreme MS overbought visible at current levels; action is a relief from oversold, not reversal from overbought.**
+
+---
+
+**TRADING DECISION**
+
+**HOLD / SPECULATIVE BUY**  
+Rationale:  
+Multiple indicators highlight a likely **short-term bottom and relief rally**:  
+- Fresh buy signals and bullish divergences post-exhaustion  
+- Price holding at/above key support (ATM line, high volume node, TTOB)  
+- Sequential '13' at lows (classic reversal/exhaustion setup)  
+However, medium- and long-term structure is still bearish with no completed higher-highs, and overall context is volatile and weak. Entry could be considered for tactical, short-term upside with tight stops. Long-term investors should wait for more confirmation (higher-highs, retest and hold of supports).
+
+---
+
+**TREND CHANGE EVALUATION**
+
+- **Intermediate trend**: Reversal potential is visible, but full uptrend confirmation is not present; this is best described as a bounce in a bearish regime.
+- **Immediate probability of sustained trend change is low**, but short-term reversal (relief rally) is moderately likely.
+- **Key levels for confirmation**: Sustained close above $1.24–$1.34 for stronger bullish reversal thesis.
+
+---
+
