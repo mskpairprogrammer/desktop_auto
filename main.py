@@ -39,6 +39,25 @@ def log(message):
     print(f"[{timestamp}] {message}")
 
 
+def load_stock_symbols():
+    """Load stock symbols from stock_symbols.txt file"""
+    try:
+        with open('stock_symbols.txt', 'r') as f:
+            symbols = [line.strip() for line in f.readlines() if line.strip()]
+        if not symbols:
+            log("⚠️ No symbols found in stock_symbols.txt, using default QBTS")
+            return ['QBTS']
+        log(f"📊 Loaded {len(symbols)} symbols from stock_symbols.txt: {', '.join(symbols)}")
+        return symbols
+    except FileNotFoundError:
+        log("⚠️ stock_symbols.txt not found, falling back to STOCK_SYMBOLS env var")
+        symbols_str = os.getenv('STOCK_SYMBOLS', 'QBTS')
+        return [s.strip() for s in symbols_str.split(',')]
+    except Exception as e:
+        log(f"⚠️ Error reading stock_symbols.txt: {e}, using default QBTS")
+        return ['QBTS']
+
+
 def is_within_market_hours():
     """Check if current time is within configured market hours."""
     schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
@@ -217,9 +236,8 @@ def main():
         time.sleep(1)
     
     try:
-        # Get stock symbols from .env
-        symbols_str = os.getenv('STOCK_SYMBOLS', 'QBTS')
-        symbols = [s.strip() for s in symbols_str.split(',')]
+        # Get stock symbols from stock_symbols.txt file
+        symbols = load_stock_symbols()
         
         # Get timing parameters from .env
         tradingview_enabled = os.getenv('TRADINGVIEW_ENABLED', 'True').lower() == 'true'
