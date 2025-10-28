@@ -534,22 +534,47 @@ class TradingAnalyzer:
     def _combine_multi_provider_results(self, results: dict, screenshot_data: dict, output_dir: str, stock_symbol: str):
         """Combine results from multiple AI providers into a comprehensive analysis"""
         from trading_analysis import logger
-        
-        # Create combined analysis report with Google AI first
-        combined_text = f"# Multi-Provider AI Analysis Report for {stock_symbol or 'Stock'}\n"
-        combined_text += f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        
+
+        # Create combined analysis report as HTML
+        html = []
+        html.append(f"""
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Multi-Provider AI Analysis Report for {stock_symbol or 'Stock'}</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; background: #f8f9fa; color: #222; margin: 0; padding: 0; }}
+        .container {{ max-width: 900px; margin: 30px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 32px; }}
+        h1 {{ text-align: center; font-size: 2.2em; margin-bottom: 0.2em; }}
+        h2 {{ border-bottom: 2px solid #eee; padding-bottom: 0.2em; margin-top: 2em; }}
+        .section {{ margin: 2em 0; }}
+        .divider {{ border-top: 2px solid #bbb; margin: 2em 0; }}
+        .summary-box {{ background: #f1f8e9; border-left: 6px solid #4caf50; padding: 1em 1.5em; margin: 1.5em 0; border-radius: 6px; font-size: 1.1em; }}
+        ul, li {{ margin-bottom: 0.5em; }}
+        .alert-list li {{ margin-bottom: 0.3em; }}
+        .consensus-low {{ background: #fff3e0; border-left: 6px solid #ff9800; }}
+        .consensus-high {{ background: #e3f2fd; border-left: 6px solid #2196f3; }}
+        .provider-title {{ font-size: 1.3em; color: #333; margin-top: 1.5em; }}
+        .meta {{ color: #888; font-size: 0.95em; text-align: right; margin-bottom: 1em; }}
+    </style>
+</head>
+<body>
+<div class='container'>
+    <h1>Multi-Provider AI Analysis Report for {stock_symbol or 'Stock'}</h1>
+    <div class='meta'>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>
+""")
+
         # Collect probabilities and alerts for consensus first
         all_probabilities = []
         all_alerts = []
-        
+
         for provider_name, result in results.items():
             change_analysis = result['change_analysis']
-            
+
             # Collect probabilities and alerts for consensus
             if change_analysis.get('trend_change_probability'):
                 all_probabilities.append(change_analysis['trend_change_probability'])
-            
+
             if change_analysis.get('has_changes'):
                 all_alerts.append({
                     'provider': provider_name,
@@ -557,7 +582,7 @@ class TradingAnalyzer:
                     'summary': change_analysis['summary'],
                     'probability': change_analysis.get('trend_change_probability', 0)
                 })
-        
+
         # Calculate averages for generating Google AI analysis first
         if all_probabilities:
             avg_probability = sum(all_probabilities) / len(all_probabilities)
@@ -567,79 +592,105 @@ class TradingAnalyzer:
             avg_probability = 0
             max_probability = 0
             min_probability = 0
-        
+
         # Generate Google AI consolidated trading decision FIRST
         results_list = [(provider_name, result['analysis_text'], result['change_analysis']) 
                       for provider_name, result in results.items()]
         trading_decision = self._generate_consolidated_trading_decision(results_list, avg_probability, all_alerts, stock_symbol, output_dir, screenshot_data)
-        combined_text += f"{trading_decision}\n\n"
-        
+        html.append("<div class='divider'></div>")
+        html.append("<h2>Google AI Consolidated Trading Decision</h2>")
+        html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{trading_decision.strip()}</pre></div>")
+
         # Add individual provider analyses in desired order: Claude, then Perplexity
         provider_order = ['claude', 'perplexity']
-        
+        section_titles = {
+            'claude': 'Claude Analysis',
+            'perplexity': 'Perplexity Analysis'
+        }
         for provider_name in provider_order:
             if provider_name in results:
                 result = results[provider_name]
                 analysis = result['analysis_text']
-                
-                combined_text += f"## {provider_name.title()} Analysis\n"
-                combined_text += f"{analysis}\n\n"
-        
+                html.append("<div class='divider'></div>")
+                html.append(f"<div class='provider-title'>{section_titles[provider_name]}</div>")
+                html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{analysis.strip()}</pre></div>")
         # Add any other providers not in the ordered list
         for provider_name, result in results.items():
             if provider_name not in provider_order:
                 analysis = result['analysis_text']
-                combined_text += f"## {provider_name.title()} Analysis\n"
-                combined_text += f"{analysis}\n\n"
-        
+                html.append("<div class='divider'></div>")
+                html.append(f"<div class='provider-title'>{provider_name.upper()} Analysis</div>")
+                html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{analysis.strip()}</pre></div>")
+
         # Create consensus summary at the end
-        combined_text += "## Multi-Provider Consensus Summary\n"
-        
+        html.append("<div class='divider'></div>")
+        html.append("<h2>Multi-Provider Consensus Summary</h2>")
+        html.append("<div class='section'>")
         if all_probabilities:
-            combined_text += f"Average Trend Change Probability: {avg_probability:.1f}%\n"
-            combined_text += f"Range: {min_probability:.1f}% - {max_probability:.1f}%\n"
-        
+            html.append(f"<ul><li><b>Average Trend Change Probability:</b> {avg_probability:.1f}%</li><li><b>Range:</b> {min_probability:.1f}% - {max_probability:.1f}%</li></ul>")
+
         # Determine consensus alert level
         if all_alerts:
-            combined_text += f"\nAlerts from {len(all_alerts)} provider(s):\n"
+            html.append(f"<div><b>Alerts from {len(all_alerts)} provider(s):</b></div>")
+            html.append("<ul class='alert-list'>")
             for alert in all_alerts:
-                combined_text += f"- {alert['provider'].title()}: {alert['alert_level']} ({alert['probability']}%) - {alert['summary']}\n"
-            
+                html.append(f"<li><b>{alert['provider'].title()}:</b> <span style='color:#d84315;font-weight:bold'>{alert['alert_level'].upper()}</span> ({alert['probability']}%) - {alert['summary']}</li>")
+            html.append("</ul>")
             # Use highest alert level for consensus
             alert_levels = {'low': 1, 'medium': 2, 'high': 3}
             max_alert = max(all_alerts, key=lambda x: alert_levels.get(x['alert_level'].lower(), 0))
-            
+            # Add a summary box
+            html.append(f"<div class='summary-box consensus-high'>CONSENSUS: <b>{max_alert['alert_level'].upper()}</b> | Confidence: <b>HIGH</b> | Providers: <b>{len(results)}</b> | Agreement: <b>{len(all_alerts) / len(results) * 100:.1f}%</b><br>SUMMARY: {max_alert['summary']}</div>")
             consensus_change_analysis = {
                 'has_changes': True,
                 'alert_level': max_alert['alert_level'],
                 'summary': f"Consensus from {len(results)} providers: {max_alert['summary']}",
                 'trend_change_probability': avg_probability,
+                'confidence_level': 'high',  # High confidence when multiple providers agree
                 'provider_count': len(results),
                 'provider_agreement': len(all_alerts) / len(results) * 100
             }
         else:
-            combined_text += "\nNo significant changes detected by any provider.\n"
+            html.append(f"<div class='summary-box consensus-low'>CONSENSUS: <b>LOW</b> | Confidence: <b>MEDIUM</b> | Providers: <b>{len(results)}</b> | Agreement: <b>0%</b><br>SUMMARY: No significant changes detected by {len(results)} providers</div>")
             consensus_change_analysis = {
                 'has_changes': False,
                 'alert_level': 'low',
                 'summary': f"No significant changes detected by {len(results)} providers",
                 'trend_change_probability': avg_probability,
+                'confidence_level': 'medium',  # Medium confidence for stable conditions
                 'provider_count': len(results),
                 'provider_agreement': 0
             }
-        
-        # Save the combined report with consistent filename (no timestamp)
-        if output_dir:
+        html.append("</div>")
+        html.append("</div></body></html>")
+
+        # Save the combined report as HTML in the correct symbol folder (no text file)
+        try:
+            symbol_dir = os.path.join(os.path.dirname(__file__), 'screenshots', stock_symbol)
+            os.makedirs(symbol_dir, exist_ok=True)
+            report_path = os.path.join(symbol_dir, 'multi_provider_analysis.html')
+            with open(report_path, 'w', encoding='utf-8') as f:
+                f.write(''.join(html))
+            logger.info(f"Multi-provider HTML report saved to: {report_path}")
+
+            # Send email alert only from Google AI consensus (not Perplexity)
             try:
-                report_filename = "multi_provider_analysis.txt"
-                report_path = os.path.join(output_dir, report_filename)
-                with open(report_path, 'w', encoding='utf-8') as f:
-                    f.write(combined_text)
-                logger.info(f"Multi-provider report saved to: {report_path}")
+                from trading_analysis import EmailAlertManager
+                print("[DEBUG] Attempting to send consensus email alert...")
+                email_manager = EmailAlertManager()
+                print(f"[DEBUG] Email manager configured: {email_manager.is_configured}, has_changes: {consensus_change_analysis.get('has_changes', False)}")
+                if email_manager.is_configured and consensus_change_analysis.get('has_changes', False):
+                    email_sent = email_manager.send_trend_alert(consensus_change_analysis, ''.join(html), stock_symbol, output_dir)
+                    print(f"[DEBUG] Email sent result: {email_sent}")
+                    if not email_sent:
+                        logger.warning("Consensus email alert failed to send")
+                else:
+                    print("[DEBUG] Email not sent: not configured or no changes.")
             except Exception as e:
-                logger.error(f"Failed to save multi-provider report: {e}")
-        
-        return combined_text, consensus_change_analysis
+                logger.error(f"Failed to send consensus email alert: {e}")
+        except Exception as e:
+            logger.error(f"Failed to save multi-provider HTML report: {e}")
+        return ''.join(html), consensus_change_analysis
     
     def _generate_consolidated_trading_decision(self, results: list, avg_probability: float, all_alerts: list, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None):
         """Generate a consolidated trading decision using Google AI Studio API"""
