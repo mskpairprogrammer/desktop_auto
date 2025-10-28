@@ -180,8 +180,8 @@ def process_window(window_title, tab_num, symbol, folder, screenshot_name, windo
     # Wait for window to settle
     time.sleep(window_settle_delay)
     
-    # Click to ensure focus
-    pyautogui.click(1280, 800)
+    # Click to ensure focus - recorded coordinates far right middle
+    pyautogui.click(2523, 714)
     time.sleep(focus_click_delay)
     
     # Type symbol directly
@@ -220,9 +220,9 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
     # Wait for window to settle
     time.sleep(2)
     
-    # Click in the center to focus
+    # Click on the far right edge area to focus (Symbolik-specific coordinates)
     log(f"  🖱️  Clicking to focus...")
-    pyautogui.click(1280, 800)
+    pyautogui.click(1900, 390)
     time.sleep(1)
     
     # Type the symbol with .bz suffix in the search/input field
