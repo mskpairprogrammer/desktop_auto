@@ -297,6 +297,20 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     screenshot = pyautogui.screenshot()
+    # Check if screenshot is likely blank (very white)
+    from PIL import ImageStat
+    stat = ImageStat.Stat(screenshot)
+    # If all RGB means are very high, assume blank/white screen
+    symbolik_refresh_wait = float(os.getenv('SYMBOLIK_REFRESH_WAIT', '5.0'))
+    if all(m > 240 for m in stat.mean[:3]):
+        log(f"  ⚠️ Detected likely blank screen. Refreshing browser and waiting {symbolik_refresh_wait} seconds...")
+        # Press F5 to refresh
+        pyautogui.press('f5')
+        time.sleep(symbolik_refresh_wait)
+        screenshot = pyautogui.screenshot()
+        stat = ImageStat.Stat(screenshot)
+        if all(m > 240 for m in stat.mean[:3]):
+            log(f"  ⚠️ Still blank after refresh. Saving anyway.")
     screenshot.save(filepath)
     log(f"✅ Saved: {filepath}")
     return True
