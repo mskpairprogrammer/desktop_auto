@@ -61,7 +61,7 @@
 
 ## 🤖 AI Provider Configuration
 
-The system supports multiple AI providers that can be used independently or together for comprehensive analysis.
+The system supports multiple AI providers that can be used independently or together for comprehensive analysis. It also supports Google AI Studio (Gemini) for consensus logic and advanced HTML report generation.
 
 ### Supported AI Providers
 
@@ -76,6 +76,12 @@ The system supports multiple AI providers that can be used independently or toge
 - **Strengths**: Advanced reasoning, detailed analysis, safety-focused
 - **API Endpoint**: Anthropic's official API
 - **Required Package**: anthropic
+
+#### 3. Google AI Studio (Gemini)
+- **Model**: Gemini 2.0 Flash (Google AI Studio)
+- **Strengths**: Advanced consensus logic, HTML report generation, robust summarization
+- **API Endpoint**: Google AI Studio API
+- **Required Package**: google-generativeai
 
 ### Configuration Options
 
@@ -94,8 +100,8 @@ CLAUDE_ENABLED=True
 ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 ```
 
-#### Option 2: Multiple Providers (Sequential Analysis)
-Enable both providers for comprehensive analysis:
+#### Option 2: Multiple Providers (Sequential Analysis & Consensus)
+Enable two or more providers for comprehensive analysis and consensus:
 
 ```properties
 # Use both providers for comprehensive analysis
@@ -105,12 +111,18 @@ PERPLEXITY_API_KEY=pplx-your-api-key-here
 ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 ```
 
-When both providers are enabled:
+
+When both Claude and Perplexity are enabled:
 - Each provider analyzes the screenshots independently
 - Results are combined into a multi-provider consensus report
 - Average probability scores are calculated
 - Alert levels are determined by the highest-confidence provider
-- Email alerts are sent only once (from the first provider to avoid spam)
+- Email alerts are sent only once (from the consensus logic)
+
+When Google AI Studio is enabled (with Claude and/or Perplexity):
+- Google AI Studio generates the consolidated trading decision and consensus summary
+- The HTML report is generated with Google AI's consensus at the top, followed by Claude and Perplexity sections
+- Email alerts are sent only from the Google AI consensus logic (not from individual providers)
 
 #### Option 3: No AI Analysis
 Disable all AI analysis (screenshots only):
@@ -281,21 +293,25 @@ The system captures screenshots from 4 different TradingView chart layouts:
 ### Analysis Process
 
 1. **Screenshot Capture**: System captures screenshots from all configured windows
-2. **AI Processing**: Enabled AI providers analyze the screenshots
-3. **Chart Recognition**: AI identifies specific indicators and chart types
-4. **Trend Analysis**: Probability scoring for trend changes (0-100%)
-5. **Report Generation**: Comprehensive analysis reports with alerts
-6. **Email Notifications**: Automated alerts for significant changes
+2. **AI Processing**: Enabled AI providers (Claude, Perplexity) analyze the screenshots
+3. **Consensus & HTML Generation**: Google AI Studio (if enabled) generates a consolidated trading decision and creates a modern HTML report
+4. **Chart Recognition**: AI identifies specific indicators and chart types
+5. **Trend Analysis**: Probability scoring for trend changes (0-100%)
+6. **Report Generation**: Comprehensive HTML analysis reports with consensus and provider breakdowns
+7. **Email Notifications**: Automated alerts for significant changes (sent only from Google AI consensus logic)
 
 ### Multi-Provider Analysis
 
+
 When multiple AI providers are enabled:
 
-1. **Sequential Processing**: Each provider analyzes independently
+1. **Sequential Processing**: Each provider (Claude, Perplexity) analyzes independently
 2. **Individual Reports**: Separate analysis from each provider
-3. **Consensus Building**: Combined analysis with agreement metrics
+3. **Consensus Building**: Google AI Studio (if enabled) generates a consolidated trading decision and consensus summary
 4. **Probability Averaging**: Average trend change probabilities
 5. **Alert Aggregation**: Highest confidence alerts are prioritized
+6. **HTML Output**: The report is generated as a single HTML file per symbol, with Google AI consensus at the top, followed by Claude and Perplexity
+7. **Email Alerts**: Only the Google AI consensus logic triggers email alerts (not individual providers)
 
 ### Analysis Reports
 
