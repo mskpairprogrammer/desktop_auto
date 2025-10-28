@@ -1,1 +1,5 @@
+QBTS
 SNAP
+PFE
+RDW
+

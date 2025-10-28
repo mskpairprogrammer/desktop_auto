@@ -3,6 +3,7 @@
 Desktop Auto Project - TradingView Automation for 4 Separate Windows
 """
 import pyautogui
+pyautogui.FAILSAFE = False
 import time
 import os
 import sys
@@ -266,15 +267,35 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
     log(f"  ✅ Pressing Enter...")
     pyautogui.press('enter')
     
-    # Wait for page to load
-    log(f"⏳ Waiting {symbolik_wait_delay} seconds for page to load...")
-    time.sleep(symbolik_wait_delay)
-    
+    # Wait for page to load and verify correct symbol is loaded
+    log(f"⏳ Waiting for Symbolik.com to load {symbol}...")
+    max_wait = max(10, int(symbolik_wait_delay))  # minimum 10s, or user-specified
+    check_interval = 1.0
+    elapsed = 0
+    found = False
+    # Try to find the symbol text on the screen (top left, etc.)
+    # Save a reference image for each symbol as 'symbolik_ref_{symbol}.png' in screenshots root for best results
+    ref_img_path = os.path.join('screenshots', f'symbolik_ref_{symbol}.png')
+    if not os.path.exists(ref_img_path):
+        log(f"  ⚠️ Reference image {ref_img_path} not found. Falling back to fixed wait.")
+        time.sleep(symbolik_wait_delay)
+        found = True
+    else:
+        log(f"  🔍 Waiting for symbol to appear on screen (using {ref_img_path})...")
+        while elapsed < max_wait:
+            location = pyautogui.locateOnScreen(ref_img_path, confidence=0.8)
+            if location:
+                found = True
+                log(f"  ✅ Detected {symbol} on screen after {elapsed} seconds.")
+                break
+            time.sleep(check_interval)
+            elapsed += check_interval
+        if not found:
+            log(f"  ⚠️ Did not detect {symbol} on screen after {max_wait} seconds. Taking screenshot anyway.")
     # Take screenshot
     log(f"📸 Taking screenshot for Symbolik.com...")
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
-    
     screenshot = pyautogui.screenshot()
     screenshot.save(filepath)
     log(f"✅ Saved: {filepath}")
@@ -348,12 +369,10 @@ def main():
             
             # Process TradingView windows if enabled
             if tradingview_enabled:
-                
                 # Check if we should reuse existing screenshots for Tab 1
                 filename = screenshot_name_tab1.format(symbol=symbol)
                 filepath = os.path.join(folder, filename)
                 reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
-                
                 if reuse_screenshots and os.path.exists(filepath):
                     log(f"\n🔄 Tab 1: Reusing existing screenshot: {filepath}")
                 else:
@@ -361,27 +380,21 @@ def main():
                     log(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
                     if not bring_window_to_front(tradingview_window1):
                         log("❌ Failed. Please make sure TradingView is open.")
-                        return
-                    
+                        continue
                     # Wait for window to settle
                     time.sleep(window_settle_delay)
-                    
                     # Click center to ensure window is fully focused
                     pyautogui.click(1280, 800)
                     time.sleep(focus_click_delay)
-                    
                     # Type symbol directly
                     log(f"⌨️  Typing: {symbol}")
                     pyautogui.write(symbol.lower(), interval=0.1)
-                    
                     # Press Enter
                     log("✅ Pressing Enter...")
                     pyautogui.press('enter')
-                    
                     # Wait for chart to load
                     log(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
                     time.sleep(chart_load_delay_tabs1_3)
-                    
                     # Take screenshot for tab 1
                     log(f"📸 Taking screenshot for Tab 1...")
                     filename = screenshot_name_tab1.format(symbol=symbol)

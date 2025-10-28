@@ -1,3 +1,53 @@
+# Desktop Auto
+
+Desktop Auto is a Python-based automation tool for multi-window TradingView and Symbolik.com screenshot capture, advanced AI-powered trading analysis, and intelligent email alerts.
+
+## Features
+- Automated screenshot capture from multiple TradingView and Symbolik.com windows
+- Multi-provider AI analysis: Claude (Anthropic), Perplexity (OpenAI-compatible), and Google AI Studio (Gemini)
+- Consensus logic and HTML report generation using Google AI Studio
+- Intelligent email alerts for significant trend changes (sent only from Google AI consensus)
+- Organized output by symbol, with modern HTML reports
+- Configurable scheduling, symbol lists, and chart-specific intelligence
+
+## AI Providers
+- **Claude (Anthropic):** Advanced reasoning, detailed analysis
+- **Perplexity (OpenAI-compatible):** Real-time web data, financial awareness
+- **Google AI Studio (Gemini):** Consensus logic, HTML report generation, robust summarization
+
+## How It Works
+1. Captures screenshots from all configured chart windows
+2. Runs AI analysis with enabled providers (Claude, Perplexity)
+3. Google AI Studio (if enabled) generates a consolidated trading decision and HTML report
+4. Only the Google AI consensus logic triggers email alerts for significant trend changes
+5. All output is saved as a single HTML file per symbol
+
+## Configuration
+- Edit `.env` for provider API keys, enable flags, email settings, and scheduling
+- List symbols to analyze in `stock_symbols.txt`
+- See `requirements.txt` for dependencies
+
+## Usage
+```bash
+python main.py
+```
+- To run on a schedule, set `SCHEDULE_ENABLED=true` in `.env`
+- To build an executable: `python build_executable.py`
+
+## File Structure
+- `main.py` — Main automation script
+- `ai_analysis.py` — Multi-provider AI and consensus logic
+- `trading_analysis.py` — Core analysis and email alert logic
+- `screenshots/` — Output folders by symbol
+- `.env` — Configuration
+
+## Notes
+- Email alerts are only sent from the Google AI consensus logic (not from Claude or Perplexity individually)
+- The HTML report includes Google AI consensus at the top, followed by Claude and Perplexity sections
+- Requires Python 3.8+ and Windows
+
+---
+For more details, see code comments and `.env.example`.
 # 📊 Desktop Auto - AI-Powered TradingView & Symbolik Automation
 
 > **Professional multi-chart screenshot automation with comprehensive AI analysis, chart-specific indicator recognition, and intelligent email alerts for stock trading workflows**
@@ -6,7 +56,6 @@
 [![License](https://img.shields.io/badge/license-Personal%20Use-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 
----
 
 ## 🎯 Overview
 
@@ -14,50 +63,17 @@
 
 ### Key Capabilities
 
-- **📸 Multi-Chart Screenshot Automation**: Automated capture from 4 TradingView windows + Symbolik.com
-- **🤖 Multi-Provider AI Analysis**: Support for Claude AI and Perplexity AI with sequential analysis
-- **📊 Chart-Specific Intelligence**: Understands different indicators per chart layout
-- **📧 Intelligent Email Alerts**: Automated notifications for trend changes and signals
-- **⏰ Market Hours Scheduling**: Runs automatically during market hours with configurable intervals
-- **🔄 Multi-Symbol Processing**: Handles multiple stock symbols sequentially
-- **📁 Organized Storage**: Screenshots and reports organized by symbol and timestamp
 
 ## 📋 Table of Contents
 
-- [Features](#-features)
-- [AI Provider Configuration](#-ai-provider-configuration)
-- [Installation](#-installation)
-- [Configuration](#%EF%B8%8F-configuration)
-- [Usage](#-usage)
-- [Chart Layouts](#-chart-layouts)
-- [AI Analysis](#-ai-analysis)
-- [Email Alerts](#-email-alerts)
-- [Troubleshooting](#-troubleshooting)
-- [File Structure](#-file-structure)
 
 ## ✨ Features
 
 ### Screenshot Automation
-- **Smart Window Detection**: Windows API for reliable window management
-- **Multi-Symbol Support**: Process multiple stock symbols sequentially  
-- **Organized Storage**: Screenshots saved by symbol in dedicated folders
-- **TradingView Integration**: Automated interaction with 4 different chart layouts
-- **Symbolik.com Integration**: Browser automation with dropdown search
 
 ### AI-Powered Analysis
-- **Multi-Provider Support**: Claude AI and Perplexity AI with independent control
-- **Sequential Analysis**: When both providers enabled, runs analyses in sequence
-- **Consensus Reporting**: Combined reports with agreement metrics when using multiple providers
-- **Chart-Specific Intelligence**: AI understands different indicators per chart layout
-- **Trend Change Detection**: 0-100% probability scoring for trend changes
-- **Historical Comparison**: Compares with previous analysis for change detection
 
 ### Automation Features
-- **Market Hours Scheduling**: Configurable start/stop times with timezone support
-- **Configurable Intervals**: Run every 15min, 30min, 1hour, or custom intervals
-- **Multi-Symbol Processing**: Handles lists of stock symbols from text file
-- **Error Handling**: Robust error handling with detailed logging
-- **Background Operation**: Can run continuously with scheduling
 
 ## 🤖 AI Provider Configuration
 
@@ -66,22 +82,10 @@ The system supports multiple AI providers that can be used independently or toge
 ### Supported AI Providers
 
 #### 1. Perplexity AI
-- **Model**: sonar
-- **Strengths**: Real-time web data access, financial market awareness
-- **API Endpoint**: https://api.perplexity.ai
-- **Required Package**: openai
 
 #### 2. Claude AI (Anthropic)
-- **Model**: claude-sonnet-4-5-20250929
-- **Strengths**: Advanced reasoning, detailed analysis, safety-focused
-- **API Endpoint**: Anthropic's official API
-- **Required Package**: anthropic
 
 #### 3. Google AI Studio (Gemini)
-- **Model**: Gemini 2.0 Flash (Google AI Studio)
-- **Strengths**: Advanced consensus logic, HTML report generation, robust summarization
-- **API Endpoint**: Google AI Studio API
-- **Required Package**: google-generativeai
 
 ### Configuration Options
 
@@ -113,16 +117,8 @@ ANTHROPIC_API_KEY=sk-ant-your-api-key-here
 
 
 When both Claude and Perplexity are enabled:
-- Each provider analyzes the screenshots independently
-- Results are combined into a multi-provider consensus report
-- Average probability scores are calculated
-- Alert levels are determined by the highest-confidence provider
-- Email alerts are sent only once (from the consensus logic)
 
 When Google AI Studio is enabled (with Claude and/or Perplexity):
-- Google AI Studio generates the consolidated trading decision and consensus summary
-- The HTML report is generated with Google AI's consensus at the top, followed by Claude and Perplexity sections
-- Email alerts are sent only from the Google AI consensus logic (not from individual providers)
 
 #### Option 3: No AI Analysis
 Disable all AI analysis (screenshots only):
@@ -162,10 +158,6 @@ PERPLEXITY_API_KEY=pplx-your-api-key-here
 ## 🚀 Installation
 
 ### Prerequisites
-- Windows 10/11
-- Python 3.8+
-- TradingView account with specific chart layouts
-- AI provider API keys (Perplexity and/or Claude)
 
 ### Step 1: Clone Repository
 ```bash
@@ -269,24 +261,12 @@ python build_executable.py
 The system captures screenshots from 4 different TradingView chart layouts:
 
 ### Window 1: Trend Analysis (LuxAlgo)
-- **LuxAlgo Signals & Overlays**: Professional signal quality analysis
-- **Trend Direction Indicators**: Overlay indicators showing trend strength
-- **Signal Confirmations**: Multi-indicator convergence validation
 
 ### Window 2: Smoothed Heiken Ashi Candles
-- **Smoothed Heiken Ashi**: Trend-following candles that smooth price noise
-- **AlgoAlpha HEMA Trend**: Hybrid Exponential Moving Average
-- **Trend identification with reduced noise**
 
 ### Window 3: Volume Layout
-- **Volume Profile**: Market Profile-style volume analysis
-- **Volume indicators**: Volume-based momentum and trend analysis
-- **Support/Resistance from volume**: Key levels based on volume
 
 ### Window 4: Volume Profile & RVOL
-- **Volume Profile**: Detailed volume-at-price analysis
-- **RVOL (Relative Volume)**: Current volume vs historical average
-- **Institutional activity indicators**
 
 ## 🤖 AI Analysis
 
@@ -316,12 +296,6 @@ When multiple AI providers are enabled:
 ### Analysis Reports
 
 Reports include:
-- **Trend Direction**: Current trend analysis per chart
-- **Signal Quality**: Strength and reliability of signals
-- **Change Detection**: Comparison with previous analysis
-- **Probability Scores**: 0-100% confidence in trend changes
-- **Alert Levels**: Low/Medium/High priority classifications
-- **Provider Consensus**: Agreement between multiple AI providers (when enabled)
 
 ## 📧 Email Alerts
 
@@ -334,16 +308,8 @@ EMAIL_ALERT_THRESHOLD=35  # Minimum probability for email alerts
 ```
 
 ### Alert Types
-- **High Priority**: Trend change probability > 70%
-- **Medium Priority**: Trend change probability 35-70%
-- **Low Priority**: Trend change probability < 35%
 
 ### Email Content
-- Complete AI analysis text
-- Trend change probabilities
-- Chart-specific insights
-- Timestamp and symbol information
-- Provider information (when using multiple providers)
 
 ## 🔧 Troubleshooting
 
@@ -404,6 +370,5 @@ This project is for personal use only. See [LICENSE](LICENSE) file for details.
 
 This is a personal automation project. Contributions, issues, and feature requests are welcome!
 
----
 
 **Note**: This tool is designed for personal trading analysis. Always conduct your own research and risk management when making trading decisions.
