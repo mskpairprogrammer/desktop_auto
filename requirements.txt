@@ -13,6 +13,7 @@ pynput
 
 # AI Analysis
 openai>=1.0.0
+anthropic>=0.25.0
 
 # Scheduling
 pytz>=2023.3

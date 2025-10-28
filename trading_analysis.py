@@ -1,5 +1,6 @@
 """
-Perplexity API integration module for screenshot analysis with email alerts
+AI Trading Analysis module for screenshot analysis with email alerts
+Supports multiple AI providers through a unified interface
 """
 import base64
 import os
@@ -616,6 +617,6 @@ KEY CHANGES:
         body += f"COMPLETE ANALYSIS REPORT\n"
         body += f"{'='*60}\n\n"
         body += f"{current_analysis}\n"
-        body += f"\n---\nThis alert was generated automatically by Perplexity AI."
+        body += f"\n---\nThis alert was generated automatically by AI Trading Analysis."
         
         return body

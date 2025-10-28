@@ -24,11 +24,17 @@ except ImportError:
     WIN32_AVAILABLE = False
 
 try:
-    from perplexity_analysis import PerplexityAnalyzer, EmailAlertManager
-    PERPLEXITY_AVAILABLE = True
+    from ai_analysis import TradingAnalyzer
+    AI_ANALYSIS_AVAILABLE = True
 except ImportError:
-    log("⚠️ Perplexity analysis module not available. Install with: pip install openai")
-    PERPLEXITY_AVAILABLE = False
+    AI_ANALYSIS_AVAILABLE = False
+
+try:
+    from trading_analysis import PerplexityAnalyzer, EmailAlertManager
+    LEGACY_ANALYSIS_AVAILABLE = True
+except ImportError:
+    print("⚠️ Trading analysis module not available. Install with: pip install openai")
+    LEGACY_ANALYSIS_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
@@ -172,6 +178,16 @@ def bring_window_to_front(window_title_keyword):
 
 def process_window(window_title, tab_num, symbol, folder, screenshot_name, window_settle_delay, focus_click_delay, chart_load_delay):
     """Process a single TradingView window."""
+    
+    # Check if we should reuse existing screenshots early
+    filename = screenshot_name.format(symbol=symbol)
+    filepath = os.path.join(folder, filename)
+    reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
+    
+    if reuse_screenshots and os.path.exists(filepath):
+        log(f"\n🔄 Tab {tab_num}: Reusing existing screenshot: {filepath}")
+        return True
+    
     log(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
         log(f"❌ Window not found. Skipping tab {tab_num}.")
@@ -209,6 +225,15 @@ def process_window(window_title, tab_num, symbol, folder, screenshot_name, windo
 
 def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name):
     """Process symbolik.com navigation and screenshot."""
+    
+    # Check if we should reuse existing screenshots early
+    filename = screenshot_name.format(symbol=symbol)
+    filepath = os.path.join(folder, filename)
+    reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
+    
+    if reuse_screenshots and os.path.exists(filepath):
+        log(f"\n🔄 Tab 5: Reusing existing Symbolik screenshot: {filepath}")
+        return True
     
     log(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
     
@@ -323,39 +348,48 @@ def main():
             
             # Process TradingView windows if enabled
             if tradingview_enabled:
-                # Tab 1: Trend analysis window - Type symbol
-                log(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
-                if not bring_window_to_front(tradingview_window1):
-                    log("❌ Failed. Please make sure TradingView is open.")
-                    return
                 
-                # Wait for window to settle
-                time.sleep(window_settle_delay)
-                
-                # Click center to ensure window is fully focused
-                pyautogui.click(1280, 800)
-                time.sleep(focus_click_delay)
-                
-                # Type symbol directly
-                log(f"⌨️  Typing: {symbol}")
-                pyautogui.write(symbol.lower(), interval=0.1)
-                
-                # Press Enter
-                log("✅ Pressing Enter...")
-                pyautogui.press('enter')
-                
-                # Wait for chart to load
-                log(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
-                time.sleep(chart_load_delay_tabs1_3)
-                
-                # Take screenshot for tab 1
-                log(f"📸 Taking screenshot for Tab 1...")
+                # Check if we should reuse existing screenshots for Tab 1
                 filename = screenshot_name_tab1.format(symbol=symbol)
                 filepath = os.path.join(folder, filename)
+                reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
                 
-                screenshot = pyautogui.screenshot()
-                screenshot.save(filepath)
-                log(f"✅ Saved: {filepath}")
+                if reuse_screenshots and os.path.exists(filepath):
+                    log(f"\n🔄 Tab 1: Reusing existing screenshot: {filepath}")
+                else:
+                    # Tab 1: Trend analysis window - Type symbol
+                    log(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
+                    if not bring_window_to_front(tradingview_window1):
+                        log("❌ Failed. Please make sure TradingView is open.")
+                        return
+                    
+                    # Wait for window to settle
+                    time.sleep(window_settle_delay)
+                    
+                    # Click center to ensure window is fully focused
+                    pyautogui.click(1280, 800)
+                    time.sleep(focus_click_delay)
+                    
+                    # Type symbol directly
+                    log(f"⌨️  Typing: {symbol}")
+                    pyautogui.write(symbol.lower(), interval=0.1)
+                    
+                    # Press Enter
+                    log("✅ Pressing Enter...")
+                    pyautogui.press('enter')
+                    
+                    # Wait for chart to load
+                    log(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
+                    time.sleep(chart_load_delay_tabs1_3)
+                    
+                    # Take screenshot for tab 1
+                    log(f"📸 Taking screenshot for Tab 1...")
+                    filename = screenshot_name_tab1.format(symbol=symbol)
+                    filepath = os.path.join(folder, filename)
+                    
+                    screenshot = pyautogui.screenshot()
+                    screenshot.save(filepath)
+                    log(f"✅ Saved: {filepath}")
                 
                 # Process remaining windows
                 process_window(tradingview_window2, 2, symbol, folder, screenshot_name_tab2,
@@ -369,11 +403,14 @@ def main():
             if symbolik_enabled:
                 process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name_symbolik)
             
-            # Perform AI analysis if enabled
+            # Perform AI analysis if any provider is enabled
+            claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
             perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
-            if perplexity_enabled and PERPLEXITY_AVAILABLE:
+            ai_analysis_enabled = claude_enabled or perplexity_enabled
+            
+            if ai_analysis_enabled and LEGACY_ANALYSIS_AVAILABLE:
                 try:
-                    log(f"\n🤖 Starting Perplexity AI analysis for {symbol}...")
+                    log(f"\n🤖 Starting AI analysis for {symbol}...")
                     
                     # Build screenshot data dictionary
                     screenshot_data = {}
@@ -388,8 +425,31 @@ def main():
                     if symbolik_enabled:
                         screenshot_data['workspace'] = os.path.join(folder, screenshot_name_symbolik.format(symbol=symbol))
                     
-                    # Initialize analyzer
-                    analyzer = PerplexityAnalyzer()
+                    # Initialize analyzer based on individual provider enable flags
+                    if AI_ANALYSIS_AVAILABLE:
+                        try:
+                            analyzer = TradingAnalyzer()
+                            
+                            # Check which providers are enabled
+                            claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
+                            perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
+                            
+                            if claude_enabled and perplexity_enabled:
+                                log(f"   🤖 Using both Claude and Perplexity AI for sequential analysis")
+                            elif claude_enabled:
+                                log(f"   🤖 Using Claude AI for analysis")
+                            elif perplexity_enabled:
+                                log(f"   🤖 Using Perplexity AI for analysis")
+                            else:
+                                log(f"   ⚠️ No AI providers enabled, check CLAUDE_ENABLED and PERPLEXITY_ENABLED settings")
+                                
+                        except Exception as e:
+                            log(f"   ⚠️ TradingAnalyzer failed, falling back to default provider: {e}")
+                            analyzer = PerplexityAnalyzer()
+                            log(f"   🤖 Using default AI provider for analysis")
+                    else:
+                        analyzer = PerplexityAnalyzer()
+                        log(f"   🤖 Using default AI provider for analysis")
                     
                     # Analyze with trend alerts
                     analysis, change_analysis = analyzer.analyze_with_trend_alerts(
@@ -404,8 +464,8 @@ def main():
                     
                 except Exception as e:
                     log(f"   ⚠️ Analysis failed: {e}")
-            elif perplexity_enabled and not PERPLEXITY_AVAILABLE:
-                log(f"\n⚠️ Perplexity analysis is enabled but module not available. Install: pip install openai")
+            elif ai_analysis_enabled and not LEGACY_ANALYSIS_AVAILABLE:
+                log(f"\n⚠️ AI analysis is enabled but module not available. Install: pip install openai")
             
             log(f"\n✅ Completed processing {symbol}!")
         

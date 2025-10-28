@@ -13,7 +13,7 @@ PyInstaller.__main__.run([
     '--onefile',
     '--name=DesktopAuto',
     f'--add-data={os.path.join(current_dir, ".env")};.',
-    '--hidden-import=perplexity_analysis',
+    '--hidden-import=trading_analysis',
     '--hidden-import=pywin32',
     '--hidden-import=win32gui',
     '--hidden-import=win32con',
