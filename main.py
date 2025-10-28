@@ -5,6 +5,7 @@ Desktop Auto Project - TradingView Automation for 4 Separate Windows
 import pyautogui
 import time
 import os
+import sys
 from datetime import datetime, time as dt_time
 from dotenv import load_dotenv
 
@@ -34,15 +35,43 @@ load_dotenv()
 
 
 def log(message):
-    """Print message with timestamp."""
+    """Print message with timestamp and save to log file with timestamp."""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"[{timestamp}] {message}")
+    
+    # Write to log file with timestamp
+    try:
+        # Get the directory where the script/executable is located
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable
+            script_dir = os.path.dirname(sys.executable)
+        else:
+            # Running as script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        log_file = os.path.join(script_dir, 'desktop_auto.log')
+        
+        with open(log_file, 'a', encoding='utf-8') as f:
+            f.write(f"[{timestamp}] {message}\n")
+    except Exception as e:
+        # Don't let logging errors break the main program
+        print(f"Warning: Could not write to log file: {e}")
 
 
 def load_stock_symbols():
     """Load stock symbols from stock_symbols.txt file"""
     try:
-        with open('stock_symbols.txt', 'r') as f:
+        # Get the directory where the script/executable is located
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable
+            script_dir = os.path.dirname(sys.executable)
+        else:
+            # Running as script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        symbols_file = os.path.join(script_dir, 'stock_symbols.txt')
+        
+        with open(symbols_file, 'r') as f:
             symbols = [line.strip() for line in f.readlines() if line.strip()]
         if not symbols:
             log("⚠️ No symbols found in stock_symbols.txt, using default QBTS")
@@ -228,8 +257,30 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
 
 
 
+def initialize_log():
+    """Initialize/clear the log file at the start of each run."""
+    try:
+        # Get the directory where the script/executable is located
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable
+            script_dir = os.path.dirname(sys.executable)
+        else:
+            # Running as script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        log_file = os.path.join(script_dir, 'desktop_auto.log')
+        
+        # Clear the log file by opening in write mode
+        with open(log_file, 'w', encoding='utf-8') as f:
+            f.write("Desktop Auto - Log Started\n")
+            f.write("=" * 50 + "\n")
+    except Exception as e:
+        print(f"Warning: Could not initialize log file: {e}")
+
+
 def main():
     """Main function."""
+    initialize_log()
     log("\n⏰ Starting in 3 seconds...")
     for i in range(3, 0, -1):
         log(f"   {i}...")
