@@ -9,6 +9,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Optional, Dict, Any
 import logging
+import time
+import random
 from datetime import datetime
 
 try:
@@ -331,18 +333,46 @@ Instructions:
 5. Focus on actionable trading insights
 """
 
-            # Generate response using Gemini
-            response = self.model.generate_content(prompt)
-            
-            if response and response.text:
-                return response.text
-            else:
-                logger.error("Empty response from Google AI")
-                return f"Error: Failed to generate consolidated decision for {stock_symbol}"
-                
+            # Helper to call the model with retries/backoff for transient errors (e.g., 429)
+            def _call_with_backoff(prompt_text, max_attempts=5, base_delay=1.0):
+                attempt = 0
+                while attempt < max_attempts:
+                    try:
+                        attempt += 1
+                        logger.info(f"Google AI attempt {attempt} for {stock_symbol}")
+                        resp = self.model.generate_content(prompt_text)
+                        # Some SDKs return objects with .text
+                        text = getattr(resp, 'text', None)
+                        if text:
+                            return text
+                        # Some responses may embed content differently
+                        if isinstance(resp, dict) and 'content' in resp:
+                            return resp['content']
+                        logger.error("Empty response from Google AI (no text/content)")
+                        raise RuntimeError("Empty response from Google AI")
+                    except Exception as e:
+                        msg = str(e)
+                        # Determine if this is a retryable error (rate limit / resource exhausted)
+                        if '429' in msg or 'Resource exhausted' in msg or 'rate limit' in msg.lower() or 'quota' in msg.lower() or 'RateLimit' in msg:
+                            # Retry with exponential backoff + jitter
+                            sleep_time = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+                            logger.warning(f"Transient Google AI error (attempt {attempt}): {e}. Retrying in {sleep_time:.1f}s")
+                            time.sleep(sleep_time)
+                            continue
+                        else:
+                            # Non-retryable, re-raise
+                            logger.error(f"Non-retryable Google AI error: {e}")
+                            raise
+                # If we exhaust retries, raise final error
+                raise RuntimeError(f"Google AI generate_consolidated_decision failed after {max_attempts} attempts")
+
+            # Generate response using Gemini with retries
+            consolidated_text = _call_with_backoff(prompt)
+            return consolidated_text
         except Exception as e:
             logger.error(f"Google AI API error: {e}")
-            return f"Error generating consolidated decision: {e}"
+            # Raise so callers (which fallback to local logic) can detect failure and fallback
+            raise
 
 
 class AnalyzerFactory:
