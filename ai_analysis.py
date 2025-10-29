@@ -666,11 +666,28 @@ class TradingAnalyzer:
 
         # Save the combined report as HTML in the correct symbol folder (no text file)
         try:
-            symbol_dir = os.path.join(os.path.dirname(__file__), 'screenshots', stock_symbol)
+            import os
+            import sys
+            def get_base_dir():
+                if getattr(sys, 'frozen', False):
+                    # Running as EXE
+                    return os.path.dirname(sys.executable)
+                else:
+                    # Running as script
+                    return os.path.dirname(os.path.abspath(__file__))
+
+            base_dir = get_base_dir()
+            print(f"[DEBUG] Attempting to save HTML report for {stock_symbol}...")
+            print(f"[DEBUG] Current working directory: {os.getcwd()}")
+            print(f"[DEBUG] Base dir for output: {base_dir}")
+            symbol_dir = os.path.join(base_dir, 'screenshots', stock_symbol)
+            print(f"[DEBUG] Target symbol_dir: {symbol_dir}")
             os.makedirs(symbol_dir, exist_ok=True)
             report_path = os.path.join(symbol_dir, 'multi_provider_analysis.html')
+            print(f"[DEBUG] Writing HTML to: {report_path}")
             with open(report_path, 'w', encoding='utf-8') as f:
                 f.write(''.join(html))
+            print(f"[DEBUG] HTML report successfully written: {report_path}")
             logger.info(f"Multi-provider HTML report saved to: {report_path}")
 
             # Send email alert only from Google AI consensus (not Perplexity)
@@ -687,9 +704,13 @@ class TradingAnalyzer:
                 else:
                     print("[DEBUG] Email not sent: not configured or no changes.")
             except Exception as e:
+                print(f"[ERROR] Failed to send consensus email alert: {e}")
                 logger.error(f"Failed to send consensus email alert: {e}")
         except Exception as e:
-            logger.error(f"Failed to save multi-provider HTML report: {e}")
+            print(f"[ERROR] Failed to write HTML report for {stock_symbol}: {e}")
+            import traceback
+            traceback.print_exc()
+            logger.error(f"Failed to write HTML report for {stock_symbol}: {e}")
         return ''.join(html), consensus_change_analysis
     
     def _generate_consolidated_trading_decision(self, results: list, avg_probability: float, all_alerts: list, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None):

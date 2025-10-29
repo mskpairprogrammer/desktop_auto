@@ -1,5 +1,2 @@
-QBTS
-SNAP
-PFE
-RDW
+NVDA
 
