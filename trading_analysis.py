@@ -363,7 +363,6 @@ Prior: {prior_analysis[:500]}...
 
 === TREND_EVALUATION ===
 {{
-    "send_email": true/false,
     "alert_level": "critical/high/medium/low",
     "trend_change_probability": 85,
     "confidence_level": "very_high/high/medium/low",
@@ -383,7 +382,6 @@ This is the INITIAL ANALYSIS.
 
 === TREND_EVALUATION ===
 {{
-    "send_email": false,
     "alert_level": "info",
     "trend_change_probability": 0,
     "confidence_level": "high",
@@ -412,7 +410,7 @@ This is the INITIAL ANALYSIS.
                     trend_data = json.loads(json_str)
                     
                     change_analysis = {
-                        'has_changes': trend_data.get('send_email', False),
+                        # 'has_changes' is only relevant for consensus/Google AI, not Perplexity/Claude
                         'change_type': 'consolidated_evaluation',
                         'alert_level': trend_data.get('alert_level', 'low'),
                         'trend_change_probability': trend_data.get('trend_change_probability', 0),
