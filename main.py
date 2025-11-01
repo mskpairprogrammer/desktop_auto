@@ -2,19 +2,25 @@
 """
 Desktop Auto Project - TradingView Automation for 4 Separate Windows
 """
-import pyautogui
-pyautogui.FAILSAFE = False
-import time
+# Standard library imports
 import os
 import sys
-from datetime import datetime, time as dt_time
+import time
+from datetime import datetime, time as dt_time, timedelta
+
+# Third-party imports
+import pyautogui
+pyautogui.FAILSAFE = False
 from dotenv import load_dotenv
+
+# Local imports
+from config import Coordinates, Defaults, Paths, Windows, Screenshots
 
 try:
     import pytz
     PYTZ_AVAILABLE = True
 except ImportError:
-    log("⚠️ pytz not available. Install with: pip install pytz")
+    print("⚠️ pytz not available. Install with: pip install pytz")
     PYTZ_AVAILABLE = False
 
 try:
@@ -41,7 +47,7 @@ except ImportError:
 load_dotenv()
 
 
-def log(message):
+def log(message: str) -> None:
     """Print message with timestamp and save to log file with timestamp."""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"[{timestamp}] {message}")
@@ -56,7 +62,7 @@ def log(message):
             # Running as script
             script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        log_file = os.path.join(script_dir, 'desktop_auto.log')
+        log_file = os.path.join(script_dir, Paths.LOG_FILE)
         
         with open(log_file, 'a', encoding='utf-8') as f:
             f.write(f"[{timestamp}] {message}\n")
@@ -65,7 +71,7 @@ def log(message):
         print(f"Warning: Could not write to log file: {e}")
 
 
-def load_stock_symbols():
+def load_stock_symbols() -> list[str]:
     """Load stock symbols from stock_symbols.txt file"""
     try:
         # Get the directory where the script/executable is located
@@ -76,7 +82,7 @@ def load_stock_symbols():
             # Running as script
             script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        symbols_file = os.path.join(script_dir, 'stock_symbols.txt')
+        symbols_file = os.path.join(script_dir, Paths.STOCK_SYMBOLS_FILE)
         
         with open(symbols_file, 'r') as f:
             symbols = [line.strip() for line in f.readlines() if line.strip()]
@@ -94,7 +100,7 @@ def load_stock_symbols():
         return ['QBTS']
 
 
-def is_within_market_hours():
+def is_within_market_hours() -> bool:
     """Check if current time is within configured market hours."""
     schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
     
@@ -135,7 +141,7 @@ def is_within_market_hours():
         return True
 
 
-def bring_window_to_front(window_title_keyword):
+def bring_window_to_front(window_title_keyword: str) -> bool:
     """Find and bring a window to foreground by title keyword."""
     if not WIN32_AVAILABLE:
         log("❌ win32gui not available")
@@ -177,7 +183,16 @@ def bring_window_to_front(window_title_keyword):
         return False
 
 
-def process_window(window_title, tab_num, symbol, folder, screenshot_name, window_settle_delay, focus_click_delay, chart_load_delay):
+def process_window(
+    window_title: str, 
+    tab_num: int, 
+    symbol: str, 
+    folder: str, 
+    screenshot_name: str, 
+    window_settle_delay: float, 
+    focus_click_delay: float, 
+    chart_load_delay: float
+) -> bool:
     """Process a single TradingView window."""
     
     # Check if we should reuse existing screenshots early
@@ -198,7 +213,7 @@ def process_window(window_title, tab_num, symbol, folder, screenshot_name, windo
     time.sleep(window_settle_delay)
     
     # Click to ensure focus - recorded coordinates far right middle
-    pyautogui.click(2523, 714)
+    pyautogui.click(Coordinates.TRADINGVIEW_FOCUS_X, Coordinates.TRADINGVIEW_FOCUS_Y)
     time.sleep(focus_click_delay)
     
     # Type symbol directly
@@ -224,7 +239,13 @@ def process_window(window_title, tab_num, symbol, folder, screenshot_name, windo
     return True
 
 
-def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, screenshot_name):
+def process_symbolik(
+    symbol: str, 
+    folder: str, 
+    symbolik_wait_delay: float, 
+    symbolik_window: str, 
+    screenshot_name: str
+) -> bool:
     """Process symbolik.com navigation and screenshot."""
     
     # Check if we should reuse existing screenshots early
@@ -248,7 +269,7 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
     
     # Click on the far right edge area to focus (Symbolik-specific coordinates)
     log(f"  🖱️  Clicking to focus...")
-    pyautogui.click(1900, 390)
+    pyautogui.click(Coordinates.SYMBOLIK_FOCUS_X, Coordinates.SYMBOLIK_FOCUS_Y)
     time.sleep(1)
     
     # Type the symbol with .bz suffix in the search/input field
@@ -282,14 +303,26 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
         found = True
     else:
         log(f"  🔍 Waiting for symbol to appear on screen (using {ref_img_path})...")
+        # Get confidence from environment variable with default
+        confidence = float(os.getenv('SYMBOLIK_MATCH_CONFIDENCE', '0.8'))
+        
         while elapsed < max_wait:
-            location = pyautogui.locateOnScreen(ref_img_path, confidence=0.8)
-            if location:
-                found = True
-                log(f"  ✅ Detected {symbol} on screen after {elapsed} seconds.")
+            try:
+                location = pyautogui.locateOnScreen(ref_img_path, confidence=confidence)
+                if location:
+                    found = True
+                    log(f"  ✅ Detected {symbol} on screen after {elapsed} seconds.")
+                    break
+            except pyautogui.ImageNotFoundException:
+                # Image not found on screen, continue waiting
+                pass
+            except Exception as e:
+                log(f"  ⚠️ Error during screen capture: {e}. Continuing...")
                 break
+            
             time.sleep(check_interval)
             elapsed += check_interval
+        
         if not found:
             log(f"  ⚠️ Did not detect {symbol} on screen after {max_wait} seconds. Taking screenshot anyway.")
     # Take screenshot
@@ -317,7 +350,7 @@ def process_symbolik(symbol, folder, symbolik_wait_delay, symbolik_window, scree
 
 
 
-def initialize_log():
+def initialize_log() -> None:
     """Initialize/clear the log file at the start of each run."""
     try:
         # Get the directory where the script/executable is located
@@ -328,7 +361,7 @@ def initialize_log():
             # Running as script
             script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        log_file = os.path.join(script_dir, 'desktop_auto.log')
+        log_file = os.path.join(script_dir, Paths.LOG_FILE)
         
         # Clear the log file by opening in write mode
         with open(log_file, 'w', encoding='utf-8') as f:
@@ -338,7 +371,7 @@ def initialize_log():
         print(f"Warning: Could not initialize log file: {e}")
 
 
-def main():
+def main() -> None:
     """Main function."""
     initialize_log()
     log("\n⏰ Starting in 3 seconds...")
@@ -398,7 +431,7 @@ def main():
                     # Wait for window to settle
                     time.sleep(window_settle_delay)
                     # Click center to ensure window is fully focused
-                    pyautogui.click(1280, 800)
+                    pyautogui.click(Coordinates.TRADINGVIEW_CENTER_X, Coordinates.TRADINGVIEW_CENTER_Y)
                     time.sleep(focus_click_delay)
                     # Type symbol directly
                     log(f"⌨️  Typing: {symbol}")
@@ -504,7 +537,7 @@ def main():
         log(f"\n❌ Error: {e}")
 
 
-def run_scheduled():
+def run_scheduled() -> None:
     """Run the automation on a schedule during market hours."""
     schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
     
@@ -567,6 +600,5 @@ def run_scheduled():
 
 
 if __name__ == "__main__":
-    from datetime import timedelta
     run_scheduled()
 

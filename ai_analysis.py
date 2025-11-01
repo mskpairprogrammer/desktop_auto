@@ -2,17 +2,24 @@
 AI API integration module for screenshot analysis with email alerts
 Supports both Perplexity and Claude APIs
 """
-import base64
-import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from typing import Optional, Dict, Any
+# Standard library imports
 import logging
-import time
+import os
 import random
+import time
 from datetime import datetime
+from typing import Optional, Dict, Any
 
+# Local imports
+from utils import (
+    encode_image_to_base64, 
+    ensure_directory_exists, 
+    get_base_dir,
+    COMBINED_ANALYSIS_FILENAME,
+    MULTI_PROVIDER_HTML_FILENAME
+)
+
+# Third-party imports with availability checks
 try:
     from openai import OpenAI
     OPENAI_AVAILABLE = True
@@ -51,7 +58,7 @@ class BaseAnalyzer:
     
     def encode_image_to_base64(self, image_path: str) -> str:
         """
-        Encode an image file to base64 string
+        Encode an image file to base64 string (delegates to shared utility)
         
         Args:
             image_path: Path to the image file
@@ -59,25 +66,7 @@ class BaseAnalyzer:
         Returns:
             Base64 encoded image as data URI
         """
-        try:
-            with open(image_path, "rb") as image_file:
-                base64_image = base64.b64encode(image_file.read()).decode("utf-8")
-            
-            # Determine the MIME type based on file extension
-            file_ext = os.path.splitext(image_path)[1].lower()
-            if file_ext == '.png':
-                mime_type = 'image/png'
-            elif file_ext in ['.jpg', '.jpeg']:
-                mime_type = 'image/jpeg'
-            else:
-                mime_type = 'image/png'  # Default to PNG
-            
-            image_data_uri = f"data:{mime_type};base64,{base64_image}"
-            return image_data_uri
-            
-        except Exception as e:
-            logger.error(f"Error encoding image {image_path}: {e}")
-            raise
+        return encode_image_to_base64(image_path)
     
     def analyze_screenshots(self, messages: list) -> str:
         """Abstract method to be implemented by specific providers"""
@@ -335,36 +324,53 @@ Instructions:
 
             # Helper to call the model with retries/backoff for transient errors (e.g., 429)
             def _call_with_backoff(prompt_text, max_attempts=5, base_delay=1.0):
-                attempt = 0
-                while attempt < max_attempts:
+                last_exception = None
+                for attempt in range(1, max_attempts + 1):
                     try:
-                        attempt += 1
-                        logger.info(f"Google AI attempt {attempt} for {stock_symbol}")
+                        logger.info(f"Google AI attempt {attempt}/{max_attempts} for {stock_symbol}")
                         resp = self.model.generate_content(prompt_text)
-                        # Some SDKs return objects with .text
+                        
+                        # Extract text from response
                         text = getattr(resp, 'text', None)
                         if text:
                             return text
+                        
                         # Some responses may embed content differently
                         if isinstance(resp, dict) and 'content' in resp:
                             return resp['content']
+                        
                         logger.error("Empty response from Google AI (no text/content)")
                         raise RuntimeError("Empty response from Google AI")
+                        
                     except Exception as e:
-                        msg = str(e)
+                        last_exception = e
+                        msg = str(e).lower()
+                        
                         # Determine if this is a retryable error (rate limit / resource exhausted)
-                        if '429' in msg or 'Resource exhausted' in msg or 'rate limit' in msg.lower() or 'quota' in msg.lower() or 'RateLimit' in msg:
+                        is_retryable = any(keyword in msg for keyword in [
+                            '429', 'resource exhausted', 'rate limit', 'quota', 
+                            'ratelimit', 'too many requests'
+                        ])
+                        
+                        if is_retryable and attempt < max_attempts:
                             # Retry with exponential backoff + jitter
                             sleep_time = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
-                            logger.warning(f"Transient Google AI error (attempt {attempt}): {e}. Retrying in {sleep_time:.1f}s")
+                            logger.warning(
+                                f"Rate limit error (attempt {attempt}/{max_attempts}): {e}. "
+                                f"Retrying in {sleep_time:.1f}s"
+                            )
                             time.sleep(sleep_time)
                             continue
                         else:
-                            # Non-retryable, re-raise
-                            logger.error(f"Non-retryable Google AI error: {e}")
+                            # Non-retryable or exhausted attempts
+                            logger.error(f"Google AI error (attempt {attempt}/{max_attempts}): {e}")
                             raise
-                # If we exhaust retries, raise final error
-                raise RuntimeError(f"Google AI generate_consolidated_decision failed after {max_attempts} attempts")
+                
+                # If we get here, all retries exhausted
+                raise RuntimeError(
+                    f"Google AI generate_consolidated_decision failed after {max_attempts} attempts. "
+                    f"Last error: {last_exception}"
+                )
 
             # Generate response using Gemini with retries
             consolidated_text = _call_with_backoff(prompt)
@@ -696,24 +702,14 @@ class TradingAnalyzer:
 
         # Save the combined report as HTML in the correct symbol folder (no text file)
         try:
-            import os
-            import sys
-            def get_base_dir():
-                if getattr(sys, 'frozen', False):
-                    # Running as EXE
-                    return os.path.dirname(sys.executable)
-                else:
-                    # Running as script
-                    return os.path.dirname(os.path.abspath(__file__))
-
             base_dir = get_base_dir()
             print(f"[DEBUG] Attempting to save HTML report for {stock_symbol}...")
             print(f"[DEBUG] Current working directory: {os.getcwd()}")
             print(f"[DEBUG] Base dir for output: {base_dir}")
             symbol_dir = os.path.join(base_dir, 'screenshots', stock_symbol)
             print(f"[DEBUG] Target symbol_dir: {symbol_dir}")
-            os.makedirs(symbol_dir, exist_ok=True)
-            report_path = os.path.join(symbol_dir, 'multi_provider_analysis.html')
+            ensure_directory_exists(symbol_dir)
+            report_path = os.path.join(symbol_dir, MULTI_PROVIDER_HTML_FILENAME)
             print(f"[DEBUG] Writing HTML to: {report_path}")
             with open(report_path, 'w', encoding='utf-8') as f:
                 f.write(''.join(html))

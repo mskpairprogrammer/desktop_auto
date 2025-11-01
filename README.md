@@ -256,6 +256,15 @@ python main.py
 python build_executable.py
 ```
 
+**⚠️ IMPORTANT SECURITY NOTICE:**
+The `.env` file is **NOT** bundled with the executable for security reasons. You **MUST** manually copy your `.env` file to the same directory as `DesktopAuto.exe` before running it.
+
+```
+dist/
+  ├── DesktopAuto.exe
+  └── .env  ← Copy this file manually!
+```
+
 ## 📊 Chart Layouts
 
 The system captures screenshots from 4 different TradingView chart layouts:

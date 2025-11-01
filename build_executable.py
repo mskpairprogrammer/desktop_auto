@@ -12,7 +12,7 @@ PyInstaller.__main__.run([
     'main.py',
     '--onefile',
     '--name=DesktopAuto',
-    f'--add-data={os.path.join(current_dir, ".env")};.',
+    # Security: Do NOT bundle .env file - users must place it next to the executable
     '--hidden-import=trading_analysis',
     '--hidden-import=pywin32',
     '--hidden-import=win32gui',
@@ -25,4 +25,8 @@ PyInstaller.__main__.run([
 ])
 
 print("\n✅ Executable created in 'dist' folder!")
-print("📄 Don't forget to copy your .env file to the same directory as the .exe")
+print("=" * 60)
+print("⚠️  IMPORTANT SECURITY NOTICE:")
+print("📄 You MUST copy your .env file to the same directory as the .exe")
+print("   The .env file is NOT bundled for security reasons")
+print("=" * 60)

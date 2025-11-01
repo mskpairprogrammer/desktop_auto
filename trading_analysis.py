@@ -2,14 +2,17 @@
 AI Trading Analysis module for screenshot analysis with email alerts
 Supports multiple AI providers through a unified interface
 """
-import base64
+# Standard library imports
+import logging
 import os
 import smtplib
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Optional, Dict, Any
-import logging
-from datetime import datetime
+
+# Local imports
+from utils import encode_image_to_base64, ensure_directory_exists
 
 try:
     from openai import OpenAI
@@ -51,7 +54,7 @@ class PerplexityAnalyzer:
     
     def encode_image_to_base64(self, image_path: str) -> str:
         """
-        Encode an image file to base64 string
+        Encode an image file to base64 string (delegates to shared utility)
         
         Args:
             image_path: Path to the image file
@@ -59,25 +62,7 @@ class PerplexityAnalyzer:
         Returns:
             Base64 encoded image as data URI
         """
-        try:
-            with open(image_path, "rb") as image_file:
-                base64_image = base64.b64encode(image_file.read()).decode("utf-8")
-            
-            # Determine the MIME type based on file extension
-            file_ext = os.path.splitext(image_path)[1].lower()
-            if file_ext == '.png':
-                mime_type = 'image/png'
-            elif file_ext in ['.jpg', '.jpeg']:
-                mime_type = 'image/jpeg'
-            else:
-                mime_type = 'image/png'  # Default to PNG
-            
-            image_data_uri = f"data:{mime_type};base64,{base64_image}"
-            return image_data_uri
-            
-        except Exception as e:
-            logger.error(f"Error encoding image {image_path}: {e}")
-            raise
+        return encode_image_to_base64(image_path)
     
     def analyze_with_trend_alerts(self, screenshot_data: Dict[str, str], output_dir: str = None, stock_symbol: str = None):
         """
@@ -462,7 +447,7 @@ This is the INITIAL ANALYSIS.
                 if output_dir is None:
                     output_dir = "screenshots"
             
-            os.makedirs(output_dir, exist_ok=True)
+            ensure_directory_exists(output_dir)
             
             report_filename = "combined_analysis_latest.txt"
             report_path = os.path.join(output_dir, report_filename)
@@ -532,15 +517,15 @@ class EmailAlertManager:
     
     def send_trend_alert(self, change_analysis: Dict[str, Any], current_analysis: str, stock_symbol: str = None, output_dir: str = None) -> bool:
         """Send email alert for detected trend changes"""
+        if not self.is_configured:
+            logger.warning("Email not configured - skipping alert")
+            return False
+        
+        if not change_analysis.get('has_changes', False):
+            logger.info("No significant changes - no email needed")
+            return True
+        
         try:
-            if not self.is_configured:
-                logger.warning("Email not configured - skipping alert")
-                return False
-            
-            if not change_analysis.get('has_changes', False):
-                logger.info("No significant changes - no email needed")
-                return True
-            
             subject = self._create_email_subject(change_analysis, stock_symbol)
             body = self._create_email_body(change_analysis, current_analysis, stock_symbol)
             
@@ -551,19 +536,26 @@ class EmailAlertManager:
             
             msg.attach(MIMEText(body, 'plain'))
             
-            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-            server.starttls()
-            server.login(self.email_user, self.email_password)
-            text = msg.as_string()
-            server.sendmail(self.email_user, self.email_to, text)
-            server.quit()
+            # Use context manager to ensure connection is properly closed
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.email_user, self.email_password)
+                server.sendmail(self.email_user, self.email_to, msg.as_string())
             
             logger.info(f"Email sent successfully to {self.email_to}")
             print(f"   📧 Email alert sent to {self.email_to}")
             return True
             
+        except smtplib.SMTPAuthenticationError as e:
+            logger.error(f"SMTP authentication failed: {e}")
+            print(f"   ✗ Email authentication failed - check credentials")
+            return False
+        except smtplib.SMTPException as e:
+            logger.error(f"SMTP error sending email: {e}")
+            print(f"   ✗ Failed to send email: {e}")
+            return False
         except Exception as e:
-            logger.error(f"Failed to send email: {e}")
+            logger.error(f"Unexpected error sending email: {e}")
             print(f"   ✗ Failed to send email: {e}")
             return False
     
