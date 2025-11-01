@@ -642,6 +642,9 @@ class TradingAnalyzer:
         results_list = [(provider_name, result['analysis_text'], result['change_analysis']) 
                       for provider_name, result in results.items()]
         trading_decision = self._generate_consolidated_trading_decision(results_list, avg_probability, all_alerts, stock_symbol, output_dir, screenshot_data)
+        
+        # Parse Google AI's email alert decision from the consolidated decision text
+        google_ai_wants_email = self._parse_google_ai_email_decision(trading_decision)
         html.append("<div class='divider'></div>")
         html.append("<h2>Google AI Consolidated Trading Decision</h2>")
         html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{trading_decision.strip()}</pre></div>")
@@ -675,34 +678,64 @@ class TradingAnalyzer:
             html.append(f"<ul><li><b>Average Trend Change Probability:</b> {avg_probability:.1f}%</li><li><b>Range:</b> {min_probability:.1f}% - {max_probability:.1f}%</li></ul>")
 
         # Determine consensus alert level
-        if all_alerts:
+        # IMPORTANT: Google AI's email decision overrides provider consensus
+        if google_ai_wants_email:
+            # Google AI determined email should be sent
+            if all_alerts:
+                html.append(f"<div><b>Alerts from {len(all_alerts)} provider(s):</b></div>")
+                html.append("<ul class='alert-list'>")
+                for alert in all_alerts:
+                    html.append(f"<li><b>{alert['provider'].title()}:</b> <span style='color:#d84315;font-weight:bold'>{alert['alert_level'].upper()}</span> ({alert['probability']}%) - {alert['summary']}</li>")
+                html.append("</ul>")
+                # Use highest alert level for consensus
+                alert_levels = {'low': 1, 'medium': 2, 'high': 3}
+                max_alert = max(all_alerts, key=lambda x: alert_levels.get(x['alert_level'].lower(), 0))
+                alert_level = max_alert['alert_level']
+                summary = f"Google AI Consensus: {max_alert['summary']}"
+            else:
+                # Google AI says send email even if providers didn't flag changes
+                alert_level = 'medium' if avg_probability >= 50 else 'low'
+                summary = f"Google AI detected significant market conditions requiring attention"
+            
+            html.append(f"<div class='summary-box consensus-high'>CONSENSUS: <b>{alert_level.upper()}</b> | Confidence: <b>HIGH</b> | Google AI: <b>EMAIL ALERT</b> | Providers: <b>{len(results)}</b> | Probability: <b>{avg_probability:.1f}%</b><br>SUMMARY: {summary}</div>")
+            consensus_change_analysis = {
+                'has_changes': True,  # Google AI determined email should be sent
+                'alert_level': alert_level,
+                'summary': summary,
+                'trend_change_probability': avg_probability,
+                'confidence_level': 'high',
+                'provider_count': len(results),
+                'provider_agreement': len(all_alerts) / len(results) * 100 if all_alerts else 0,
+                'google_ai_decision': True
+            }
+        elif all_alerts:
+            # Providers flagged changes but Google AI didn't explicitly say to send email
             html.append(f"<div><b>Alerts from {len(all_alerts)} provider(s):</b></div>")
             html.append("<ul class='alert-list'>")
             for alert in all_alerts:
                 html.append(f"<li><b>{alert['provider'].title()}:</b> <span style='color:#d84315;font-weight:bold'>{alert['alert_level'].upper()}</span> ({alert['probability']}%) - {alert['summary']}</li>")
             html.append("</ul>")
-            # Use highest alert level for consensus
             alert_levels = {'low': 1, 'medium': 2, 'high': 3}
             max_alert = max(all_alerts, key=lambda x: alert_levels.get(x['alert_level'].lower(), 0))
-            # Add a summary box
             html.append(f"<div class='summary-box consensus-high'>CONSENSUS: <b>{max_alert['alert_level'].upper()}</b> | Confidence: <b>HIGH</b> | Providers: <b>{len(results)}</b> | Agreement: <b>{len(all_alerts) / len(results) * 100:.1f}%</b><br>SUMMARY: {max_alert['summary']}</div>")
             consensus_change_analysis = {
                 'has_changes': True,
                 'alert_level': max_alert['alert_level'],
                 'summary': f"Consensus from {len(results)} providers: {max_alert['summary']}",
                 'trend_change_probability': avg_probability,
-                'confidence_level': 'high',  # High confidence when multiple providers agree
+                'confidence_level': 'high',
                 'provider_count': len(results),
                 'provider_agreement': len(all_alerts) / len(results) * 100
             }
         else:
-            html.append(f"<div class='summary-box consensus-low'>CONSENSUS: <b>LOW</b> | Confidence: <b>MEDIUM</b> | Providers: <b>{len(results)}</b> | Agreement: <b>0%</b><br>SUMMARY: No significant changes detected by {len(results)} providers</div>")
+            # No alerts from providers and Google AI didn't request email
+            html.append(f"<div class='summary-box consensus-low'>CONSENSUS: <b>LOW</b> | Confidence: <b>MEDIUM</b> | Providers: <b>{len(results)}</b> | Agreement: <b>0%</b><br>SUMMARY: No significant changes detected</div>")
             consensus_change_analysis = {
                 'has_changes': False,
                 'alert_level': 'low',
-                'summary': f"No significant changes detected by {len(results)} providers",
+                'summary': f"No significant changes detected by {len(results)} providers or Google AI",
                 'trend_change_probability': avg_probability,
-                'confidence_level': 'medium',  # Medium confidence for stable conditions
+                'confidence_level': 'medium',
                 'provider_count': len(results),
                 'provider_agreement': 0
             }
@@ -756,6 +789,62 @@ class TradingAnalyzer:
             traceback.print_exc()
             logger.error(f"Failed to write HTML report for {stock_symbol}: {e}")
         return ''.join(html), consensus_change_analysis
+    
+    def _parse_google_ai_email_decision(self, trading_decision: str) -> bool:
+        """
+        Parse Google AI's email alert decision from the consolidated trading decision text.
+        
+        Returns:
+            True if Google AI recommends sending an email alert, False otherwise
+        """
+        if not trading_decision:
+            return False
+        
+        # Normalize text for case-insensitive matching
+        decision_text = trading_decision.upper()
+        
+        # Look for explicit YES/SEND patterns
+        yes_patterns = [
+            "EMAIL ALERT DECISION: YES",
+            "EMAIL ALERT DECISION:YES",
+            "SEND EMAIL ALERT",
+            "EMAIL: YES",
+            "ALERT: YES",
+            "RECOMMENDATION: SEND EMAIL"
+        ]
+        
+        # Look for explicit NO/DON'T SEND patterns
+        no_patterns = [
+            "EMAIL ALERT DECISION: NO",
+            "EMAIL ALERT DECISION:NO",
+            "DO NOT SEND EMAIL",
+            "DON'T SEND EMAIL",
+            "EMAIL: NO",
+            "ALERT: NO",
+            "NO EMAIL NEEDED"
+        ]
+        
+        # Check for YES patterns first
+        for pattern in yes_patterns:
+            if pattern in decision_text:
+                from trading_analysis import logger
+                logger.info(f"Google AI email decision: SEND (matched pattern: '{pattern}')")
+                print(f"   📧 Google AI Decision: SEND EMAIL ALERT (matched: '{pattern}')")
+                return True
+        
+        # Check for NO patterns
+        for pattern in no_patterns:
+            if pattern in decision_text:
+                from trading_analysis import logger
+                logger.info(f"Google AI email decision: DO NOT SEND (matched pattern: '{pattern}')")
+                print(f"   📧 Google AI Decision: NO EMAIL (matched: '{pattern}')")
+                return False
+        
+        # No clear pattern found - default to False for safety
+        from trading_analysis import logger
+        logger.info("Google AI email decision: UNCLEAR (defaulting to NO)")
+        print("   ⚠️ Google AI Decision: UNCLEAR (defaulting to NO EMAIL)")
+        return False
     
     def _generate_consolidated_trading_decision(self, results: list, avg_probability: float, all_alerts: list, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None):
         """Generate a consolidated trading decision using Google AI Studio API"""
