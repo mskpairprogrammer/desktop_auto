@@ -312,6 +312,14 @@ PROVIDER SYNTHESIS:
 - Agreement Areas: [Where both providers align]
 - Disagreement Areas: [Where providers differ]
 
+EMAIL ALERT DECISION:
+Based on the analysis above, determine if an email alert should be sent.
+Consider:
+- Trend change probability (higher probability = more likely to send)
+- Alert level from both providers
+- Significance of changes detected
+- Trading decision confidence
+
 ==================================================
 
 Instructions:
@@ -320,6 +328,7 @@ Instructions:
 3. Provide specific price targets and risk levels when mentioned
 4. Be objective and balanced in your assessment
 5. Focus on actionable trading insights
+6. Email alerts should be sent for significant changes that traders need to act on
 """
 
             # Helper to call the model with retries/backoff for transient errors (e.g., 429)
@@ -716,22 +725,31 @@ class TradingAnalyzer:
             print(f"[DEBUG] HTML report successfully written: {report_path}")
             logger.info(f"Multi-provider HTML report saved to: {report_path}")
 
-            # Send email alert only from Google AI consensus (not Perplexity)
+            # Send email alert ONLY from Google AI consensus (not from individual providers like Perplexity/Claude)
             try:
                 from trading_analysis import EmailAlertManager
-                print("[DEBUG] Attempting to send consensus email alert...")
+                print("   📧 Google AI Consensus: Evaluating email alert...")
                 email_manager = EmailAlertManager()
-                print(f"[DEBUG] Email manager configured: {email_manager.is_configured}, has_changes: {consensus_change_analysis.get('has_changes', False)}")
+                
                 if email_manager.is_configured and consensus_change_analysis.get('has_changes', False):
+                    print(f"   📧 Sending email alert from Google AI consensus")
+                    print(f"   📊 Alert Level: {consensus_change_analysis.get('alert_level', 'unknown').upper()}")
+                    print(f"   📊 Probability: {consensus_change_analysis.get('trend_change_probability', 0):.1f}%")
+                    
                     email_sent = email_manager.send_trend_alert(consensus_change_analysis, ''.join(html), stock_symbol, output_dir)
-                    print(f"[DEBUG] Email sent result: {email_sent}")
-                    if not email_sent:
-                        logger.warning("Consensus email alert failed to send")
+                    
+                    if email_sent:
+                        print(f"   ✅ Email alert sent successfully from Google AI consensus")
+                    else:
+                        print(f"   ⚠️ Email alert failed to send")
+                        logger.warning("Google AI consensus email alert failed to send")
+                elif not email_manager.is_configured:
+                    print("   📧 Email alerts not configured (check .env settings)")
                 else:
-                    print("[DEBUG] Email not sent: not configured or no changes.")
+                    print(f"   📧 No email sent - no significant changes detected by Google AI consensus")
             except Exception as e:
-                print(f"[ERROR] Failed to send consensus email alert: {e}")
-                logger.error(f"Failed to send consensus email alert: {e}")
+                print(f"   ❌ Error sending Google AI consensus email alert: {e}")
+                logger.error(f"Failed to send Google AI consensus email alert: {e}")
         except Exception as e:
             print(f"[ERROR] Failed to write HTML report for {stock_symbol}: {e}")
             import traceback
@@ -947,8 +965,6 @@ class TradingAnalyzer:
     
     def _handle_alerts(self, change_analysis: dict, analysis_text: str, stock_symbol: str, output_dir: str, provider_name: str = None):
         """Handle alert display and email notifications"""
-        from trading_analysis import EmailAlertManager
-        
         provider_label = f" ({provider_name.title()})" if provider_name else ""
         
         if change_analysis['has_changes']:
@@ -956,16 +972,7 @@ class TradingAnalyzer:
             probability = change_analysis.get('trend_change_probability', 0)
             print(f"   🚨 {alert_level} ALERT{provider_label}: {change_analysis['summary']}")
             print(f"   📊 Trend Change Probability: {probability}%")
-            
-            # Send email alert if configured (only for the first provider to avoid spam)
-            if not provider_name or provider_name == list(self.providers.keys())[0]:
-                email_manager = EmailAlertManager()
-                if email_manager.is_configured:
-                    email_sent = email_manager.send_trend_alert(change_analysis, analysis_text, stock_symbol, output_dir)
-                    if not email_sent:
-                        print(f"   ⚠️ Email alert failed to send")
-                else:
-                    print(f"   📧 Email alerts not configured")
+            print(f"   📧 Email will be sent from Google AI consensus (not individual providers)")
         else:
             probability = change_analysis.get('trend_change_probability', 0)
             print(f"   ✅ No significant trend changes detected{provider_label} (Probability: {probability}%)")

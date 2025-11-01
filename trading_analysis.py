@@ -137,21 +137,13 @@ class PerplexityAnalyzer:
             # Parse the response
             analysis_text, change_analysis = self._parse_response(result, prior_analysis)
             
-            # Display change detection results
+            # Display change detection results (email sending moved to Google AI consensus)
             if change_analysis['has_changes']:
                 alert_level = change_analysis['alert_level'].upper()
                 probability = change_analysis.get('trend_change_probability', 0)
                 print(f"   🚨 {alert_level} ALERT: {change_analysis['summary']}")
                 print(f"   📊 Trend Change Probability: {probability}%")
-                
-                # Send email alert if configured
-                email_manager = EmailAlertManager()
-                if email_manager.is_configured:
-                    email_sent = email_manager.send_trend_alert(change_analysis, analysis_text, stock_symbol, output_dir)
-                    if not email_sent:
-                        print(f"   ⚠️ Email alert failed to send")
-                else:
-                    print(f"   📧 Email alerts not configured")
+                print(f"   📧 Email will be sent from Google AI consensus (not individual providers)")
             else:
                 probability = change_analysis.get('trend_change_probability', 0)
                 print(f"   ✅ No significant trend changes detected (Probability: {probability}%)")
