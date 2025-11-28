@@ -280,6 +280,9 @@ class GoogleAIAnalyzer(BaseAnalyzer):
             Analysis text from Google AI
         """
         try:
+            import base64
+            from google.generativeai.types import content_types
+            
             # Convert messages to Gemini format
             content = []
             for msg in messages:
@@ -296,9 +299,9 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                     if url.startswith('data:image'):
                         # Extract base64 data
                         try:
-                            import base64
                             header, data = url.split(',', 1)
                             image_data = base64.standard_b64decode(data)
+                            
                             # Determine media type from header
                             if 'png' in header:
                                 media_type = 'image/png'
@@ -307,11 +310,9 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                             else:
                                 media_type = 'image/jpeg'
                             
-                            content.append({
-                                'type': 'image',
-                                'data': image_data,
-                                'mime_type': media_type
-                            })
+                            # Use Gemini's blob format
+                            blob = content_types.Blob(mime_type=media_type, data=image_data)
+                            content.append(blob)
                         except Exception as e:
                             logger.warning(f"Failed to process image data URL: {e}")
                             continue
@@ -325,6 +326,8 @@ class GoogleAIAnalyzer(BaseAnalyzer):
             
         except Exception as e:
             logger.error(f"Google AI chart analysis error: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     def generate_consolidated_decision(self, perplexity_analysis: str, claude_analysis: str, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None) -> str:
