@@ -548,7 +548,8 @@ class TradingAnalyzer:
         """Initialize with provider settings from environment variables"""
         self.claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
         self.perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
-        self.google_enabled = os.getenv('GOOGLE_AI_ENABLED', 'False').lower() == 'true'
+        self.google_chart_enabled = os.getenv('GOOGLE_AI_CHART_ENABLED', 'False').lower() == 'true'
+        self.google_consolidation_enabled = os.getenv('GOOGLE_AI_CONSOLIDATION_ENABLED', 'False').lower() == 'true'
         
         # Import the actual analysis methods from trading_analysis.py
         self.original_analyzer = None
@@ -594,7 +595,7 @@ class TradingAnalyzer:
                 self.claude_enabled = False
         
         # Check Google AI setup for chart analysis
-        if self.google_enabled:
+        if self.google_chart_enabled:
             google_key = os.getenv('GOOGLE_AI_API_KEY')
             if google_key:
                 try:
@@ -603,10 +604,24 @@ class TradingAnalyzer:
                     logger.info("Google AI chart analyzer enabled")
                 except Exception as e:
                     logger.error(f"Failed to initialize Google AI analyzer: {e}")
-                    self.google_enabled = False
+                    self.google_chart_enabled = False
             else:
-                logger.warning("GOOGLE_AI_ENABLED=True but GOOGLE_AI_API_KEY not found")
-                self.google_enabled = False
+                logger.warning("GOOGLE_AI_CHART_ENABLED=True but GOOGLE_AI_API_KEY not found")
+                self.google_chart_enabled = False
+        
+        # Initialize Google AI for consolidation even if chart analysis is disabled
+        if self.google_consolidation_enabled and not self.google_analyzer:
+            google_key = os.getenv('GOOGLE_AI_API_KEY')
+            if google_key:
+                try:
+                    self.google_analyzer = GoogleAIAnalyzer(google_key)
+                    logger.info("Google AI consolidation analyzer enabled")
+                except Exception as e:
+                    logger.error(f"Failed to initialize Google AI consolidation analyzer: {e}")
+                    self.google_consolidation_enabled = False
+            else:
+                logger.warning("GOOGLE_AI_CONSOLIDATION_ENABLED=True but GOOGLE_AI_API_KEY not found")
+                self.google_consolidation_enabled = False
         
         if not self.providers:
             logger.warning("No AI providers enabled or properly configured. Check API keys and enable flags.")
@@ -787,16 +802,22 @@ class TradingAnalyzer:
             max_probability = 0
             min_probability = 0
 
-        # Generate Google AI consolidated trading decision FIRST
+        # Generate Google AI consolidated trading decision FIRST (if enabled)
         results_list = [(provider_name, result['analysis_text'], result['change_analysis']) 
                       for provider_name, result in results.items()]
-        trading_decision = self._generate_consolidated_trading_decision(results_list, avg_probability, all_alerts, stock_symbol, output_dir, screenshot_data)
         
-        # Parse Google AI's email alert decision from the consolidated decision text
-        google_ai_wants_email = self._parse_google_ai_email_decision(trading_decision)
-        html.append("<div class='divider'></div>")
-        html.append("<h2>Google AI Consolidated Trading Decision</h2>")
-        html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{trading_decision.strip()}</pre></div>")
+        trading_decision = None
+        google_ai_wants_email = False
+        
+        if self.google_consolidation_enabled:
+            trading_decision = self._generate_consolidated_trading_decision(results_list, avg_probability, all_alerts, stock_symbol, output_dir, screenshot_data)
+            # Parse Google AI's email alert decision from the consolidated decision text
+            google_ai_wants_email = self._parse_google_ai_email_decision(trading_decision)
+        
+        if trading_decision:
+            html.append("<div class='divider'></div>")
+            html.append("<h2>Google AI Consolidated Trading Decision</h2>")
+            html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{trading_decision.strip()}</pre></div>")
 
         # Add individual provider analyses in desired order: Claude, Perplexity, Google
         provider_order = ['claude', 'perplexity', 'google']
