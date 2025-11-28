@@ -1,6 +1,7 @@
 """
 Configuration constants for desktop_auto project
 """
+import os
 
 # Screen coordinates for different operations
 # Note: These are hardcoded for specific screen resolutions and may need adjustment
@@ -71,9 +72,10 @@ class Screenshots:
 class API:
     """API configuration constants"""
     PERPLEXITY_BASE_URL = "https://api.perplexity.ai"
-    PERPLEXITY_MODEL = "sonar"
-    CLAUDE_MODEL = "claude-sonnet-4-5-20250929"
-    GOOGLE_AI_MODEL = "gemini-3-pro-preview"
+    # Model names can be overridden via environment variables
+    PERPLEXITY_MODEL = os.getenv('PERPLEXITY_MODEL', 'sonar')
+    CLAUDE_MODEL = os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929')
+    GOOGLE_AI_MODEL = os.getenv('GOOGLE_AI_MODEL', 'gemini-3-pro-preview')
     
     # Retry configuration
     MAX_RETRY_ATTEMPTS = 5
