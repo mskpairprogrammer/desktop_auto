@@ -73,7 +73,7 @@ class API:
     PERPLEXITY_BASE_URL = "https://api.perplexity.ai"
     PERPLEXITY_MODEL = "sonar"
     CLAUDE_MODEL = "claude-sonnet-4-5-20250929"
-    GOOGLE_AI_MODEL = "gemini-3-pro"
+    GOOGLE_AI_MODEL = "gemini-3-pro-preview"
     
     # Retry configuration
     MAX_RETRY_ATTEMPTS = 5
