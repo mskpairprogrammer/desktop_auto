@@ -223,9 +223,61 @@ class GoogleAIAnalyzer(BaseAnalyzer):
     
     def analyze_screenshots(self, messages: list) -> str:
         """
-        This method is not used for Google AI as it only generates consolidated decisions from text
+        Analyze chart screenshots using Google AI
+        
+        Args:
+            messages: List of message dicts with 'type' and 'text'/'image_url' keys
+            
+        Returns:
+            Analysis text from Google AI
         """
-        raise NotImplementedError("GoogleAIAnalyzer is designed for text-based consolidated decision generation only")
+        try:
+            # Convert messages to Gemini format
+            content = []
+            for msg in messages:
+                if msg.get('type') == 'text':
+                    content.append(msg['text'])
+                elif msg.get('type') == 'image_url':
+                    # Extract base64 from data URL if present
+                    image_url = msg.get('image_url', {})
+                    if isinstance(image_url, dict):
+                        url = image_url.get('url', '')
+                    else:
+                        url = image_url
+                    
+                    if url.startswith('data:image'):
+                        # Extract base64 data
+                        try:
+                            import base64
+                            header, data = url.split(',', 1)
+                            image_data = base64.standard_b64decode(data)
+                            # Determine media type from header
+                            if 'png' in header:
+                                media_type = 'image/png'
+                            elif 'jpeg' in header or 'jpg' in header:
+                                media_type = 'image/jpeg'
+                            else:
+                                media_type = 'image/jpeg'
+                            
+                            content.append({
+                                'type': 'image',
+                                'data': image_data,
+                                'mime_type': media_type
+                            })
+                        except Exception as e:
+                            logger.warning(f"Failed to process image data URL: {e}")
+                            continue
+            
+            if not content:
+                return "No content to analyze"
+            
+            # Call Google AI with backoff retry
+            response = self._call_with_backoff(content)
+            return response
+            
+        except Exception as e:
+            logger.error(f"Google AI chart analysis error: {e}")
+            return None
     
     def generate_consolidated_decision(self, perplexity_analysis: str, claude_analysis: str, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None) -> str:
         """
@@ -421,6 +473,7 @@ class TradingAnalyzer:
         """Initialize with provider settings from environment variables"""
         self.claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
         self.perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
+        self.google_enabled = os.getenv('GOOGLE_AI_ENABLED', 'False').lower() == 'true'
         
         # Import the actual analysis methods from trading_analysis.py
         self.original_analyzer = None
@@ -436,6 +489,7 @@ class TradingAnalyzer:
         
         # Initialize enabled AI providers
         self.providers = {}
+        self.google_analyzer = None
         
         # Check Perplexity setup
         if self.perplexity_enabled:
@@ -464,6 +518,21 @@ class TradingAnalyzer:
                 logger.warning("CLAUDE_ENABLED=True but ANTHROPIC_API_KEY not found")
                 self.claude_enabled = False
         
+        # Check Google AI setup for chart analysis
+        if self.google_enabled:
+            google_key = os.getenv('GOOGLE_AI_API_KEY')
+            if google_key:
+                try:
+                    self.google_analyzer = GoogleAIAnalyzer(google_key)
+                    self.providers['google'] = self.google_analyzer
+                    logger.info("Google AI chart analyzer enabled")
+                except Exception as e:
+                    logger.error(f"Failed to initialize Google AI analyzer: {e}")
+                    self.google_enabled = False
+            else:
+                logger.warning("GOOGLE_AI_ENABLED=True but GOOGLE_AI_API_KEY not found")
+                self.google_enabled = False
+        
         if not self.providers:
             logger.warning("No AI providers enabled or properly configured. Check API keys and enable flags.")
     
@@ -486,6 +555,11 @@ class TradingAnalyzer:
             if provider_name == 'perplexity':
                 # Use original Perplexity analyzer directly - but skip prior analysis
                 analysis_text, change_analysis = self._analyze_with_perplexity_no_prior(
+                    screenshot_data, output_dir, stock_symbol
+                )
+            elif provider_name == 'google':
+                # Use Google AI analyzer for chart analysis
+                analysis_text, change_analysis = self._analyze_with_google_ai(
                     screenshot_data, output_dir, stock_symbol
                 )
             else:
@@ -972,6 +1046,75 @@ class TradingAnalyzer:
         consolidated_text += f"\n{'='*50}\n"
         
         return consolidated_text
+    
+    def _analyze_with_google_ai(self, screenshot_data: dict, output_dir: str = None, stock_symbol: str = None):
+        """Analyze charts with Google AI"""
+        try:
+            # Filter out None/empty paths
+            valid_screenshots = {k: v for k, v in screenshot_data.items() if v and os.path.exists(v)}
+            
+            if not valid_screenshots:
+                logger.warning("No valid screenshots found for Google AI analysis")
+                return None, None
+            
+            print(f"   🤖 Google AI analyzing {len(valid_screenshots)} chart screenshot(s)...")
+            
+            # Encode all images
+            image_data_uris = {}
+            for window_type, image_path in valid_screenshots.items():
+                try:
+                    image_data_uris[window_type] = self.google_analyzer.encode_image_to_base64(image_path)
+                except Exception as e:
+                    logger.error(f"Failed to encode {window_type} image for Google AI: {e}")
+                    continue
+            
+            if not image_data_uris:
+                logger.error("Failed to encode any images for Google AI analysis")
+                return None, None
+            
+            # Create analysis prompt for Google AI (chart analysis focused)
+            prompt = f"""Analyze these trading charts for {stock_symbol or 'the stock'} and provide:
+1. Current technical conditions (support/resistance, trends, momentum)
+2. Notable patterns or formations visible in the charts
+3. Volume and price action assessment
+4. Key levels to watch
+5. Short-term outlook based on the technical picture
+
+Focus on objective technical observations from the charts provided."""
+            
+            # Build content array with text prompt and all images
+            content = [{"type": "text", "text": prompt}]
+            
+            # Add all images to the content
+            for window_type, image_uri in image_data_uris.items():
+                content.append({
+                    "type": "image_url",
+                    "image_url": {"url": image_uri}
+                })
+            
+            # Call Google AI analyze_screenshots method
+            analysis_text = self.google_analyzer.analyze_screenshots(content)
+            
+            if not analysis_text:
+                logger.warning("Google AI returned empty analysis")
+                return None, None
+            
+            # For Google AI chart analysis, we mark as "change" if high confidence analysis provided
+            change_analysis = {
+                'has_changes': True,  # Google AI provides detailed analysis
+                'alert_level': 'low',  # Chart analysis is informational
+                'summary': 'Google AI chart analysis completed',
+                'probability': 0  # No change probability for chart analysis
+            }
+            
+            logger.info(f"Google AI chart analysis completed for {stock_symbol}")
+            return analysis_text, change_analysis
+            
+        except Exception as e:
+            logger.error(f"Google AI chart analysis error: {e}")
+            import traceback
+            traceback.print_exc()
+            return None, None
     
     def _analyze_with_custom_provider(self, screenshot_data: dict, output_dir: str = None, stock_symbol: str = None, provider_name: str = 'claude', prior_analysis: str = None):
         """Analyze using custom AI provider (Claude, etc.)"""
