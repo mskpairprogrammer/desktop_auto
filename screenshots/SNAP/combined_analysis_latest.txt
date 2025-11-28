@@ -1,6 +1,6 @@
 Combined Screenshot Analysis Report
 ============================================================
-Analysis Date: 2025-10-30 10:11:53
+Analysis Date: 2025-11-27 21:05:10
 Screenshots Analyzed: 5
 
 Screenshot Sources:
@@ -14,9 +14,9 @@ Screenshot Sources:
 Trend Change Analysis:
 ------------------------------
 📊 Trend Change Probability: 0%
-🎯 Confidence Level: MEDIUM
-🚨 Alert Status: NO ALERT (LOW)
-📋 Summary: No significant changes detected by 2 providers
+🎯 Confidence Level: HIGH
+🚨 Alert Status: ALERT (LOW)
+📋 Summary: Google AI Consensus: Google AI chart analysis completed
 
 Combined Analysis Results:
 ========================================
@@ -44,151 +44,212 @@ Combined Analysis Results:
 <body>
 <div class='container'>
     <h1>Multi-Provider AI Analysis Report for SNAP</h1>
-    <div class='meta'>Generated: 2025-10-30 10:11:46</div>
+    <div class='meta'>Generated: 2025-11-27 21:04:34</div>
 <div class='divider'></div><h2>Google AI Consolidated Trading Decision</h2><div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>==================================================
 CONSOLIDATED TRADING DECISION FOR SNAP
 ==================================================
 
-TRADING DECISION: **HOLD/SELL BIAS**
-Consensus Assessment: Both providers lean towards a bearish outlook, with Perplexity advising a hold/sell bias and Claude highlighting strong bearish signals. While Claude notes oversold conditions, the overall trend remains downward.
-Overall Confidence: 75%
+TRADING DECISION: **HOLD / WATCH**
+Consensus Assessment: There is strong unanimity across all three AI providers that SNAP is currently in a "no trade" zone. The stock is deeply oversold (prohibiting new shorts) but lacks the requisite momentum or confirmed reversal signals to justify a long entry. The consensus view is that the stock is searching for a bottom between $7.32 and $7.61.
+Overall Confidence: **85%** (High confidence in the "Hold" decision; lower confidence in immediate direction).
 
 TREND CHANGE EVALUATION:
-Both analyses indicate a low probability of a significant trend change in the immediate future. Perplexity sees no evidence of imminent reversal, while Claude identifies potential for a bounce due to oversold conditions but the primary trend is bearish.
-Consolidated probability assessment: 20% chance of an immediate bullish reversal.
-Key factors driving the trend evaluation: Dominant bearish trend signals, lack of confirmed bullish divergences, and absence of strong buying pressure, outweigh potential oversold bounces.
+**Consolidated Probability: 40-45% (Approaching, but not confirmed)**
+While the macro trend remains bearish, signs of exhaustion are accumulating.
+- **Google AI** assigns a 45% probability, citing a visible +RD (Positive Reversal Divergence) and Bullish Sweep signals.
+- **Claude** highlights "13" exhaustion counts and positive VOLD pressure, suggesting capitulation is near.
+- **Perplexity** remains the most skeptical, noting a lack of confirmed reversal oscillators and low relative volume.
+**Key Driver:** The extreme reading on the MS Matrix (-192.4) suggests the elastic band is stretched to the downside, but a "snap back" requires volume confirmation which is currently absent.
 
 CRITICAL FACTORS:
-- Bearish trend confirmed by LuxAlgo signals, Heiken Ashi candles, and multi-timeframe dashboards (Perplexity & Claude)
-- Lack of +RD (Positive Reversal Divergence) signals (Perplexity & Claude)
-- High selling pressure evidenced by the CVD Divergence Oscillator (Claude)
-- Claude notes MS Matrix Mod in oversold territory, while Perplexity shows current levels are neutral, not at reversal extremes
-- Volume profile shows price near lower value node, no sharp exhaustion (Perplexity & Claude)
+1.  **Extreme Oversold Conditions:** All providers highlight the MS Matrix Mod at **-192.4**, a level that historically precedes mean reversion bounces.
+2.  **Support Level Confluence:** There is high agreement on support zones. Current price ($7.61) is testing immediate structural support, with a stronger, "hard deck" ATM support line identified at **$7.32**.
+3.  **Conflicting Divergence Signals:** A critical technical disagreement exists: **Google AI** identifies a "+RD" (Positive Reversal Divergence) on the 4H chart, while **Perplexity** explicitly states "No recent +RD" is visible.
+4.  **Volume Discrepancy:** RVOL is low (0.65), indicating a lack of conviction, yet the VOLD ratio is positive (4.68), suggesting that despite the price drop, buying pressure is quietly absorbing selling at these levels.
+5.  **Bearish Momentum:** Trend indicators (HEMA, Deltas, SQZMOM) remain red/negative. No "squeeze" has fired to the upside.
 
 RISK ASSESSMENT:
-- Upside Potential: Limited upside potential. Resistance around $8.00 - $8.10 (Claude's resistance zone). Minor short term bounce potential near $7.80.
-- Downside Risk: Support at $7.60-$7.70, with potential for further decline if broken. Longer term projections suggest potential drops to $7.12 or lower (Claude's ATM Chart Lines).
-- Stop Loss Recommendation: If holding short positions, consider a stop loss around $8.15 to protect against a break of resistance.
+- **Upside Potential:** Immediate resistance lies at **$7.74**, with heavier volume nodes (bag holders) at **$8.20 - $8.55**. A mean reversion bounce targets these levels.
+- **Downside Risk:** If the current $7.61 shelf breaks, the price is expected to test **$7.32**. A break below $7.30 opens the door to significant further discovery.
+- **Stop Loss Recommendation:** For aggressive traders attempting to front-run the reversal at $7.61, a hard stop is recommended below **$7.29**.
 
 PROVIDER SYNTHESIS:
-- Perplexity Focus: Emphasizes the established bearish trend, lack of reversal signals, and neutral oscillator readings. Recommends a HOLD/SELL bias based on trend continuation potential.
-- Claude Focus: Highlights bearish signals and oversold conditions, but also mentions key levels like $7.50 - $7.60 support and $8.00 - $8.10 resistance. Notes ATM Chart Lines suggesting long-term downside potential.
-- Agreement Areas: Both agree on the prevailing bearish trend, the lack of strong bullish reversal signals and the presence of selling pressure.
-- Disagreement Areas: Claude notes MS Matrix Mod as being in extremely oversold territory. Perplexity notes "MS Matrix Mod not at overbought/oversold extremes". This is likely due to differing calculations/timeframes used in each tool's implementation of the indicator.
+- **Perplexity Focus:** Risk-averse. Emphasizes the lack of volume conviction and the absence of clear reversal oscillators. Suggests staying flat until confirmation.
+- **Claude Focus:** Exhaustion signals. Highlights the Demark "13" countdowns and the specific VOLD buying pressure as signs that the selling is capitulating.
+- **Google AI Focus:** Reversal potential. Optimistic about the "+RD" signal and "Bullish Sweep" labels, viewing the current price as a potential accumulation zone if $7.32 holds.
+- **Agreement Areas:** All agree the trend is bearish, the asset is oversold (MS Matrix), and $7.32 is the critical support floor.
+- **Disagreement Areas:** The existence of a valid Positive Reversal Divergence (+RD). Google confirms it; Perplexity denies it.
+
+EMAIL ALERT DECISION:
+**NO IMMEDIATE ALERT**
+*Rationale:* The market is in a "wait and see" mode. While the oversold conditions are significant, there is no actionable trigger (such as a trendline break or a confirmed reversal candle) to justify an immediate alert.
+*Monitor For:* A test of **$7.32** (potential buy zone) OR a close above **$7.75** (confirmation of reversal). If either occurs, an alert would be warranted.
 
 ==================================================</pre></div><div class='divider'></div><div class='provider-title'>Claude Analysis</div><div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'># SNAP Stock Analysis
 
 ## MARKET OVERVIEW
-SNAP is trading at $7.73, down -0.19% on the 1-hour timeframe. The stock is in a bearish trend with recent downward pressure, currently testing support levels around $7.70-$7.73. Multiple timeframes show consistent bearish sentiment with the stock trading near recent lows.
+SNAP is trading at $7.61, down -0.39% (-0.05 points) on the 1-hour timeframe as of November 26, 2025. The stock is in a bearish trend with recent price action showing consolidation near multi-year lows around the $7.60 level. Multiple technical indicators across all timeframes suggest continued weakness with some early signs of potential stabilization.
 
 ## KEY VISIBLE INDICATORS
 
-**Trend Analysis Chart (Chart 1):**
-- LuxAlgo Trendlines with Breaks: Price at 7.72-7.73 range
-- LuxAlgo Nadaraya-Watson Envelope: 3 close signals visible
-- LuxAlgo Signals & Scalper: Multiple bearish confirmations visible with "Trend Catcher Bullish" and "Neo Cloud Bullish" signals appearing but price rejecting higher
-- Price Action Concepts: Strong resistance zone visible around $8.00-$8.10 (pink/red shaded area)
-- MTF Trend & Momentum Dashboard: Showing bearish readings across multiple timeframes
-- Volume Footprint: Visible with absorption patterns at key levels
-- Oscillator Matrix showing crossing over conditions with multiple reversal signals
+**Trend Analysis Chart (Volume Footprint):**
+- LuxAlgo Trendlines with Breaks showing multiple resistance levels
+- Volume Footprint displaying significant selling pressure with Delta readings showing -756.38K, -286.29K, and other negative deltas
+- Current price at $7.61 with strong bearish sentiment
+- Oscillator Matrix showing multiple bearish signals
+- QQE close at 14.5 (48.2182)
+- Kalman Trend Strength Oscillator visible at bottom
 
-**Smoothed Heiken Ashi Chart (Chart 2):**
-- Smoothed Heiken Ashi Candles: Predominantly RED candles indicating strong bearish trend
-- AlgoAlpha HEMA Trend: HEMA at 7.77, price trading below it showing bearish structure
-- Divergence signals: Multiple divergence markers visible throughout the chart
-- Volume Profile zones: Support zones at $7.60-$7.70 (cyan), resistance at $8.20-$8.40 (pink)
-- Recent price action shows rejection from $8.00+ levels with sustained downtrend
-- Yellow diagonal trendline showing long-term support being tested
-- "Hist" labels indicating histogram changes and potential momentum shifts
+**Smoothed Heiken Ashi Chart:**
+- Predominantly red/bearish Heiken Ashi candles across the visible timeframe
+- Multiple MACD bearish signals (MACD Hist RSI VWMACD CMF MFI labels visible)
+- AlgoAlpha HEMA Trend showing downward trajectory
+- Volume Profile showing high volume nodes around $8.50-$9.00 range
+- Recent "Hist 1" signals appearing, suggesting potential histogram reversals
+- Multiple divergence indicators showing RSI, Stoch signals
+- Clear downtrend from $10+ levels to current $7.60 range
 
-**Volume Layout Chart (Chart 3):**
-- LuxAlgo Money Flow Profile: Visible with high volume nodes around $7.50-$7.60 and $8.00-$8.10
-- CVD Divergence Oscillator: Currently at -552,991.25, showing significant selling pressure (RED bars dominating)
-- SQZMOM_LB: Currently at -0.0834, showing negative momentum with red coloring, indicating bearish squeeze conditions
-- MA Distance with StdDev Bands: Currently at 10.78, showing price extended from moving average
-- Volume Profile: High volume node (POC) visible around $7.80-$8.00 range
-- **CRITICAL: No clear +RD or -RD signals visible in the recent period**
-- CVD showing persistent selling with green buy signals appearing but not sustained
+**Volume Layout Chart:**
+- LuxAlgo Money Flow Profile showing distribution zones
+- CVD Divergence Oscillator reading -6,948,212.77 (strongly negative)
+- SQZMOM_LB showing red/negative momentum bars with value at 0.0000
+- MA Distance with StdDev Bands showing -5.58, 20.45, -10.23, indicating price well below moving averages
+- Volume profile showing key support around $7.20-$7.30 zone
+- High volume nodes visible around $8.80-$9.10 range (resistance)
 
-**Volume Profile Chart (Chart 4):**
-- RVOL: Currently at 0.81, showing below-average volume (bearish confirmation)
-- VOLD Ratio: 1.36, showing slight buying pressure but not strong
-- **MS Matrix Mod: Currently at -85.0 (deep oversold territory), with readings showing -228.3 and -240.3 in recent periods - CRITICAL OVERSOLD CONDITION**
-- TTOB: "Bearish Sweep" signals visible at recent highs around $7.85-$8.00
-- LuxAlgo Rolling VWAP Channel: Price trading at lower end of channel around 7.70
-- Multiple "Bearish Sweep" labels indicating trapped long traders at higher levels
+**Volume Profile Chart:**
+- RVOL at 0.65 (below average volume)
+- VOLD ratio USI:VOLD at 4.68 (positive buying pressure currently)
+- MS (Matrix Mod) showing -66.0, -192.4 (deeply oversold conditions) - **CRITICAL OVERSOLD SIGNAL**
+- TTOB 52 4mall indicator visible
+- LuxAlgo Rolling VWAP Channel showing current price near lower boundary
+- Multiple "Bullish Sweep" and "Bearish Sweep" labels visible on chart
+- Wyckoff Bollinger Bands showing price at lower band
 
-**Symbolik Workspace Chart (Chart 5):**
-- **ATM Chart Lines visible:** Multiple levels shown including 21.82, 21.00, 20.18, 20.12, 19.46, 18.93, 18.03, 17.12, and 14.88 (these appear to be longer-term projections)
-- ATM Elliott Projections: Listed but chart visualization not fully loaded
-- ATM Elliott Wave: Listed in menu
-- ATM Pressure Alert: Listed in menu
-- Variable Aggressive Sequential: Listed in menu
-- TKT Analysis: Menu visible but chart data not displayed
-- TKT Score: Shows 4.25 (relatively low score indicating weak opportunity)
-- **Note: Main chart area appears blank/not fully loaded - limited visual data available**
+**Symbolik Workspace Chart:**
+- ATM Chart Lines visible with multiple support/resistance levels
+- ATM Elliott Wave count showing potential Wave structure with numbered waves visible (1, 2, 3, 4, 5, A, B, C patterns)
+- Current price appears to be in corrective wave structure
+- Variable Aggressive Sequential showing "13" countdown markers (exhaustion signals)
+- ATM Elliott Projections showing price targets around $7.00, $7.32, $7.61, $8.00+ levels
+- TKT Analysis showing mixed signals (red, yellow, green bars)
+- TKT Score at -29.50 (negative but improving from lows)
+- Multiple "P" (pivot) markers visible on chart
+- ATM Chart Lines showing current price sitting near $7.61 support level
 
 ## CRITICAL SIGNALS
 
-1. **MS Matrix Mod EXTREME OVERSOLD**: At -85</pre></div><div class='divider'></div><div class='provider-title'>Perplexity Analysis</div><div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>**MARKET OVERVIEW**  
-SNAP is trading at **$7.73** on the hourly (and higher) timeframes across all windows. The recent price action is **bearish**, as seen by the breakdown toward local lows near key support zones. Market sentiment across multiple indicator panels suggests trend weakness and potential instability, but no strong reversal cues yet.
+1. **MS Matrix Mod Deeply Oversold**: MS indicator at -66.0 and -192.4 indicates extreme oversold conditions, suggesting potential reversal zone
+2. **Demark Sequential 13s**: Multiple "13" countdown markers visible on Symbolik chart indicating exhaustion of current trend
+3. **ATM Chart Line Alignment**: Current price at $7.61 is sitting directly on an ATM chart line support level
+4. **CVD Extreme Negative**: CVD at -6.95M shows massive cumulative selling pressure, but this can mark capitulation
+5. **VOLD Ratio Positive**: Despite bearish trend, VOLD at 4.68 shows current buying pressure</pre></div><div class='divider'></div><div class='provider-title'>Perplexity Analysis</div><div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>**MARKET OVERVIEW**  
+SNAP is trading at **$7.61** (as of Nov 27, 2025) with a recent mild loss (-0.39%); analysis spans weekly, 4-hour, and intraday timeframes. Market conditions appear **bearish to consolidating** with significant overhead resistance and weak bullish momentum.
 
 ---
 
 **KEY VISIBLE INDICATORS**
 
-- **Trend Analysis (LuxAlgo Window, Image 1):**
-  - **LuxAlgo signals**: Recent "Sell" tags, with visible bearish overlays.
-  - **Price Action Concepts**: Lower highs (LH) and lower lows (LL) forming, with a breakdown below highlighted support zone.
-  - **Overlays**: Bearish cloud areas overhead, bullish support (green zone) below price, with price near/at the bottom of this support.
-  - **Oscillator Matrix**: Oscillators are below 50, not showing a reversal.
-  - **Trend/Momentum**: Dashboard shows dominant bearish conditions on several timeframes.
+- **Trend Analysis / LuxAlgo Footprint (Image 1):**
+  - **Weekly footprint:** Volume and delta bars show several large negative deltas and weak positive absorption, with no dominant bullish delta periods. 
+  - **Trend strength:** Marked as “trending (50.93%)” but not at an extreme.
+  - **Oscillators:** QQE at 48.22/42.19 (borderline neutral-bearish); no strong reversal signal detected.
 
-- **Smoothed Heiken Ashi Candles Window (Image 2):**
-  - **Candle Colors**: Transitioned recently from green (bullish) to mostly red (bearish trend).
-  - **HEMA Trend**: Both 20 and 40 HEMA now flat to downward, with price below HEMA.
-  - **Divergences**: Notable bullish divergences marked previously, but most recent signal cluster is **bearish** (Hist, RSI, Stoch, AFI) as price accelerates down.
-  - **Volume Footprint**: Large volume spike on last bearish move; absorption possible at current low, but not yet confirmed.
+- **Smoothed Heiken Ashi & Trend (Image 2):**
+  - **Candles:** Recent trend is bearish (dark/red candles).
+  - **HEMA trend:** Slope is downward, with no crossover to bullish.
+  - **Divergences:** Several highlighted reversal signals in prior downswings, but the most recent price leg down shows no strong bullish divergence.
+  - **Volume footprint:** High volume absorption/cluster zones near $7.60–$7.80 and $7.95–$8.20 acting as likely resistance.
 
-- **Volume Layout Window (Image 3):**
-  - **Money Flow Profile**: Bulk of activity consolidating between $7.70–$8.10, with price now at the lower end of this accumulation.
-  - **CVD Divergence Oscillator**: Strong negative print (–552,991), no recent +RD/–RD divergence icons.
-  - **SQZMOM_LB**: Momentum histogram negative, below zero, fade but not yet indicative of a squeeze reversal.
-  - **MA Distance with StdDev**: Price at/near –1.32 stddev below MA, not an extreme but on the lower edge of range.
+- **Volume Layout (Image 3):**
+  - **Money flow profile:** Shows repeated rejections at high-volume nodes near $8.20 and above; cluster of recent activity $7.20–$7.70.
+  - **CVD Divergence Oscillator:** Large negative value (-6.95M), no recent +RD (positive reversal divergence) visible.
+  - **SQZMOM_LB:** Negative and flat, no squeeze firing; momentum remains to the downside.
+  - **MA Distance w/ StdDev:** Price is below mean, but not at a strong standard deviation extreme.
 
-- **Volume Profile Window (Image 4):**
-  - **RVOL**: Low (0.81), below 1, suggesting no capitulation or panic-selling volume spike.
-  - **VOLD Ratio**: +1.36, positive indicating slight buying pressure intraday despite the price drop.
-  - **MS (Matrix Mod)**: Not at overbought/oversold extremes; closest bar (–17.8) well above oversold trigger (–200).
-  - **TTOB Order Blocks**: Prior bearish sweeps, but currently price is consolidating just above a support node.
+- **Volume Profile (Image 4):**
+  - **RVOL:** Low (0.65), indicating weak volume participation—no strong conviction by bulls or bears at current level.
+  - **VOLD Ratio:** Last visible reading is positive (4.68), suggesting a slight recent uptick in buying pressure after prior heavy selling.
+  - **MS Matrix Mod:** Remains far in negative territory (-192.4), oversold and weak, but not yet showing an upward reversal.
+  - **TTOB order blocks:** Small bullish and bearish sweeps present; not clustered at a crucial pivot.
 
 - **Symbolik Workspace (Image 5):**
-  - **Chart not loaded**: No data visible for ATM Chart Lines, Elliott Waves, Pressure Alerts, TKT analysis, Demark setups, or scores.
+  - **ATM Chart Lines:** Current price ($7.61) is very close to a chart line—**key support at roughly $7.32** and resistance at $7.71–$7.74.
+  - **Elliott Waves:** Structure is in a corrective/consolidation phase after a completed impulse above $9.00.
+  - **Demark Sequential:** Latest visible 13’s (potential reversal) have already played out; current sequence is early—no new 9/13 at major swing.
+  - **TKT Score:** Low (approx. -30), signaling weak opportunity and risk-off environment.
+  - **ATM Pressure Alert:** No active extreme bullish/bearish alert.
 
 ---
 
 **CRITICAL SIGNALS**
-- **No clear +RD (Positive Reversal Divergence) or –RD** on volume or price oscillators.
-- **No MS Matrix Mod overbought/oversold readings**—current levels are neutral, not at reversal extremes.
-- **Bearish trend is dominant across LuxAlgo signals, HEMA, candles, and multi-timeframe dashboards**.
-- **Symbolik Workspace: Chart not loaded** (so no critical support/resistance, pressure, or TD signals available from this system).
-- **Volume profile shows price near lower value node**, but no sharp exhaustion or absorption signature confirmed.
+
+- **No recent +RD or -RD** (reversal divergence) on CVD or price oscillators.
+- **Volume and RVOL remain low**, suggesting any move could lack strength until participation increases.
+- **MS Matrix Mod is highly oversold**, which often precedes a bounce but lacks confirmation from price or divergence factors here.
+- **ATM chart line alignment:** Current price is very near a multi-tested support band ($7.32–$7.61).  
+- **No new Demark Sequential 9/13** at current lows, reducing probability of immediate reversal.
 
 ---
 
-**TRADING DECISION**
-
-**HOLD / SELL BIAS**
-
-Rationale:
-- **Primary trend is clearly bearish:** Repeated "Sell" signals, red Heiken Ashi candles, and breakdown below support.
-- **Momentum and volume metrics do not indicate capitulation or a reversal:** Oscillators remain negative, and RVOL is not spiking.
-- **No confirmed bullish divergences or reversal triggers** are present. Price remains at the lower boundary of major value area, but without bullish confirmation.
-- **No trend exhaustion or absorption patterns** are confirmed in the volume or footprint.
+**TRADING DECISION**  
+**HOLD / WATCH for confirmation.**  
+- **Rationale:** Although the market is oversold (per MS) and sitting near long-term support with a slight bullish volume sweep, there’s no confirmed reversal signal: no bullish divergence, no reversal oscillator trigger, no squeeze momentum “fire,” and relative volume is low. ATM/TKT signals are risk-averse and Demark Sequential does not confirm exhaustion yet.  
+- Aggressive traders may attempt small speculative longs at support ($7.32–$7.61) **only with tight stops below $7.30**—otherwise, remain flat and wait for clear reversal.
 
 ---
 
 **TREND CHANGE EVALUATION**
 
-No evidence of imminent trend reversal or exhaustion; the setup remains bearish but not at an oversold extreme. Lack of reversal divergences and the absence of fresh buying pressure or aggressive absorption suggest **continuation or mild stabilization at this level** rather than a clear bounce.</pre></div><div class='divider'></div><h2>Multi-Provider Consensus Summary</h2><div class='section'><div class='summary-box consensus-low'>CONSENSUS: <b>LOW</b> | Confidence: <b>MEDIUM</b> | Providers: <b>2</b> | Agreement: <b>0%</b><br>SUMMARY: No significant changes detected by 2 providers</div></div></div></body></html>
+- **Trend remains bearish**, though at a broadly oversold, high-volume support level. Probabilities increase for a mean reversion *if* price finds support and volume confirms, but no technical signal justifies early entry.
+
+---</pre></div><div class='divider'></div><div class='provider-title'>Google AI Analysis</div><div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>Based on the provided chart screenshots for SNAP, here is the technical analysis:
+
+**MARKET OVERVIEW**
+SNAP is currently trading at $7.61, down -0.39%. The stock is in a confirmed downtrend across medium (4H) and short-term (1H) timeframes, having retraced significantly from recent highs near $9.50. The weekly structure also appears weak with net selling pressure, though signs of selling exhaustion are beginning to appear on intraday charts.
+
+**KEY VISIBLE INDICATORS**
+
+*   **Trend Analysis Chart (1W):**
+    *   **LuxAlgo Signals:** Price is below recent trendlines; the dashboard indicates "Bearish" sentiment for most timeframes (15m, 1h, 4h, 1W), though the 1D timeframe shows a "Bullish" reading of 41.83.
+    *   **Volume Footprint:** The most recent completed weekly candle shows a negative Delta of -756.38K, indicating seller dominance.
+    *   **Oscillators:** The Kalman Trend Strength Oscillator is flatlining/trending lower, confirming weak momentum.
+
+*   **Smoothed Heiken Ashi Chart (4H):**
+    *   **Candles:** Consistent red Smoothed Heiken Ashi candles indicate a continued bearish trend.
+    *   **AlgoAlpha HEMA Trend:** The price is below the red HEMA ribbon, confirming the downtrend.
+    *   **Divergences:** Several bearish flags (Red triangles) appeared during the descent.
+    *   **Volume Profile:** Significant volume nodes are visible above current price (overhead supply), creating resistance on any bounce.
+
+*   **Volume Layout Chart (4H):**
+    *   **SQZMOM_LB:** Red histogram bars indicate bearish momentum (no squeeze currently active).
+    *   **CVD Divergence:** Shows red bars, aligning with price action.
+    *   **MA Distance:** The indicator is dropping but not yet at the extreme lower band deviation (-10.23).
+    *   **Reversal Signals:** **CRITICAL:** A **+RD (Positive Reversal Divergence)** tag is visible near the current price action, suggesting potential localized accumulation or a bounce.
+
+*   **Volume Profile Chart (1H):**
+    *   **TTOB:** A green **"Bullish Sweep"** label has appeared at the recent low, indicating liquidity was grabbed and potential support is forming.
+    *   **VOLD Ratio:** The ratio is positive at **4.68**, showing a divergence where volume pressure is bullish despite negative price action.
+    *   **MS (Matrix Mod):** The indicator is at **-192.4**, which is deeply **Oversold**, suggesting the downward move may be overextended in the short term.
+
+*   **Symbolik Workspace Chart (4H):**
+    *   **ATM Chart Lines:** Current price ($7.61) is floating between resistance at $8.55 and dashed support lines lower down. There is a specific dashed support level visible near **$7.32**.
+    *   **TKT Score:** The score is negative (-29.50), indicating a lack of long opportunities currently.
+    *   **Variable Aggressive Sequential:** No active "9" or "13" buy signal is visible on the current bar, though a "13" was printed during a previous bottoming phase on the left.
+
+**CRITICAL SIGNALS**
+1.  **+RD (Positive Reversal Divergence):** Forming on the 4H Volume Layout, signaling selling momentum is waning relative to price.
+2.  **MS Matrix Mod Oversold:** The 1H reading of -192.4 is an extreme reading that often precedes a mean reversion bounce.
+3.  **VOLD Ratio Divergence:** Positive VOLD (4.68) on the 1H chart contradicts the price drop, suggesting absorption of selling pressure.
+4.  **ATM Support Target:** The price has room to fall slightly further to the ATM support line at **~$7.32** before finding structural support.
+
+**TRADING DECISION**
+**HOLD / WAIT FOR ENTRY**
+
+*Rationale:* While the trend is strictly bearish (Red Heiken Ashi, Price < HEMA, Negative Deltas), initiating a *Sell* (Short) here is risky due to the extreme oversold conditions on the MS Matrix and the appearance of +RD signals. Conversely, it is too early to *Buy* because there is no trend change confirmation (Heiken Ashi is still red). The prudent move is to wait for the price to test the $7.32 ATM support level or for the HEMA ribbon to turn green to confirm the validity of the +RD signal.
+
+**TREND CHANGE EVALUATION**
+**Probability: 45%**
+
+*Indicators suggesting this:* The confluence of the **+RD signal**, the **Oversold MS Matrix**, and the **Bullish Sweep** on the 1H chart strongly suggests the immediate downside momentum is exhausted. However, until the 4H HEMA ribbon flips or price reclaims the $8.00 level, the macro trend remains bearish. Expect a consolidation or relief bounce, but a full trend reversal requires more volume confirmation.</pre></div><div class='divider'></div><h2>Multi-Provider Consensus Summary</h2><div class='section'><div><b>Alerts from 1 provider(s):</b></div><ul class='alert-list'><li><b>Google:</b> <span style='color:#d84315;font-weight:bold'>LOW</span> (0%) - Google AI chart analysis completed</li></ul><div class='summary-box consensus-high'>CONSENSUS: <b>LOW</b> | Confidence: <b>HIGH</b> | Google AI: <b>EMAIL ALERT</b> | Providers: <b>3</b> | Probability: <b>0.0%</b><br>SUMMARY: Google AI Consensus: Google AI chart analysis completed</div></div></div></body></html>
 

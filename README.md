@@ -1,383 +1,396 @@
-# Desktop Auto
+# 📊 Desktop Auto - AI-Powered Multi-Window Trading Analysis
 
-Desktop Auto is a Python-based automation tool for multi-window TradingView and Symbolik.com screenshot capture, advanced AI-powered trading analysis, and intelligent email alerts.
-
-## Features
-- Automated screenshot capture from multiple TradingView and Symbolik.com windows
-- Multi-provider AI analysis: Claude (Anthropic), Perplexity (OpenAI-compatible), and Google AI Studio (Gemini)
-- Consensus logic and HTML report generation using Google AI Studio
-- Intelligent email alerts for significant trend changes (sent only from Google AI consensus)
-- Organized output by symbol, with modern HTML reports
-- Configurable scheduling, symbol lists, and chart-specific intelligence
-
-## AI Providers
-- **Claude (Anthropic):** Advanced reasoning, detailed analysis
-- **Perplexity (OpenAI-compatible):** Real-time web data, financial awareness
-- **Google AI Studio (Gemini):** Consensus logic, HTML report generation, robust summarization
-
-## How It Works
-1. Captures screenshots from all configured chart windows
-2. Runs AI analysis with enabled providers (Claude, Perplexity)
-3. Google AI Studio (if enabled) generates a consolidated trading decision and HTML report
-4. Only the Google AI consensus logic triggers email alerts for significant trend changes
-5. All output is saved as a single HTML file per symbol
-
-## Configuration
-- Edit `.env` for provider API keys, enable flags, email settings, and scheduling
-- List symbols to analyze in `stock_symbols.txt`
-- See `requirements.txt` for dependencies
-
-## Usage
-```bash
-python main.py
-```
-- To run on a schedule, set `SCHEDULE_ENABLED=true` in `.env`
-- To build an executable: `python build_executable.py`
-
-## File Structure
-- `main.py` — Main automation script
-- `ai_analysis.py` — Multi-provider AI and consensus logic
-- `trading_analysis.py` — Core analysis and email alert logic
-- `screenshots/` — Output folders by symbol
-- `.env` — Configuration
-
-## Notes
-- Email alerts are only sent from the Google AI consensus logic (not from Claude or Perplexity individually)
-- The HTML report includes Google AI consensus at the top, followed by Claude and Perplexity sections
-- Requires Python 3.8+ and Windows
-
----
-For more details, see code comments and `.env.example`.
-# 📊 Desktop Auto - AI-Powered TradingView & Symbolik Automation
-
-> **Professional multi-chart screenshot automation with comprehensive AI analysis, chart-specific indicator recognition, and intelligent email alerts for stock trading workflows**
+> **Professional multi-chart screenshot automation with multi-provider AI analysis, chart-specific indicator recognition, and intelligent email alerts**
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Personal%20Use-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078D4.svg)](https://www.microsoft.com/windows)
 
+## Overview
 
-## 🎯 Overview
+**Desktop Auto** is a sophisticated Python-based desktop automation system that:
+- 📸 Captures screenshots from **4 simultaneous TradingView windows** + **Symbolik.com**
+- 🤖 Performs **AI analysis with 3 independent providers** (Perplexity, Claude, Google AI)
+- 📊 Generates **consensus trading decisions** with confidence scoring
+- 📧 Sends **intelligent email alerts** for significant trade signals
+- 📄 Creates **comprehensive HTML reports** with multi-indicator analysis
 
-**Desktop Auto** is a sophisticated Python-based desktop automation tool that captures screenshots from multiple TradingView chart windows and Symbolik.com, then performs advanced AI-powered analysis using multiple AI providers with chart-specific indicator recognition. The system understands each chart's unique technical indicators and provides comprehensive multi-indicator analysis with intelligent email alerts.
+## Features
 
-### Key Capabilities
+### Desktop Automation
+- ✅ Concurrent capture from 4 TradingView chart windows
+  - Trend Analysis (LuxAlgo indicators)
+  - Smoothed Heiken Ashi Candles
+  - Volume Layout
+  - Volume Profile / RVOL
+- ✅ Symbolik.com automation for additional analysis
+- ✅ Smart window focus and error recovery
+- ✅ Configurable capture scheduling (market hours, intervals)
 
+### Multi-Provider AI Analysis
+- **Perplexity AI** — Real-time technical analysis with financial context
+- **Claude AI (Anthropic)** — Advanced reasoning and pattern recognition
+- **Google AI (Gemini)** — Consensus logic and HTML report generation
 
-## 📋 Table of Contents
+Each provider analyzes the same screenshots independently, enabling:
+- Robust failure handling (if one provider fails, others continue)
+- Consensus scoring (bullish/bearish/neutral from each provider)
+- Comparison of different analytical perspectives
 
+### Intelligent Decision Making
+- Consolidates analyses from all 3 providers
+- Generates confidence-weighted trading decisions
+- Triggers email alerts only when consensus is strong
+- Supports per-provider enable/disable for flexibility
 
-## ✨ Features
+### Output & Reporting
+- HTML reports with per-provider analysis
+- Combined trading decision summary
+- Signal strength and confidence metrics
+- Email notifications with analysis details
 
-### Screenshot Automation
+## Quick Start
 
-### AI-Powered Analysis
-
-### Automation Features
-
-## 🤖 AI Provider Configuration
-
-The system supports multiple AI providers that can be used independently or together for comprehensive analysis. It also supports Google AI Studio (Gemini) for consensus logic and advanced HTML report generation.
-
-### Supported AI Providers
-
-#### 1. Perplexity AI
-
-#### 2. Claude AI (Anthropic)
-
-#### 3. Google AI Studio (Gemini)
-
-### Configuration Options
-
-#### Option 1: Single Provider
-Enable only one AI provider:
-
-```properties
-# Use only Perplexity
-PERPLEXITY_ENABLED=True
-CLAUDE_ENABLED=False
-PERPLEXITY_API_KEY=pplx-your-api-key-here
-
-# OR use only Claude
-PERPLEXITY_ENABLED=False
-CLAUDE_ENABLED=True
-ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-```
-
-#### Option 2: Multiple Providers (Sequential Analysis & Consensus)
-Enable two or more providers for comprehensive analysis and consensus:
-
-```properties
-# Use both providers for comprehensive analysis
-PERPLEXITY_ENABLED=True
-CLAUDE_ENABLED=True
-PERPLEXITY_API_KEY=pplx-your-api-key-here
-ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-```
-
-
-When both Claude and Perplexity are enabled:
-
-When Google AI Studio is enabled (with Claude and/or Perplexity):
-
-#### Option 3: No AI Analysis
-Disable all AI analysis (screenshots only):
-
-```properties
-PERPLEXITY_ENABLED=False
-CLAUDE_ENABLED=False
-```
-
-### Configuration Examples
-
-**Scenario 1: Both Providers Enabled (Multi-Provider Analysis)**
-```properties
-CLAUDE_ENABLED=True
-PERPLEXITY_ENABLED=True
-ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-PERPLEXITY_API_KEY=pplx-your-api-key-here
-```
-**Result**: Both providers analyze screenshots sequentially. A combined consensus report is generated.
-
-**Scenario 2: Claude Only**
-```properties
-CLAUDE_ENABLED=True
-PERPLEXITY_ENABLED=False
-ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-```
-**Result**: Only Claude analyzes screenshots.
-
-**Scenario 3: Perplexity Only**
-```properties
-CLAUDE_ENABLED=False
-PERPLEXITY_ENABLED=True
-PERPLEXITY_API_KEY=pplx-your-api-key-here
-```
-**Result**: Only Perplexity analyzes screenshots.
-
-## 🚀 Installation
-
-### Prerequisites
-
-### Step 1: Clone Repository
+### 1. Setup Environment
 ```bash
-git clone https://github.com/yourusername/desktop_auto.git
+# Clone repository
+git clone https://github.com/mskpairprogrammer/desktop_auto.git
 cd desktop_auto
-```
 
-### Step 2: Create Virtual Environment
-```bash
+# Create virtual environment
 python -m venv .venv
 .venv\Scripts\activate
-```
 
-### Step 3: Install Dependencies
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### Step 4: Install AI Provider Packages
+### 2. Configure `.env`
 ```bash
-# For Perplexity AI
-pip install openai
+# Copy template (if exists)
+copy .env.example .env
 
-# For Claude AI  
-pip install anthropic
+# Edit .env with your API keys and settings
+# See Configuration section below
 ```
 
-### Step 5: Configure Environment
-1. Copy `.env.example` to `.env`
-2. Configure your settings (see Configuration section)
-3. Add your API keys
+### 3. Add Stock Symbols
+Edit `stock_symbols.txt` (one symbol per line):
+```
+SNAP
+QBTS
+NVDA
+```
 
-## ⚙️ Configuration
+### 4. Run
+```bash
+python main.py
+```
 
-### Environment Variables
-
-Create a `.env` file with the following configuration:
-
-```properties
-# AI Provider Settings
-CLAUDE_ENABLED=True
-PERPLEXITY_ENABLED=True
-
-# API Keys
-PERPLEXITY_API_KEY=pplx-your-api-key-here
-ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-
-# Desktop Automation Settings
-AUTOMATION_DELAY=1.0
-SCREENSHOT_DIR=screenshots
-TRADINGVIEW_ENABLED=True
-SYMBOLIK_ENABLED=True
-
-# Chart Loading Delays
-CHART_LOAD_DELAY_TAB1_3=5.0
-CHART_LOAD_DELAY_TAB4=15.0
-
-# Email Alert Settings (optional)
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
-EMAIL_TO=recipient@gmail.com
-EMAIL_ALERT_THRESHOLD=35
-
-# Scheduling Settings
+### 5. Schedule (Optional)
+Set in `.env`:
+```env
+SCHEDULE_ENABLED=true
 CAPTURE_START_TIME=09:30
 CAPTURE_STOP_TIME=16:00
 CAPTURE_TIMEZONE=US/Eastern
 CAPTURE_INTERVAL_SECONDS=3600
-SCHEDULE_ENABLED=false
 ```
 
-### Stock Symbols Configuration
+## Configuration
 
-Edit `stock_symbols.txt` to specify which symbols to analyze:
+### API Keys (`.env`)
+```env
+# Perplexity
+PERPLEXITY_API_KEY=pplx-xxxxx
+PERPLEXITY_MODEL=sonar
+
+# Claude (Anthropic)
+ANTHROPIC_API_KEY=sk-ant-xxxxx
+CLAUDE_MODEL=claude-sonnet-4-5-20250929
+
+# Google AI (Gemini)
+GOOGLE_AI_API_KEY=AIzaSy-xxxxx
+GOOGLE_AI_MODEL=gemini-3-pro-preview
 ```
-AAPL
-TSLA
-NVDA
-SPY
+
+### Provider Enable/Disable
+```env
+PERPLEXITY_ENABLED=True        # Enable Perplexity analysis
+CLAUDE_ENABLED=True             # Enable Claude analysis
+GOOGLE_AI_CHART_ENABLED=True    # Enable Google AI chart analysis
+GOOGLE_AI_CONSOLIDATION_ENABLED=True  # Enable Google AI consensus decision
 ```
 
-## 📱 Usage
+### Email Alerts
+```env
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=app-specific-password
+EMAIL_TO=recipient@example.com
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+EMAIL_ALERT_THRESHOLD=35  # Confidence threshold (0-100)
+```
 
-### Run Once
+### TradingView Settings
+```env
+TRADINGVIEW_ENABLED=True
+TRADINGVIEW_WINDOW1=trend analysis
+TRADINGVIEW_WINDOW2=Smoothed Heiken Ashi Candles
+TRADINGVIEW_WINDOW3=volume layout
+TRADINGVIEW_WINDOW4=volumeprofile
+WINDOW_SETTLE_DELAY=3.0
+CHART_LOAD_DELAY_TAB1_3=7.0
+CHART_LOAD_DELAY_TAB4=20.0
+```
+
+### Symbolik.com Settings
+```env
+SYMBOLIK_ENABLED=True
+SYMBOLIK_URL=https://symbolik.com
+SYMBOLIK_WINDOW=workspace
+SYMBOLIK_WAIT_DELAY=10.0
+```
+
+## Project Structure
+
+```
+desktop_auto/
+├── main.py                  # Main orchestrator script
+├── ai_analysis.py           # Multi-provider AI system (1460+ lines)
+├── trading_analysis.py      # Perplexity analyzer & email logic
+├── config.py               # Configuration constants
+├── utils.py                # Shared utilities
+├── build_executable.py     # PyInstaller build script
+├── requirements.txt        # Python dependencies
+├── stock_symbols.txt       # List of symbols to analyze
+├── .env                    # Environment configuration (DO NOT COMMIT)
+├── .env.example            # Template for .env
+├── test_individual_providers.py  # Test each provider
+├── screenshots/            # Output directory (organized by symbol)
+├── build/                  # PyInstaller build artifacts
+├── dist/                   # Compiled executable output
+├── MULTI_AGENT_ARCHITECTURE.md  # Future architecture design
+└── README.md              # This file
+```
+
+## Core Modules
+
+### `main.py`
+- Windows automation orchestrator
+- Screenshot capture from 4 TradingView windows + Symbolik
+- Stock symbol iteration
+- Market hours scheduling
+- Keyboard automation (Alt+Tab, window management)
+
+### `ai_analysis.py` (1460+ lines)
+**Multi-Provider AI System with Consensus Logic**
+
+Classes:
+- `BaseAnalyzer` — Abstract base for all providers
+- `PerplexityAnalyzer` — OpenAI-compatible interface for Perplexity API
+- `ClaudeAnalyzer` — Anthropic API integration
+- `GoogleAIAnalyzer` — Google Generative AI (Gemini) integration
+- `TradingAnalyzer` — Main orchestrator for all AI providers
+
+Features:
+- Parallel or sequential provider execution
+- Automatic retry with exponential backoff
+- Rate limit handling
+- Standardized prompt across all providers (150+ lines of technical indicators)
+- Email decision parsing from Google AI consensus
+- HTML report generation
+- Per-provider enable/disable flags
+
+### `trading_analysis.py`
+- `PerplexityAnalyzer` — Legacy Perplexity integration
+- `EmailAlertManager` — SMTP email sending with error handling
+- Detailed technical prompt (~350 lines) for indicator analysis
+
+### `config.py`
+- Screen coordinates for window clicks
+- File paths and naming conventions
+- Timing defaults for window settling
+- API configuration structure
+
+### `utils.py`
+- `encode_image_to_base64()` — Convert images to Gemini-compatible format
+- `ensure_directory_exists()` — Safe directory creation
+- `get_base_dir()` — Script/executable directory detection
+- Image validation and logging utilities
+
+## Testing
+
+### Run Individual Providers
 ```bash
-python main.py
+python test_individual_providers.py
 ```
 
-### Run with Scheduling
-1. Set `SCHEDULE_ENABLED=True` in `.env`
-2. Run: `python main.py`
-3. The system will run continuously during market hours
+Tests each provider independently:
+- Checks for screenshot files
+- Validates API keys
+- Shows response preview
+- Reports pass/fail for each provider
 
 ### Build Executable
 ```bash
 python build_executable.py
 ```
 
-**⚠️ IMPORTANT SECURITY NOTICE:**
-The `.env` file is **NOT** bundled with the executable for security reasons. You **MUST** manually copy your `.env` file to the same directory as `DesktopAuto.exe` before running it.
+Creates standalone `.exe` using PyInstaller (62.8 MB):
+- No Python installation required
+- All dependencies bundled
+- Requires `.env` in same directory as `.exe`
 
-```
-dist/
-  ├── DesktopAuto.exe
-  └── .env  ← Copy this file manually!
-```
+## Architecture
 
-## 📊 Chart Layouts
+### Current: Sequential Processing
+1. UI Automation → Capture screenshots (4 windows sequentially)
+2. AI Analysis → Each provider analyzes sequentially
+3. Decision → Consolidate and generate report
+4. Email → Send alert if threshold met
 
-The system captures screenshots from 4 different TradingView chart layouts:
+**Processing time: ~130-180 seconds per symbol**
 
-### Window 1: Trend Analysis (LuxAlgo)
+### Future: Multi-Agent (Agentic) System
+See `MULTI_AGENT_ARCHITECTURE.md` for proposed parallel architecture:
+- 4 UI agents capture windows concurrently
+- 3 AI agents analyze in parallel
+- Message bus for inter-agent communication
+- Dynamic agent lifecycle management
 
-### Window 2: Smoothed Heiken Ashi Candles
+**Estimated processing time: ~40-55 seconds (3x improvement)**
 
-### Window 3: Volume Layout
+## Email Alerts
 
-### Window 4: Volume Profile & RVOL
+Email alerts are triggered only by **Google AI consensus logic** (not individual providers):
 
-## 🤖 AI Analysis
+1. **Threshold**: Email sent when confidence > `EMAIL_ALERT_THRESHOLD` (default: 35%)
+2. **Format**: HTML email with:
+   - Trading decision (BULLISH/BEARISH/NEUTRAL)
+   - Confidence score
+   - Key technical factors from all 3 providers
+   - Link to HTML report
+3. **Authentication**: Requires Gmail app-specific password (not regular password)
 
-### Analysis Process
+### Gmail Setup
+1. Enable 2-factor authentication
+2. Create app-specific password: https://myaccount.google.com/apppasswords
+3. Use app password in `.env`:
+   ```env
+   EMAIL_PASSWORD=your-16-char-app-password
+   ```
 
-1. **Screenshot Capture**: System captures screenshots from all configured windows
-2. **AI Processing**: Enabled AI providers (Claude, Perplexity) analyze the screenshots
-3. **Consensus & HTML Generation**: Google AI Studio (if enabled) generates a consolidated trading decision and creates a modern HTML report
-4. **Chart Recognition**: AI identifies specific indicators and chart types
-5. **Trend Analysis**: Probability scoring for trend changes (0-100%)
-6. **Report Generation**: Comprehensive HTML analysis reports with consensus and provider breakdowns
-7. **Email Notifications**: Automated alerts for significant changes (sent only from Google AI consensus logic)
-
-### Multi-Provider Analysis
-
-
-When multiple AI providers are enabled:
-
-1. **Sequential Processing**: Each provider (Claude, Perplexity) analyzes independently
-2. **Individual Reports**: Separate analysis from each provider
-3. **Consensus Building**: Google AI Studio (if enabled) generates a consolidated trading decision and consensus summary
-4. **Probability Averaging**: Average trend change probabilities
-5. **Alert Aggregation**: Highest confidence alerts are prioritized
-6. **HTML Output**: The report is generated as a single HTML file per symbol, with Google AI consensus at the top, followed by Claude and Perplexity
-7. **Email Alerts**: Only the Google AI consensus logic triggers email alerts (not individual providers)
-
-### Analysis Reports
-
-Reports include:
-
-## 📧 Email Alerts
-
-### Configuration
-```properties
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password  # Use app-specific password for Gmail
-EMAIL_TO=recipient@gmail.com
-EMAIL_ALERT_THRESHOLD=35  # Minimum probability for email alerts
-```
-
-### Alert Types
-
-### Email Content
-
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-#### AI Analysis Fails
-1. **Check API Keys**: Ensure valid API keys in `.env`
-2. **Check Provider Flags**: Verify `CLAUDE_ENABLED` and `PERPLEXITY_ENABLED` settings
-3. **Install Packages**: Run `pip install openai anthropic`
-4. **Check Internet**: Ensure stable internet connection
+**"No module named 'ai_analysis'"**
+- Ensure you're in the correct directory
+- Virtual environment activated: `.venv\Scripts\activate`
 
-#### Screenshot Issues
-1. **Window Titles**: Update window title keywords in `.env`
-2. **Chart Loading**: Increase delay settings for slow charts
-3. **Window Focus**: Ensure TradingView windows are properly arranged
+**Email not sending**
+- Verify `EMAIL_PASSWORD` is app-specific password (not account password)
+- Check `GOOGLE_AI_CONSOLIDATION_ENABLED=True` in `.env`
+- Review email threshold (`EMAIL_ALERT_THRESHOLD`)
 
-#### Email Issues
-1. **App Passwords**: Use app-specific passwords for Gmail
-2. **SMTP Settings**: Verify SMTP server and port settings
-3. **Firewall**: Check firewall allows SMTP connections
+**Screenshots not captured**
+- Ensure TradingView windows are focused and visible
+- Check window titles match `.env` settings
+- Verify `TRADINGVIEW_ENABLED=True`
 
-### Testing
+**API rate limiting**
+- Add delays in `.env`: `WINDOW_SETTLE_DELAY`, `CHART_LOAD_DELAY_TAB1_3`
+- Providers have built-in exponential backoff
 
-Test individual components:
+**AI provider failures**
+- Check API keys are valid and have sufficient quota
+- Verify `.env` contains correct model names
+- Other providers continue even if one fails
+
+## Requirements
+
+- **OS**: Windows 10/11
+- **Python**: 3.8+
+- **Internet**: Required for API calls
+- **Display**: 1920x1080 or higher (for coordinate accuracy)
+- **RAM**: 2GB+ (depends on provider concurrency)
+
+## Dependencies
+
+See `requirements.txt`:
+```
+python-dotenv
+pyautogui
+pillow
+anthropic
+openai
+google-generativeai
+pytz
+pywin32
+```
+
+## Performance Metrics
+
+| Operation | Time |
+|-----------|------|
+| Screenshot capture (4 windows) | 40-60s (sequential) |
+| AI analysis (3 providers) | 90-120s (sequential) |
+| HTML report generation | 2-5s |
+| Total per symbol | 130-180s |
+
+**With multi-agent parallelization: 40-55s (proposed)**
+
+## Security
+
+- ⚠️ **DO NOT commit `.env` file** (contains API keys)
+- `.env` is in `.gitignore`
+- Use environment-specific copies in production
+- Rotate API keys regularly
+- Gmail app-specific passwords are safer than account passwords
+
+## Building Executable
+
 ```bash
-# Test Symbolik automation
-python test_symbolik.py
-
-# Test main system
-python main.py
+python build_executable.py
 ```
 
-## 📁 File Structure
+Creates `dist/DesktopAuto.exe`:
+- Self-contained (~62.8 MB)
+- Copy `.env` to same directory as `.exe`
+- Run: `DesktopAuto.exe`
 
-```
-desktop_auto/
-├── main.py                    # Main automation script
-├── ai_analysis.py            # Multi-provider AI analysis
-├── trading_analysis.py       # Core analysis logic
-├── build_executable.py       # Build script for executable
-├── test_symbolik.py          # Symbolik automation test
-├── requirements.txt          # Python dependencies
-├── stock_symbols.txt         # List of symbols to process
-├── .env                      # Environment configuration
-├── screenshots/              # Screenshot storage
-│   ├── AAPL/                # Symbol-specific folders
-│   └── TSLA/
-├── build/                    # Build artifacts
-└── .github/
-    └── copilot-instructions.md
-```
+**Note**: First run extracts dependencies (~5-10 seconds)
 
-## 📄 License
+## Roadmap
 
-This project is for personal use only. See [LICENSE](LICENSE) file for details.
+### Completed ✅
+- Multi-provider AI analysis (Perplexity, Claude, Google AI)
+- Consensus decision logic
+- Email alerts from Google AI
+- HTML report generation
+- Provider enable/disable flags
+- Test script for individual providers
 
-## 🤝 Contributing
+### In Development 🔄
+- Multi-agent agentic architecture (parallel processing)
+- Provider-specific performance metrics
+- Advanced signal filtering
 
-This is a personal automation project. Contributions, issues, and feature requests are welcome!
+### Future 🔮
+- Web dashboard for monitoring
+- Historical signal tracking
+- ML-based confidence calibration
+- Support for crypto and forex
+- Mobile notifications
 
+## License
 
-**Note**: This tool is designed for personal trading analysis. Always conduct your own research and risk management when making trading decisions.
+Personal use. See LICENSE file.
+
+## Support
+
+For issues, questions, or feature requests:
+1. Check troubleshooting section
+2. Review code comments in main modules
+3. Examine `.env.example` for configuration options
+4. Check git commit history for recent changes
