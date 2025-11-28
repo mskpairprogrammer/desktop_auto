@@ -926,6 +926,7 @@ class TradingAnalyzer:
     def _parse_google_ai_email_decision(self, trading_decision: str) -> bool:
         """
         Parse Google AI's email alert decision from the consolidated trading decision text.
+        Uses multiple heuristics to determine if an email alert should be sent.
         
         Returns:
             True if Google AI recommends sending an email alert, False otherwise
@@ -936,17 +937,19 @@ class TradingAnalyzer:
         # Normalize text for case-insensitive matching
         decision_text = trading_decision.upper()
         
-        # Look for explicit YES/SEND patterns
+        # Look for explicit YES/SEND patterns (highest priority)
         yes_patterns = [
             "EMAIL ALERT DECISION: YES",
             "EMAIL ALERT DECISION:YES",
             "SEND EMAIL ALERT",
             "EMAIL: YES",
             "ALERT: YES",
-            "RECOMMENDATION: SEND EMAIL"
+            "RECOMMENDATION: SEND EMAIL",
+            "SHOULD SEND EMAIL",
+            "ALERT RECOMMENDED"
         ]
         
-        # Look for explicit NO/DON'T SEND patterns
+        # Look for explicit NO/DON'T SEND patterns (highest priority)
         no_patterns = [
             "EMAIL ALERT DECISION: NO",
             "EMAIL ALERT DECISION:NO",
@@ -954,10 +957,12 @@ class TradingAnalyzer:
             "DON'T SEND EMAIL",
             "EMAIL: NO",
             "ALERT: NO",
-            "NO EMAIL NEEDED"
+            "NO EMAIL NEEDED",
+            "NOT ALERT",
+            "NO ALERT NEEDED"
         ]
         
-        # Check for YES patterns first
+        # Check for explicit YES/NO patterns first (highest priority)
         for pattern in yes_patterns:
             if pattern in decision_text:
                 from trading_analysis import logger
@@ -965,13 +970,34 @@ class TradingAnalyzer:
                 print(f"   📧 Google AI Decision: SEND EMAIL ALERT (matched: '{pattern}')")
                 return True
         
-        # Check for NO patterns
         for pattern in no_patterns:
             if pattern in decision_text:
                 from trading_analysis import logger
                 logger.info(f"Google AI email decision: DO NOT SEND (matched pattern: '{pattern}')")
                 print(f"   📧 Google AI Decision: NO EMAIL (matched: '{pattern}')")
                 return False
+        
+        # Secondary heuristics: Look for key indicator words that suggest an alert
+        # Count bullish vs bearish signals
+        bullish_keywords = ["BUY", "STRONG BUY", "BULLISH", "UPTREND", "SIGNAL", "ALERT", "OPPORTUNITY", "REVERSAL UP", "BREAKOUT"]
+        bearish_keywords = ["SELL", "STRONG SELL", "BEARISH", "DOWNTREND", "WARNING", "CAUTION", "REVERSAL DOWN", "BREAKDOWN"]
+        
+        bullish_count = sum(1 for keyword in bullish_keywords if keyword in decision_text)
+        bearish_count = sum(1 for keyword in bearish_keywords if keyword in decision_text)
+        
+        # If there's a clear bias toward bullish signals AND the word "ALERT" or "SIGNAL" appears, likely should alert
+        if ("ALERT" in decision_text or "SIGNAL" in decision_text) and (bullish_count > bearish_count):
+            from trading_analysis import logger
+            logger.info("Google AI email decision: SEND (based on bullish signals and alert keywords)")
+            print("   📧 Google AI Decision: SEND EMAIL ALERT (based on bullish signals)")
+            return True
+        
+        # If there's significant bearish content with warning keywords, also alert
+        if ("WARNING" in decision_text or "CAUTION" in decision_text) and bearish_count > 0:
+            from trading_analysis import logger
+            logger.info("Google AI email decision: SEND (based on bearish warnings)")
+            print("   📧 Google AI Decision: SEND EMAIL ALERT (based on bearish warnings)")
+            return True
         
         # No clear pattern found - default to False for safety
         from trading_analysis import logger
