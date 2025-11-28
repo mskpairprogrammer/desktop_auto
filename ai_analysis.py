@@ -281,7 +281,6 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         """
         try:
             import base64
-            from google.generativeai.types import content_types
             
             # Convert messages to Gemini format
             content = []
@@ -300,7 +299,6 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                         # Extract base64 data
                         try:
                             header, data = url.split(',', 1)
-                            image_data = base64.standard_b64decode(data)
                             
                             # Determine media type from header
                             if 'png' in header:
@@ -310,9 +308,14 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                             else:
                                 media_type = 'image/jpeg'
                             
-                            # Use Gemini's blob format
-                            blob = content_types.Blob(mime_type=media_type, data=image_data)
-                            content.append(blob)
+                            # For Gemini, use genai.upload_file or pass as dict with inline_data
+                            # Using inline_data format directly
+                            content.append({
+                                "inline_data": {
+                                    "mime_type": media_type,
+                                    "data": data  # Base64 string, not binary
+                                }
+                            })
                         except Exception as e:
                             logger.warning(f"Failed to process image data URL: {e}")
                             continue
