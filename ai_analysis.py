@@ -216,7 +216,7 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         # Configure the API key
         genai.configure(api_key=self.api_key)
         
-        # Initialize the model (using Gemini 3 Pro - latest model)
+        # Initialize the model (using Gemini 3 Pro)
         self.model = genai.GenerativeModel('gemini-3-pro')
         
         logger.info("Google AI analyzer initialized successfully")
