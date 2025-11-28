@@ -221,6 +221,54 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         
         logger.info("Google AI analyzer initialized successfully")
     
+    def _call_with_backoff(self, content, max_attempts=5, base_delay=1.0):
+        """Call Google AI with exponential backoff retry for rate limiting"""
+        last_exception = None
+        for attempt in range(1, max_attempts + 1):
+            try:
+                logger.info(f"Google AI attempt {attempt}/{max_attempts}")
+                resp = self.model.generate_content(content)
+                
+                # Extract text from response
+                text = getattr(resp, 'text', None)
+                if text:
+                    return text
+                
+                # Some responses may embed content differently
+                if isinstance(resp, dict) and 'content' in resp:
+                    return resp['content']
+                
+                logger.error("Empty response from Google AI (no text/content)")
+                raise RuntimeError("Empty response from Google AI")
+                
+            except Exception as e:
+                last_exception = e
+                msg = str(e).lower()
+                
+                # Determine if this is a retryable error (rate limit / resource exhausted)
+                is_retryable = any(keyword in msg for keyword in [
+                    '429', 'resource exhausted', 'rate limit', 'quota', 
+                    'ratelimit', 'too many requests'
+                ])
+                
+                if is_retryable and attempt < max_attempts:
+                    # Retry with exponential backoff + jitter
+                    sleep_time = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+                    logger.warning(
+                        f"Rate limit error (attempt {attempt}/{max_attempts}): {e}. "
+                        f"Retrying in {sleep_time:.1f}s..."
+                    )
+                    time.sleep(sleep_time)
+                else:
+                    # Non-retryable error or max attempts reached
+                    logger.error(f"Google AI error (attempt {attempt}/{max_attempts}): {e}")
+                    if attempt == max_attempts:
+                        break
+        
+        # All attempts failed
+        logger.error(f"Google AI failed after {max_attempts} attempts: {last_exception}")
+        return None
+    
     def analyze_screenshots(self, messages: list) -> str:
         """
         Analyze chart screenshots using Google AI
@@ -1072,15 +1120,142 @@ class TradingAnalyzer:
                 logger.error("Failed to encode any images for Google AI analysis")
                 return None, None
             
-            # Create analysis prompt for Google AI (chart analysis focused)
-            prompt = f"""Analyze these trading charts for {stock_symbol or 'the stock'} and provide:
-1. Current technical conditions (support/resistance, trends, momentum)
-2. Notable patterns or formations visible in the charts
-3. Volume and price action assessment
-4. Key levels to watch
-5. Short-term outlook based on the technical picture
+            # Create analysis prompt for Google AI - SAME AS PERPLEXITY/CLAUDE
+            window_types = list(image_data_uris.keys())
+            symbol_text = f" for {stock_symbol}" if stock_symbol else ""
+            email_threshold = int(os.getenv('EMAIL_ALERT_THRESHOLD', '60'))
+            
+            # Create chart-specific context (same as Perplexity)
+            chart_context = ""
+            if 'trend_analysis' in window_types:
+                chart_context += """
+CHART CONTEXT - Trend Analysis Window:
+This chart displays LuxAlgo technical indicators. Use the following documentation to analyze it:
+- LuxAlgo Signals & Overlays: https://docs.luxalgo.com/docs/algos/signals-overlays/signals
+- LuxAlgo Price Action Concepts: https://docs.luxalgo.com/docs/algos/price-action-concepts/introduction
 
-Focus on objective technical observations from the charts provided."""
+Pay special attention to:
+- Signal Quality (Strong Buy/Sell signals)
+- Price Action Concepts (Support/Resistance levels, market structure)
+- Overlay indicators (trend direction, strength)
+- Signal confirmations and divergences
+
+"""
+            
+            if 'heiken_ashi' in window_types:
+                chart_context += """
+CHART CONTEXT - Smoothed Heiken Ashi Candles Window:
+This chart displays the following technical indicators:
+- Smoothed Heiken Ashi Candles: Trend-following candles that smooth out price action
+- AlgoAlpha HEMA Trend: Hybrid Exponential Moving Average for trend identification
+- Divergence Indicators: Price vs indicator divergences for reversal signals
+- Volume Footprint: Order flow analysis showing buy/sell volume at each price level
+
+Pay special attention to:
+- Smoothed Heiken Ashi candle colors (bullish/bearish trends)
+- HEMA trend direction and crossovers
+- Divergence signals (bullish/bearish divergences)
+- Trend strength and momentum
+- Reversal patterns indicated by divergences
+- Volume Footprint Analysis:
+  * Absorption: Large volume at price level with minimal price movement indicates strong institutional support/resistance
+  * Exhaustion: Decreasing volume as price extends signals trend weakness and potential reversal
+  * Bid/ask imbalances at key levels for order flow confirmation
+
+"""
+            
+            if 'volume_layout' in window_types:
+                chart_context += """
+CHART CONTEXT - Volume Layout Window:
+This chart displays the following technical indicators:
+- LuxAlgo Money Flow Profile: Shows institutional money flow and buying/selling pressure
+- CVD Divergence Oscillator: Cumulative Volume Delta divergences for trend reversals
+- SQZMOM_LB: Squeeze Momentum indicator with LazyBear modifications
+- MA Distance with StdDev Bands: Moving average distance with standard deviation bands
+
+Pay special attention to:
+- Money flow profile (accumulation/distribution zones)
+- CVD divergence signals (bullish/bearish divergences)
+- SQZMOM_LB squeeze conditions and momentum direction
+- MA distance from price and standard deviation extremes
+- **CRITICAL**: If a +RD (Positive Reversal Divergence) or -RD (Negative Reversal Divergence) was formed recently, clearly indicate this in the analysis as it signals potential trend reversal
+- Volume patterns confirming or diverging from price action
+
+"""
+            
+            if 'volumeprofile' in window_types:
+                chart_context += """
+CHART CONTEXT - Volume Profile Window:
+This chart displays the following technical indicators:
+- RVOL: Relative Volume indicator showing volume compared to average
+- VOLD Ratio: Volume Delta ratio showing buying vs selling pressure
+- MS (Matrix Mod): Matrix momentum indicator with overbought/oversold levels
+- TTOB (Trapped Trader Order Blocks): Identifies trapped trader zones and order blocks
+
+Pay special attention to:
+- RVOL levels (high relative volume confirms moves)
+- VOLD ratio (positive = buying pressure, negative = selling pressure)
+- **MS Matrix Mod overbought/oversold conditions**: If the MS indicator shows overbought or oversold conditions, clearly indicate this in the analysis as it signals potential reversal zones
+- TTOB order blocks (support/resistance from trapped traders)
+- Volume profile distribution (high volume nodes, value area)
+- Point of Control (POC) levels
+- Volume confirmation of price movements
+
+"""
+            
+            if 'workspace' in window_types:
+                chart_context += """
+CHART CONTEXT - Symbolik Workspace Window:
+This chart displays the following technical indicators:
+- ATM Chart Lines: Algorithmic Trading Model support/resistance lines
+- ATM Elliott Projections: Elliott Wave price projections and targets
+- ATM Elliott Waves: Elliott Wave count and structure analysis
+- ATM Pressure Alert: Market pressure and momentum alerts
+- TKT Analysis: Technical Knowledge Trading analysis framework
+- TKT Score: Quantified trading opportunity score
+- Variable Aggressive Sequential (Demark Sequential): TD Sequential buy/sell setup and countdown signals
+
+Pay special attention to:
+- **ATM Chart Lines alignment**: If the current price is sitting on or near an ATM chart line, clearly indicate this in the analysis as it represents a key support/resistance level
+- ATM Elliott Wave count and current position in the wave structure
+- ATM Elliott projections for price targets
+- ATM Pressure alerts (bullish/bearish pressure signals)
+- TKT analysis signals and overall market structure
+- TKT score value (higher scores indicate stronger opportunities)
+- Variable Aggressive Sequential setup and countdown numbers (9s and 13s are critical)
+- Demark Sequential buy/sell signals at exhaustion points
+
+"""
+            
+            prompt = f"""
+You are an expert stock market analyst. Analyze these {len(window_types)} chart screenshots{symbol_text}.
+
+CRITICAL INSTRUCTION: Only analyze what you can clearly see in the screenshots. If a chart window appears blank, contains no data, or is not loaded properly, explicitly state "Chart not loaded" or "No data visible" for that window. DO NOT make assumptions or provide analysis for charts that are not visible or contain no data.
+
+{chart_context}
+ANALYSIS FORMAT:
+
+**MARKET OVERVIEW** (2-3 sentences)
+Current price, timeframe, and overall market condition.
+
+**KEY VISIBLE INDICATORS**
+List specific indicators visible:
+- For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
+- For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
+- For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
+- For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks
+- For Symbolik Workspace chart: ATM chart lines, ATM Elliott Waves/Projections, ATM Pressure alerts, TKT analysis/score, Variable Aggressive Sequential (Demark)
+- Moving averages, oscillators, volume data, support/resistance levels
+
+**CRITICAL SIGNALS**
+Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions, ATM chart line alignments, Demark Sequential 9s or 13s if present)
+
+**TRADING DECISION**
+Clear BUY/SELL/HOLD with rationale
+
+**TREND CHANGE EVALUATION**
+Assess probability of significant trend change or reversal in the short term (0-100%). Explain what indicators suggest this.
+"""
             
             # Build content array with text prompt and all images
             content = [{"type": "text", "text": prompt}]
