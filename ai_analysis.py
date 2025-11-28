@@ -338,9 +338,9 @@ class GoogleAIAnalyzer(BaseAnalyzer):
             traceback.print_exc()
             return None
     
-    def generate_consolidated_decision(self, perplexity_analysis: str, claude_analysis: str, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None) -> str:
+    def generate_consolidated_decision(self, perplexity_analysis: str, claude_analysis: str, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None, google_analysis: str = None) -> str:
         """
-        Generate a consolidated trading decision based on Perplexity and Claude analyses
+        Generate a consolidated trading decision based on analyses from multiple AI providers
         
         Args:
             perplexity_analysis: Full text analysis from Perplexity
@@ -348,6 +348,7 @@ class GoogleAIAnalyzer(BaseAnalyzer):
             stock_symbol: Stock symbol being analyzed
             output_dir: Directory for loading prior analysis
             screenshot_data: Screenshot data for loading prior analysis
+            google_analysis: Optional analysis from Google AI
             
         Returns:
             Consolidated trading decision text
@@ -379,20 +380,29 @@ INITIAL ANALYSIS:
 This is the first analysis for this symbol, so focus on current state evaluation.
 """
             
-            prompt = f"""
-You are an expert financial analyst tasked with creating a consolidated trading decision based on analyses from two different AI providers.
-
-STOCK SYMBOL: {stock_symbol}
-
-PERPLEXITY ANALYSIS:
+            # Build provider sections dynamically
+            provider_sections = f"""PERPLEXITY ANALYSIS:
 {perplexity_analysis}
 
 CLAUDE ANALYSIS:
-{claude_analysis}
+{claude_analysis}"""
+
+            if google_analysis:
+                provider_sections += f"""
+
+GOOGLE AI ANALYSIS:
+{google_analysis}"""
+            
+            prompt = f"""
+You are an expert financial analyst tasked with creating a consolidated trading decision based on analyses from multiple AI providers.
+
+STOCK SYMBOL: {stock_symbol}
+
+{provider_sections}
 
 {prior_context}
 
-Based on these two comprehensive analyses, generate a consolidated trading decision with the following format:
+Based on these comprehensive analyses, generate a consolidated trading decision with the following format:
 
 ==================================================
 CONSOLIDATED TRADING DECISION FOR {stock_symbol}
@@ -403,12 +413,12 @@ Consensus Assessment: [Describe agreement/disagreement between providers]
 Overall Confidence: [Provide a confidence percentage 0-100%]
 
 TREND CHANGE EVALUATION:
-[Synthesize the trend change probability from both analyses]
+[Synthesize the trend change probability from all analyses]
 [Provide consolidated probability assessment]
 [Explain key factors driving the trend evaluation]
 
 CRITICAL FACTORS:
-- [List 3-5 most important technical factors from both analyses]
+- [List 3-5 most important technical factors from all analyses]
 - [Highlight any conflicting signals between providers]
 - [Note volume, momentum, and support/resistance levels]
 
@@ -419,22 +429,28 @@ RISK ASSESSMENT:
 
 PROVIDER SYNTHESIS:
 - Perplexity Focus: [Summarize key points from Perplexity]
-- Claude Focus: [Summarize key points from Claude]
-- Agreement Areas: [Where both providers align]
+- Claude Focus: [Summarize key points from Claude]"""
+
+            if google_analysis:
+                prompt += """
+- Google AI Focus: [Summarize key points from Google AI]"""
+            
+            prompt += """
+- Agreement Areas: [Where providers align]
 - Disagreement Areas: [Where providers differ]
 
 EMAIL ALERT DECISION:
 Based on the analysis above, determine if an email alert should be sent.
 Consider:
 - Trend change probability (higher probability = more likely to send)
-- Alert level from both providers
+- Alert levels from all providers
 - Significance of changes detected
 - Trading decision confidence
 
 ==================================================
 
 Instructions:
-1. Synthesize both analyses into a coherent trading decision
+1. Synthesize all analyses into a coherent trading decision
 2. Highlight areas of agreement and disagreement
 3. Provide specific price targets and risk levels when mentioned
 4. Be objective and balanced in your assessment
@@ -782,11 +798,12 @@ class TradingAnalyzer:
         html.append("<h2>Google AI Consolidated Trading Decision</h2>")
         html.append(f"<div class='section'><pre style='white-space:pre-wrap;font-family:inherit;font-size:1.08em;background:#f6f8fa;padding:1em;border-radius:6px;border:1px solid #eee'>{trading_decision.strip()}</pre></div>")
 
-        # Add individual provider analyses in desired order: Claude, then Perplexity
-        provider_order = ['claude', 'perplexity']
+        # Add individual provider analyses in desired order: Claude, Perplexity, Google
+        provider_order = ['claude', 'perplexity', 'google']
         section_titles = {
             'claude': 'Claude Analysis',
-            'perplexity': 'Perplexity Analysis'
+            'perplexity': 'Perplexity Analysis',
+            'google': 'Google AI Analysis'
         }
         for provider_name in provider_order:
             if provider_name in results:
@@ -1023,17 +1040,20 @@ class TradingAnalyzer:
             # Extract individual provider analyses
             perplexity_analysis = ""
             claude_analysis = ""
+            google_analysis = ""
             
             for provider_name, analysis_text, change_analysis in results:
                 if provider_name.lower() == 'perplexity':
                     perplexity_analysis = analysis_text
                 elif provider_name.lower() == 'claude':
                     claude_analysis = analysis_text
+                elif provider_name.lower() == 'google':
+                    google_analysis = analysis_text
             
             # Generate consolidated decision using Google AI
             if perplexity_analysis or claude_analysis:
                 consolidated_decision = google_analyzer.generate_consolidated_decision(
-                    perplexity_analysis, claude_analysis, stock_symbol, output_dir, screenshot_data
+                    perplexity_analysis, claude_analysis, stock_symbol, output_dir, screenshot_data, google_analysis
                 )
                 return f"\n{consolidated_decision}\n"
             else:
