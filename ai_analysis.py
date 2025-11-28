@@ -227,7 +227,12 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         for attempt in range(1, max_attempts + 1):
             try:
                 logger.info(f"Google AI attempt {attempt}/{max_attempts}")
-                resp = self.model.generate_content(content)
+                
+                # Handle both list and string content
+                if isinstance(content, list):
+                    resp = self.model.generate_content(content)
+                else:
+                    resp = self.model.generate_content(content)
                 
                 # Extract text from response
                 text = getattr(resp, 'text', None)
@@ -282,11 +287,13 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         try:
             import base64
             
-            # Convert messages to Gemini format
-            content = []
+            # For Gemini, we need to use genai.upload_file for files or pass inline data
+            # Build content list with text and images
+            content_parts = []
+            
             for msg in messages:
                 if msg.get('type') == 'text':
-                    content.append(msg['text'])
+                    content_parts.append(msg['text'])
                 elif msg.get('type') == 'image_url':
                     # Extract base64 from data URL if present
                     image_url = msg.get('image_url', {})
@@ -308,23 +315,21 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                             else:
                                 media_type = 'image/jpeg'
                             
-                            # For Gemini, use genai.upload_file or pass as dict with inline_data
-                            # Using inline_data format directly
-                            content.append({
-                                "inline_data": {
-                                    "mime_type": media_type,
-                                    "data": data  # Base64 string, not binary
-                                }
-                            })
+                            # Create inline data part - Gemini expects direct base64
+                            image_part = {
+                                "mime_type": media_type,
+                                "data": data  # Keep as base64 string
+                            }
+                            content_parts.append(image_part)
                         except Exception as e:
                             logger.warning(f"Failed to process image data URL: {e}")
                             continue
             
-            if not content:
+            if not content_parts:
                 return "No content to analyze"
             
             # Call Google AI with backoff retry
-            response = self._call_with_backoff(content)
+            response = self._call_with_backoff(content_parts)
             return response
             
         except Exception as e:
