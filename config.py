@@ -41,7 +41,7 @@ class Defaults:
 class Paths:
     """Path constants"""
     SCREENSHOTS_DIR = "screenshots"
-    STOCK_SYMBOLS_FILE = "stock_symbols.txt"
+    STOCK_SYMBOLS_FILE = os.path.join("screenshots", "stock_symbols.txt")
     LOG_FILE = "desktop_auto.log"
     ENV_FILE = ".env"
     COMBINED_ANALYSIS_FILE = "combined_analysis_latest.txt"
