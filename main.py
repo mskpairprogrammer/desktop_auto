@@ -493,15 +493,22 @@ def main() -> None:
                             # Check which providers are enabled
                             claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
                             perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
+                            google_chart_enabled = os.getenv('GOOGLE_AI_CHART_ENABLED', 'False').lower() == 'true'
+                            google_consolidation_enabled = os.getenv('GOOGLE_AI_CONSOLIDATION_ENABLED', 'False').lower() == 'true'
                             
-                            if claude_enabled and perplexity_enabled:
-                                log(f"   🤖 Using both Claude and Perplexity AI for sequential analysis")
-                            elif claude_enabled:
-                                log(f"   🤖 Using Claude AI for analysis")
-                            elif perplexity_enabled:
-                                log(f"   🤖 Using Perplexity AI for analysis")
+                            # Build provider list
+                            enabled_providers = []
+                            if perplexity_enabled:
+                                enabled_providers.append('Perplexity')
+                            if claude_enabled:
+                                enabled_providers.append('Claude')
+                            if google_chart_enabled or google_consolidation_enabled:
+                                enabled_providers.append('Google AI')
+                            
+                            if enabled_providers:
+                                log(f"   🤖 Using {', '.join(enabled_providers)} for analysis")
                             else:
-                                log(f"   ⚠️ No AI providers enabled, check CLAUDE_ENABLED and PERPLEXITY_ENABLED settings")
+                                log(f"   ⚠️ No AI providers enabled, check provider enable flags in .env")
                                 
                         except Exception as e:
                             log(f"   ⚠️ TradingAnalyzer failed, falling back to default provider: {e}")
