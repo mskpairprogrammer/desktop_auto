@@ -2,6 +2,7 @@
 Configuration constants for desktop_auto project
 """
 import os
+import sys
 
 # Screen coordinates for different operations
 # Note: These are hardcoded for specific screen resolutions and may need adjustment
@@ -40,8 +41,21 @@ class Defaults:
 # File and directory names
 class Paths:
     """Path constants"""
-    SCREENSHOTS_DIR = "screenshots"
-    STOCK_SYMBOLS_FILE = os.path.join("screenshots", "stock_symbols.txt")
+    # Use standalone data folder in parent directory for both executable and source code
+    # This ensures both write to the same location regardless of where they're run from
+    if hasattr(sys, 'frozen'):
+        # Running as frozen executable - go up from dist folder
+        _script_dir = os.path.dirname(sys.executable)  # dist folder
+        BASE_DIR = os.path.dirname(_script_dir)  # desktop_auto folder
+    else:
+        # Running as script
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # desktop_auto folder
+    
+    # Create data folder in parent directory of project
+    DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "data")
+    
+    SCREENSHOTS_DIR = os.path.join(DATA_DIR, "screenshots")
+    STOCK_SYMBOLS_FILE = os.path.join(DATA_DIR, "stock_symbols.txt")
     LOG_FILE = "desktop_auto.log"
     ENV_FILE = ".env"
     COMBINED_ANALYSIS_FILE = "combined_analysis_latest.txt"

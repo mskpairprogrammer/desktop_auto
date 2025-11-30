@@ -46,6 +46,9 @@ class PerplexityAnalyzer:
         if not self.api_key:
             raise ValueError("Perplexity API key is required. Set PERPLEXITY_API_KEY environment variable or pass api_key parameter")
         
+        # Get model from environment variable or use default
+        self.model = os.getenv('PERPLEXITY_MODEL', 'sonar-pro')
+        
         # Initialize the OpenAI client with Perplexity's endpoint
         self.client = OpenAI(
             api_key=self.api_key,
@@ -122,7 +125,7 @@ class PerplexityAnalyzer:
             
             # Make API request
             completion = self.client.chat.completions.create(
-                model="sonar",
+                model=self.model,
                 messages=[
                     {
                         "role": "user",

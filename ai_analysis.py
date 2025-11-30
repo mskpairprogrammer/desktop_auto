@@ -14,7 +14,6 @@ from typing import Optional, Dict, Any
 from utils import (
     encode_image_to_base64, 
     ensure_directory_exists, 
-    get_base_dir,
     COMBINED_ANALYSIS_FILENAME,
     MULTI_PROVIDER_HTML_FILENAME
 )
@@ -94,6 +93,9 @@ class PerplexityAnalyzer(BaseAnalyzer):
         if not self.api_key:
             raise ValueError("Perplexity API key is required. Set PERPLEXITY_API_KEY environment variable or pass api_key parameter")
         
+        # Get model from environment variable or use default
+        self.model = os.getenv('PERPLEXITY_MODEL', 'sonar-pro')
+        
         # Initialize the OpenAI client with Perplexity's endpoint
         self.client = OpenAI(
             api_key=self.api_key,
@@ -104,7 +106,7 @@ class PerplexityAnalyzer(BaseAnalyzer):
         """Analyze screenshots using Perplexity API"""
         try:
             response = self.client.chat.completions.create(
-                model="sonar",
+                model=self.model,
                 messages=messages,
                 max_tokens=4000,
                 temperature=0.2
@@ -135,6 +137,9 @@ class ClaudeAnalyzer(BaseAnalyzer):
         
         if not self.api_key:
             raise ValueError("Claude API key is required. Set ANTHROPIC_API_KEY environment variable or pass api_key parameter")
+        
+        # Get model from environment variable or use default
+        self.model = os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-5-20250929')
         
         # Initialize the Anthropic client
         self.client = anthropic.Anthropic(api_key=self.api_key)
@@ -175,7 +180,7 @@ class ClaudeAnalyzer(BaseAnalyzer):
             
             # Prepare the request parameters
             request_params = {
-                "model": "claude-sonnet-4-5-20250929",
+                "model": self.model,
                 "max_tokens": 1024,
                 "temperature": 0.2,
                 "messages": claude_messages
@@ -216,8 +221,11 @@ class GoogleAIAnalyzer(BaseAnalyzer):
         # Configure the API key
         genai.configure(api_key=self.api_key)
         
-        # Initialize the model (using Gemini 3 Pro Preview - latest preview model)
-        self.model = genai.GenerativeModel('gemini-3-pro-preview')
+        # Get model from environment variable or use default
+        model_name = os.getenv('GOOGLE_AI_MODEL', 'gemini-3-pro-preview')
+        
+        # Initialize the model
+        self.model = genai.GenerativeModel(model_name)
         
         logger.info("Google AI analyzer initialized successfully")
     
@@ -719,7 +727,7 @@ class TradingAnalyzer:
             
             # Make API request using the original analyzer's client
             completion = self.original_analyzer.client.chat.completions.create(
-                model="sonar",
+                model=self.original_analyzer.model,
                 messages=[
                     {
                         "role": "user",
@@ -915,11 +923,11 @@ class TradingAnalyzer:
 
         # Save the combined report as HTML in the correct symbol folder (no text file)
         try:
-            base_dir = get_base_dir()
+            from config import Paths
             print(f"[DEBUG] Attempting to save HTML report for {stock_symbol}...")
             print(f"[DEBUG] Current working directory: {os.getcwd()}")
-            print(f"[DEBUG] Base dir for output: {base_dir}")
-            symbol_dir = os.path.join(base_dir, 'screenshots', stock_symbol)
+            print(f"[DEBUG] Data directory: {Paths.DATA_DIR}")
+            symbol_dir = os.path.join(Paths.SCREENSHOTS_DIR, stock_symbol)
             print(f"[DEBUG] Target symbol_dir: {symbol_dir}")
             ensure_directory_exists(symbol_dir)
             report_path = os.path.join(symbol_dir, MULTI_PROVIDER_HTML_FILENAME)

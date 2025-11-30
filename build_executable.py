@@ -14,11 +14,14 @@ PyInstaller.__main__.run([
     '--name=DesktopAuto',
     # Security: Do NOT bundle .env file - users must place it next to the executable
     '--hidden-import=trading_analysis',
-    '--hidden-import=pywin32',
-    '--hidden-import=win32gui',
-    '--hidden-import=win32con',
+    '--hidden-import=ai_analysis',
+    '--hidden-import=config',
+    '--hidden-import=utils',
     '--hidden-import=openai',
+    '--hidden-import=anthropic',
+    '--hidden-import=google.generativeai',
     '--hidden-import=pytz',
+    '--hidden-import=PIL',
     '--collect-all=openai',
     '--noconfirm',
     # Remove '--windowed' to keep console window for logs

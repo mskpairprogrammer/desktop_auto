@@ -393,7 +393,7 @@ def main() -> None:
         focus_click_delay = float(os.getenv('FOCUS_CLICK_DELAY', '1.5'))
         chart_load_delay_tabs1_3 = float(os.getenv('CHART_LOAD_DELAY_TAB1_3', '5.0'))
         chart_load_delay_tab4 = float(os.getenv('CHART_LOAD_DELAY_TAB4', '15.0'))
-        screenshot_dir = os.getenv('SCREENSHOT_DIR', 'screenshots')
+        screenshot_dir = Paths.SCREENSHOTS_DIR  # Use absolute path from config
         screenshot_name_tab1 = os.getenv('SCREENSHOT_NAME_TAB1', '{symbol}_tab1.png')
         screenshot_name_tab2 = os.getenv('SCREENSHOT_NAME_TAB2', '{symbol}_tab2.png')
         screenshot_name_tab3 = os.getenv('SCREENSHOT_NAME_TAB3', '{symbol}_tab3.png')
@@ -519,18 +519,28 @@ def main() -> None:
                         log(f"   🤖 Using default AI provider for analysis")
                     
                     # Analyze with trend alerts
-                    analysis, change_analysis = analyzer.analyze_with_trend_alerts(
-                        screenshot_data, folder, symbol
-                    )
-                    
-                    # Save analysis report if successful
-                    if analysis:
-                        analyzer.save_combined_analysis_report(
-                            screenshot_data, analysis, folder, change_analysis
+                    try:
+                        analysis, change_analysis = analyzer.analyze_with_trend_alerts(
+                            screenshot_data, folder, symbol
                         )
+                        
+                        # Save analysis report if successful
+                        if analysis:
+                            analyzer.save_combined_analysis_report(
+                                screenshot_data, analysis, folder, change_analysis
+                            )
+                    except Exception as api_error:
+                        stop_on_failure = os.getenv('STOP_ON_API_FAILURE', 'False').lower() == 'true'
+                        if stop_on_failure:
+                            log(f"   ❌ API call failed: {api_error}")
+                            log(f"   🛑 STOP_ON_API_FAILURE is enabled. Stopping processing.")
+                            raise
+                        else:
+                            log(f"   ⚠️ Analysis failed: {api_error}")
                     
                 except Exception as e:
-                    log(f"   ⚠️ Analysis failed: {e}")
+                    log(f"   ❌ Critical error: {e}")
+                    raise
             elif ai_analysis_enabled and not LEGACY_ANALYSIS_AVAILABLE:
                 log(f"\n⚠️ AI analysis is enabled but module not available. Install: pip install openai")
             
