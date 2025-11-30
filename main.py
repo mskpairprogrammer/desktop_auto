@@ -288,43 +288,18 @@ def process_symbolik(
     log(f"  ✅ Pressing Enter...")
     pyautogui.press('enter')
     
-    # Wait for page to load and verify correct symbol is loaded
+    # Wait for page to load
     log(f"⏳ Waiting for Symbolik.com to load {symbol}...")
-    max_wait = max(10, int(symbolik_wait_delay))  # minimum 10s, or user-specified
-    check_interval = 1.0
-    elapsed = 0
-    found = False
-    # Try to find the symbol text on the screen (top left, etc.)
-    # Save a reference image for each symbol as 'symbolik_ref_{symbol}.png' in screenshots root for best results
-    ref_img_path = os.path.join('screenshots', f'symbolik_ref_{symbol}.png')
-    if not os.path.exists(ref_img_path):
-        log(f"  ⚠️ Reference image {ref_img_path} not found. Falling back to fixed wait.")
-        time.sleep(symbolik_wait_delay)
-        found = True
-    else:
-        log(f"  🔍 Waiting for symbol to appear on screen (using {ref_img_path})...")
-        # Get confidence from environment variable with default
-        confidence = float(os.getenv('SYMBOLIK_MATCH_CONFIDENCE', '0.8'))
-        
-        while elapsed < max_wait:
-            try:
-                location = pyautogui.locateOnScreen(ref_img_path, confidence=confidence)
-                if location:
-                    found = True
-                    log(f"  ✅ Detected {symbol} on screen after {elapsed} seconds.")
-                    break
-            except pyautogui.ImageNotFoundException:
-                # Image not found on screen, continue waiting
-                pass
-            except Exception as e:
-                log(f"  ⚠️ Error during screen capture: {e}. Continuing...")
-                break
-            
-            time.sleep(check_interval)
-            elapsed += check_interval
-        
-        if not found:
-            log(f"  ⚠️ Did not detect {symbol} on screen after {max_wait} seconds. Taking screenshot anyway.")
+    log(f"  ⏱️  Waiting {symbolik_wait_delay} seconds for page to fully load...")
+    time.sleep(symbolik_wait_delay)
+    
+    # Move chart position using right arrow twice (after SYMBOLIK_WAIT_DELAY)
+    log(f"  ➡️  Moving chart position (right arrow x2)...")
+    pyautogui.press('right')
+    time.sleep(0.5)
+    pyautogui.press('right')
+    time.sleep(0.5)
+    
     # Take screenshot
     log(f"📸 Taking screenshot for Symbolik.com...")
     filename = screenshot_name.format(symbol=symbol)
