@@ -20,7 +20,7 @@ try:
     import pytz
     PYTZ_AVAILABLE = True
 except ImportError:
-    print("⚠️ pytz not available. Install with: pip install pytz")
+    print("[WARN] pytz not available. Install with: pip install pytz")
     PYTZ_AVAILABLE = False
 
 try:
@@ -40,7 +40,7 @@ try:
     from trading_analysis import PerplexityAnalyzer, EmailAlertManager
     LEGACY_ANALYSIS_AVAILABLE = True
 except ImportError:
-    print("⚠️ Trading analysis module not available. Install with: pip install openai")
+    print("[WARN] Trading analysis module not available. Install with: pip install openai")
     LEGACY_ANALYSIS_AVAILABLE = False
 
 # Load environment variables
@@ -50,7 +50,12 @@ load_dotenv()
 def log(message: str) -> None:
     """Print message with timestamp and save to log file with timestamp."""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(f"[{timestamp}] {message}")
+    # Handle Unicode characters that can't be displayed in Windows console
+    try:
+        print(f"[{timestamp}] {message}")
+    except UnicodeEncodeError:
+        safe_message = message.encode('ascii', 'replace').decode('ascii')
+        print(f"[{timestamp}] {safe_message}")
     
     # Write to log file with timestamp
     try:
@@ -87,16 +92,16 @@ def load_stock_symbols() -> list[str]:
         with open(symbols_file, 'r') as f:
             symbols = [line.strip() for line in f.readlines() if line.strip()]
         if not symbols:
-            log("⚠️ No symbols found in stock_symbols.txt, using default QBTS")
+            log("[WARN] No symbols found in stock_symbols.txt, using default QBTS")
             return ['QBTS']
-        log(f"📊 Loaded {len(symbols)} symbols from stock_symbols.txt: {', '.join(symbols)}")
+        log(f"[DATA] Loaded {len(symbols)} symbols from stock_symbols.txt: {', '.join(symbols)}")
         return symbols
     except FileNotFoundError:
-        log("⚠️ stock_symbols.txt not found, falling back to STOCK_SYMBOLS env var")
+        log("[WARN] stock_symbols.txt not found, falling back to STOCK_SYMBOLS env var")
         symbols_str = os.getenv('STOCK_SYMBOLS', 'QBTS')
         return [s.strip() for s in symbols_str.split(',')]
     except Exception as e:
-        log(f"⚠️ Error reading stock_symbols.txt: {e}, using default QBTS")
+        log(f"[WARN] Error reading stock_symbols.txt: {e}, using default QBTS")
         return ['QBTS']
 
 
@@ -108,7 +113,7 @@ def is_within_market_hours() -> bool:
         return True  # Always run if scheduling is disabled
     
     if not PYTZ_AVAILABLE:
-        log("⚠️ pytz not available - cannot check market hours. Running anyway.")
+        log("[WARN] pytz not available - cannot check market hours. Running anyway.")
         return True
     
     try:
@@ -137,14 +142,14 @@ def is_within_market_hours() -> bool:
             return False
             
     except Exception as e:
-        log(f"⚠️ Error checking market hours: {e}. Running anyway.")
+        log(f"[WARN] Error checking market hours: {e}. Running anyway.")
         return True
 
 
 def bring_window_to_front(window_title_keyword: str) -> bool:
     """Find and bring a window to foreground by title keyword."""
     if not WIN32_AVAILABLE:
-        log("❌ win32gui not available")
+        log("[ERROR] win32gui not available")
         return False
     
     try:
@@ -156,7 +161,9 @@ def bring_window_to_front(window_title_keyword: str) -> bool:
                 title = win32gui.GetWindowText(hwnd)
                 if window_title_keyword.lower() in title.lower():
                     window_hwnd = hwnd
-                    log(f"✅ Found window: {title}")
+                    # Sanitize title for console output (remove problematic Unicode chars)
+                    safe_title = title.encode('ascii', 'replace').decode('ascii')
+                    log(f"[OK] Found window: {safe_title}")
             return True
         
         win32gui.EnumWindows(enum_callback, None)
@@ -172,14 +179,14 @@ def bring_window_to_front(window_title_keyword: str) -> bool:
             except:
                 pass
             
-            log(f"✅ Window maximized and brought to foreground")
+            log(f"[OK] Window maximized and brought to foreground")
             return True
         else:
-            log(f"❌ Window with '{window_title_keyword}' not found")
+            log(f"[ERROR] Window with '{window_title_keyword}' not found")
             return False
             
     except Exception as e:
-        log(f"⚠️  Error: {e}")
+        log(f"[WARN]  Error: {e}")
         return False
 
 
@@ -201,12 +208,12 @@ def process_window(
     reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
     
     if reuse_screenshots and os.path.exists(filepath):
-        log(f"\n🔄 Tab {tab_num}: Reusing existing screenshot: {filepath}")
+        log(f"\n[REUSE] Tab {tab_num}: Reusing existing screenshot: {filepath}")
         return True
     
-    log(f"\n🎯 Tab {tab_num}: Bringing '{window_title}' window to foreground...")
+    log(f"\n[>>] Tab {tab_num}: Bringing '{window_title}' window to foreground...")
     if not bring_window_to_front(window_title):
-        log(f"❌ Window not found. Skipping tab {tab_num}.")
+        log(f"[ERROR] Window not found. Skipping tab {tab_num}.")
         return False
     
     # Wait for window to settle
@@ -217,25 +224,25 @@ def process_window(
     time.sleep(focus_click_delay)
     
     # Type symbol directly
-    log(f"⌨️  Typing: {symbol}")
+    log(f"[TYPE]  Typing: {symbol}")
     pyautogui.write(symbol.lower(), interval=0.1)
     
     # Press Enter
-    log("✅ Pressing Enter...")
+    log("[OK] Pressing Enter...")
     pyautogui.press('enter')
     
     # Wait for chart to load
-    log(f"⏳ Waiting {chart_load_delay} seconds for chart to load...")
+    log(f"[WAIT] Waiting {chart_load_delay} seconds for chart to load...")
     time.sleep(chart_load_delay)
     
     # Take screenshot
-    log(f"📸 Taking screenshot for Tab {tab_num}...")
+    log(f"[SCREENSHOT] Taking screenshot for Tab {tab_num}...")
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     
     screenshot = pyautogui.screenshot()
     screenshot.save(filepath)
-    log(f"✅ Saved: {filepath}")
+    log(f"[OK] Saved: {filepath}")
     return True
 
 
@@ -254,54 +261,54 @@ def process_symbolik(
     reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
     
     if reuse_screenshots and os.path.exists(filepath):
-        log(f"\n🔄 Tab 5: Reusing existing Symbolik screenshot: {filepath}")
+        log(f"\n[REUSE] Tab 5: Reusing existing Symbolik screenshot: {filepath}")
         return True
     
-    log(f"\n🌐 Tab 5: Processing symbolik.com for {symbol}...")
+    log(f"\n[WEB] Tab 5: Processing symbolik.com for {symbol}...")
     
     # Bring browser window to front
     if not bring_window_to_front(symbolik_window):
-        log(f"  ⚠️  Please open the browser with '{symbolik_window}' in the title")
+        log(f"  [WARN]  Please open the browser with '{symbolik_window}' in the title")
         return False
     
     # Wait for window to settle
     time.sleep(2)
     
     # Click on the far right edge area to focus (Symbolik-specific coordinates)
-    log(f"  🖱️  Clicking to focus...")
+    log(f"  [CLICK]  Clicking to focus...")
     pyautogui.click(Coordinates.SYMBOLIK_FOCUS_X, Coordinates.SYMBOLIK_FOCUS_Y)
     time.sleep(1)
     
     # Type the symbol with .bz suffix in the search/input field
     symbol_query = f"{symbol.lower()}.bz"
-    log(f"  ⌨️  Typing symbol: {symbol_query}")
+    log(f"  [TYPE]  Typing symbol: {symbol_query}")
     pyautogui.write(symbol_query, interval=0.1)
     time.sleep(0.5)
     
     # Wait for dropdown to appear and select first item
-    log(f"  ⬇️  Selecting from dropdown...")
+    log(f"  [DOWN]  Selecting from dropdown...")
     time.sleep(1)  # Wait for dropdown to appear
     pyautogui.press('down')  # Select first item in dropdown
     time.sleep(0.3)
     
     # Press Enter
-    log(f"  ✅ Pressing Enter...")
+    log(f"  [OK] Pressing Enter...")
     pyautogui.press('enter')
     
     # Wait for page to load
-    log(f"⏳ Waiting for Symbolik.com to load {symbol}...")
-    log(f"  ⏱️  Waiting {symbolik_wait_delay} seconds for page to fully load...")
+    log(f"[WAIT] Waiting for Symbolik.com to load {symbol}...")
+    log(f"  [TIME]  Waiting {symbolik_wait_delay} seconds for page to fully load...")
     time.sleep(symbolik_wait_delay)
     
     # Move chart position using right arrow twice (after SYMBOLIK_WAIT_DELAY)
-    log(f"  ➡️  Moving chart position (right arrow x2)...")
+    log(f"  [RIGHT]  Moving chart position (right arrow x2)...")
     pyautogui.press('right')
     time.sleep(0.5)
     pyautogui.press('right')
     time.sleep(0.5)
     
     # Take screenshot
-    log(f"📸 Taking screenshot for Symbolik.com...")
+    log(f"[SCREENSHOT] Taking screenshot for Symbolik.com...")
     filename = screenshot_name.format(symbol=symbol)
     filepath = os.path.join(folder, filename)
     screenshot = pyautogui.screenshot()
@@ -311,16 +318,16 @@ def process_symbolik(
     # If all RGB means are very high, assume blank/white screen
     symbolik_refresh_wait = float(os.getenv('SYMBOLIK_REFRESH_WAIT', '5.0'))
     if all(m > 240 for m in stat.mean[:3]):
-        log(f"  ⚠️ Detected likely blank screen. Refreshing browser and waiting {symbolik_refresh_wait} seconds...")
+        log(f"  [WARN] Detected likely blank screen. Refreshing browser and waiting {symbolik_refresh_wait} seconds...")
         # Press F5 to refresh
         pyautogui.press('f5')
         time.sleep(symbolik_refresh_wait)
         screenshot = pyautogui.screenshot()
         stat = ImageStat.Stat(screenshot)
         if all(m > 240 for m in stat.mean[:3]):
-            log(f"  ⚠️ Still blank after refresh. Saving anyway.")
+            log(f"  [WARN] Still blank after refresh. Saving anyway.")
     screenshot.save(filepath)
-    log(f"✅ Saved: {filepath}")
+    log(f"[OK] Saved: {filepath}")
     return True
 
 
@@ -349,7 +356,7 @@ def initialize_log() -> None:
 def main() -> None:
     """Main function."""
     initialize_log()
-    log("\n⏰ Starting in 3 seconds...")
+    log("\n[TIMER] Starting in 3 seconds...")
     for i in range(3, 0, -1):
         log(f"   {i}...")
         time.sleep(1)
@@ -378,7 +385,7 @@ def main() -> None:
         symbolik_window = os.getenv('SYMBOLIK_WINDOW', 'workspace')
         symbolik_wait_delay = float(os.getenv('SYMBOLIK_WAIT_DELAY', '5.0'))
         
-        log(f"\n📊 Processing {len(symbols)} symbols: {', '.join(symbols)}")
+        log(f"\n[DATA] Processing {len(symbols)} symbols: {', '.join(symbols)}")
         
         for symbol in symbols:
             log(f"\n{'='*60}")
@@ -396,12 +403,12 @@ def main() -> None:
                 filepath = os.path.join(folder, filename)
                 reuse_screenshots = os.getenv('REUSE_EXISTING_SCREENSHOTS', 'False').lower() == 'true'
                 if reuse_screenshots and os.path.exists(filepath):
-                    log(f"\n🔄 Tab 1: Reusing existing screenshot: {filepath}")
+                    log(f"\n[REUSE] Tab 1: Reusing existing screenshot: {filepath}")
                 else:
                     # Tab 1: Trend analysis window - Type symbol
-                    log(f"\n🎯 Tab 1: Bringing '{tradingview_window1}' window to foreground...")
+                    log(f"\n[>>] Tab 1: Bringing '{tradingview_window1}' window to foreground...")
                     if not bring_window_to_front(tradingview_window1):
-                        log("❌ Failed. Please make sure TradingView is open.")
+                        log("[ERROR] Failed. Please make sure TradingView is open.")
                         continue
                     # Wait for window to settle
                     time.sleep(window_settle_delay)
@@ -409,22 +416,22 @@ def main() -> None:
                     pyautogui.click(Coordinates.TRADINGVIEW_CENTER_X, Coordinates.TRADINGVIEW_CENTER_Y)
                     time.sleep(focus_click_delay)
                     # Type symbol directly
-                    log(f"⌨️  Typing: {symbol}")
+                    log(f"[TYPE]  Typing: {symbol}")
                     pyautogui.write(symbol.lower(), interval=0.1)
                     # Press Enter
-                    log("✅ Pressing Enter...")
+                    log("[OK] Pressing Enter...")
                     pyautogui.press('enter')
                     # Wait for chart to load
-                    log(f"⏳ Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
+                    log(f"[WAIT] Waiting {chart_load_delay_tabs1_3} seconds for chart to load...")
                     time.sleep(chart_load_delay_tabs1_3)
                     # Take screenshot for tab 1
-                    log(f"📸 Taking screenshot for Tab 1...")
+                    log(f"[SCREENSHOT] Taking screenshot for Tab 1...")
                     filename = screenshot_name_tab1.format(symbol=symbol)
                     filepath = os.path.join(folder, filename)
                     
                     screenshot = pyautogui.screenshot()
                     screenshot.save(filepath)
-                    log(f"✅ Saved: {filepath}")
+                    log(f"[OK] Saved: {filepath}")
                 
                 # Process remaining windows
                 process_window(tradingview_window2, 2, symbol, folder, screenshot_name_tab2,
@@ -441,11 +448,19 @@ def main() -> None:
             # Perform AI analysis if any provider is enabled
             claude_enabled = os.getenv('CLAUDE_ENABLED', 'False').lower() == 'true'
             perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
-            ai_analysis_enabled = claude_enabled or perplexity_enabled
+            google_chart_enabled = os.getenv('GOOGLE_AI_CHART_ENABLED', 'False').lower() == 'true'
+            google_consolidation_enabled = os.getenv('GOOGLE_AI_CONSOLIDATION_ENABLED', 'False').lower() == 'true'
+            grok_enabled = os.getenv('GROK_ENABLED', 'False').lower() == 'true'
+            openai_enabled = os.getenv('OPENAI_ENABLED', 'False').lower() == 'true'
             
-            if ai_analysis_enabled and LEGACY_ANALYSIS_AVAILABLE:
+            # Check if any AI provider is enabled (old or new)
+            any_provider_enabled = (claude_enabled or perplexity_enabled or 
+                                   google_chart_enabled or google_consolidation_enabled or
+                                   grok_enabled or openai_enabled)
+            
+            if any_provider_enabled and AI_ANALYSIS_AVAILABLE:
                 try:
-                    log(f"\n🤖 Starting AI analysis for {symbol}...")
+                    log(f"\n[AI] Starting AI analysis for {symbol}...")
                     
                     # Build screenshot data dictionary
                     screenshot_data = {}
@@ -470,6 +485,8 @@ def main() -> None:
                             perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
                             google_chart_enabled = os.getenv('GOOGLE_AI_CHART_ENABLED', 'False').lower() == 'true'
                             google_consolidation_enabled = os.getenv('GOOGLE_AI_CONSOLIDATION_ENABLED', 'False').lower() == 'true'
+                            grok_enabled = os.getenv('GROK_ENABLED', 'False').lower() == 'true'
+                            openai_enabled = os.getenv('OPENAI_ENABLED', 'False').lower() == 'true'
                             
                             # Build provider list
                             enabled_providers = []
@@ -479,19 +496,23 @@ def main() -> None:
                                 enabled_providers.append('Claude')
                             if google_chart_enabled or google_consolidation_enabled:
                                 enabled_providers.append('Google AI')
+                            if grok_enabled:
+                                enabled_providers.append('Grok')
+                            if openai_enabled:
+                                enabled_providers.append('OpenAI')
                             
                             if enabled_providers:
-                                log(f"   🤖 Using {', '.join(enabled_providers)} for analysis")
+                                log(f"   [AI] Using {', '.join(enabled_providers)} for analysis")
                             else:
-                                log(f"   ⚠️ No AI providers enabled, check provider enable flags in .env")
+                                log(f"   [WARN] No AI providers enabled, check provider enable flags in .env")
                                 
                         except Exception as e:
-                            log(f"   ⚠️ TradingAnalyzer failed, falling back to default provider: {e}")
+                            log(f"   [WARN] TradingAnalyzer failed, falling back to default provider: {e}")
                             analyzer = PerplexityAnalyzer()
-                            log(f"   🤖 Using default AI provider for analysis")
+                            log(f"   [AI] Using default AI provider for analysis")
                     else:
                         analyzer = PerplexityAnalyzer()
-                        log(f"   🤖 Using default AI provider for analysis")
+                        log(f"   [AI] Using default AI provider for analysis")
                     
                     # Analyze with trend alerts
                     try:
@@ -507,26 +528,26 @@ def main() -> None:
                     except Exception as api_error:
                         stop_on_failure = os.getenv('STOP_ON_API_FAILURE', 'False').lower() == 'true'
                         if stop_on_failure:
-                            log(f"   ❌ API call failed: {api_error}")
+                            log(f"   [ERROR] API call failed: {api_error}")
                             log(f"   🛑 STOP_ON_API_FAILURE is enabled. Stopping processing.")
                             raise
                         else:
-                            log(f"   ⚠️ Analysis failed: {api_error}")
+                            log(f"   [WARN] Analysis failed: {api_error}")
                     
                 except Exception as e:
-                    log(f"   ❌ Critical error: {e}")
+                    log(f"   [ERROR] Critical error: {e}")
                     raise
-            elif ai_analysis_enabled and not LEGACY_ANALYSIS_AVAILABLE:
-                log(f"\n⚠️ AI analysis is enabled but module not available. Install: pip install openai")
+            elif any_provider_enabled and not AI_ANALYSIS_AVAILABLE:
+                log(f"\n[WARN] AI analysis is enabled but module not available. Install: pip install openai")
             
-            log(f"\n✅ Completed processing {symbol}!")
+            log(f"\n[OK] Completed processing {symbol}!")
         
-        log("\n✅ DONE! All symbols and windows processed.")
+        log("\n[OK] DONE! All symbols and windows processed.")
         
     except KeyboardInterrupt:
-        log("\n👋 Cancelled by user")
+        log("\n[BYE] Cancelled by user")
     except Exception as e:
-        log(f"\n❌ Error: {e}")
+        log(f"\n[ERROR] Error: {e}")
 
 
 def run_scheduled() -> None:
@@ -534,7 +555,7 @@ def run_scheduled() -> None:
     schedule_enabled = os.getenv('SCHEDULE_ENABLED', 'False').lower() == 'true'
     
     if not schedule_enabled:
-        log("📍 Running once (SCHEDULE_ENABLED=False)")
+        log("[START] Running once (SCHEDULE_ENABLED=False)")
         main()
         return
     
@@ -568,7 +589,7 @@ def run_scheduled() -> None:
                 
                 main()
                 
-                log(f"\n⏰ Next run in {interval_seconds//60} minutes...")
+                log(f"\n[TIMER] Next run in {interval_seconds//60} minutes...")
                 log(f"   Sleeping until {(datetime.now() + timedelta(seconds=interval_seconds)).strftime('%H:%M:%S')}")
                 time.sleep(interval_seconds)
             else:
@@ -583,10 +604,10 @@ def run_scheduled() -> None:
                 time.sleep(300)  # Check every 5 minutes when outside market hours
                 
         except KeyboardInterrupt:
-            log(f"\n\n👋 Stopped by user after {run_count} runs")
+            log(f"\n\n[BYE] Stopped by user after {run_count} runs")
             break
         except Exception as e:
-            log(f"\n❌ Error in scheduled run: {e}")
+            log(f"\n[ERROR] Error in scheduled run: {e}")
             log(f"   Waiting {interval_seconds//60} minutes before retry...")
             time.sleep(interval_seconds)
 

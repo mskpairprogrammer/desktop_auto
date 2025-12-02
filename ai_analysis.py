@@ -246,22 +246,22 @@ class GoogleAIAnalyzer(BaseAnalyzer):
                 text = getattr(resp, 'text', None)
                 if text:
                     return text
+                    
+                # Try alternate extraction methods
+                if hasattr(resp, 'candidates') and resp.candidates:
+                    candidate = resp.candidates[0]
+                    if hasattr(candidate, 'content') and candidate.content.parts:
+                        return candidate.content.parts[0].text
                 
-                # Some responses may embed content differently
-                if isinstance(resp, dict) and 'content' in resp:
-                    return resp['content']
-                
-                logger.error("Empty response from Google AI (no text/content)")
-                raise RuntimeError("Empty response from Google AI")
+                return None
                 
             except Exception as e:
                 last_exception = e
-                msg = str(e).lower()
+                error_str = str(e).lower()
                 
-                # Determine if this is a retryable error (rate limit / resource exhausted)
-                is_retryable = any(keyword in msg for keyword in [
-                    '429', 'resource exhausted', 'rate limit', 'quota', 
-                    'ratelimit', 'too many requests'
+                # Check if this is a retryable error (rate limiting, quota, etc.)
+                is_retryable = any(term in error_str for term in [
+                    'rate', 'limit', 'quota', '429', '503', 'overloaded', 'resource_exhausted'
                 ])
                 
                 if is_retryable and attempt < max_attempts:
@@ -524,6 +524,272 @@ Instructions:
             # Raise so callers (which fallback to local logic) can detect failure and fallback
             raise
 
+    def generate_consolidated_decision_multi(self, provider_analyses: dict, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None) -> str:
+        """
+        Generate a consolidated trading decision based on analyses from any combination of AI providers
+        
+        Args:
+            provider_analyses: Dict of {provider_name: analysis_text} for all providers
+            stock_symbol: Stock symbol being analyzed
+            output_dir: Directory for loading prior analysis
+            screenshot_data: Screenshot data for loading prior analysis
+            
+        Returns:
+            Consolidated trading decision text
+        """
+        try:
+            # Load prior analysis for comparison (Google AI will handle this)
+            prior_analysis = None
+            if output_dir and screenshot_data:
+                from trading_analysis import PerplexityAnalyzer
+                temp_analyzer = PerplexityAnalyzer()
+                valid_screenshots = {k: v for k, v in screenshot_data.items() if v and os.path.exists(v)}
+                if valid_screenshots:
+                    prior_analysis = temp_analyzer._load_prior_analysis(output_dir, valid_screenshots, stock_symbol)
+            
+            # Create prior context
+            if prior_analysis:
+                prior_context = f"""
+PRIOR ANALYSIS FOR COMPARISON:
+{prior_analysis[:1000]}...
+
+TREND CHANGE EVALUATION REQUIRED:
+Compare the current analyses above with the prior analysis to evaluate if there are significant changes or trend shifts.
+"""
+            else:
+                prior_context = """
+INITIAL ANALYSIS:
+This is the first analysis for this symbol, so focus on current state evaluation.
+"""
+            
+            # Build provider sections dynamically from all available providers
+            provider_sections = ""
+            provider_names = list(provider_analyses.keys())
+            
+            for provider_name in provider_analyses:
+                analysis_text = provider_analyses[provider_name]
+                provider_sections += f"""{provider_name.upper()} ANALYSIS:
+{analysis_text}
+
+"""
+            
+            # Build dynamic provider synthesis section
+            provider_synthesis = "\nPROVIDER SYNTHESIS:\n"
+            for provider_name in provider_analyses:
+                provider_synthesis += f"- {provider_name.title()} Focus: [Summarize key points from {provider_name.title()}]\n"
+            provider_synthesis += "- Agreement Areas: [Where providers align]\n"
+            provider_synthesis += "- Disagreement Areas: [Where providers differ]\n"
+            
+            prompt = f"""
+You are an expert financial analyst tasked with creating a consolidated trading decision based on analyses from multiple AI providers.
+
+STOCK SYMBOL: {stock_symbol}
+
+{provider_sections}
+
+{prior_context}
+
+Based on these comprehensive analyses, generate a consolidated trading decision with the following format:
+
+==================================================
+CONSOLIDATED TRADING DECISION FOR {stock_symbol}
+==================================================
+
+TRADING DECISION: [BUY/SELL/HOLD]
+Consensus Assessment: [Describe agreement/disagreement between providers]
+Overall Confidence: [Provide a confidence percentage 0-100%]
+
+TREND CHANGE EVALUATION:
+[Synthesize the trend change probability from all analyses]
+[Provide consolidated probability assessment]
+[Explain key factors driving the trend evaluation]
+
+CRITICAL FACTORS:
+- [List 3-5 most important technical factors from all analyses]
+- [Highlight any conflicting signals between providers]
+- [Note volume, momentum, and support/resistance levels]
+
+RISK ASSESSMENT:
+- Upside Potential: [Based on resistance levels and bullish signals]
+- Downside Risk: [Based on support levels and bearish signals]
+- Stop Loss Recommendation: [If applicable]
+{provider_synthesis}
+
+EMAIL ALERT DECISION:
+Based on the analysis above, determine if an email alert should be sent.
+Consider:
+- Trend change probability (higher probability = more likely to send)
+- Alert levels from all providers
+- Significance of changes detected
+- Trading decision confidence
+
+Clearly state: EMAIL ALERT DECISION: YES or EMAIL ALERT DECISION: NO
+
+==================================================
+
+Instructions:
+1. Synthesize all analyses into a coherent trading decision
+2. Highlight areas of agreement and disagreement
+3. Provide specific price targets and risk levels when mentioned
+4. Be objective and balanced in your assessment
+5. Focus on actionable trading insights
+6. Email alerts should be sent for significant changes that traders need to act on
+"""
+
+            # Helper to call the model with retries/backoff for transient errors
+            def _call_with_backoff(prompt_text, max_attempts=5, base_delay=1.0):
+                last_exception = None
+                for attempt in range(1, max_attempts + 1):
+                    try:
+                        logger.info(f"Google AI multi-provider consolidation attempt {attempt}/{max_attempts} for {stock_symbol}")
+                        resp = self.model.generate_content(prompt_text)
+                        
+                        text = getattr(resp, 'text', None)
+                        if text:
+                            return text
+                        
+                        if isinstance(resp, dict) and 'content' in resp:
+                            return resp['content']
+                        
+                        logger.error("Empty response from Google AI (no text/content)")
+                        raise RuntimeError("Empty response from Google AI")
+                        
+                    except Exception as e:
+                        last_exception = e
+                        msg = str(e).lower()
+                        
+                        is_retryable = any(keyword in msg for keyword in [
+                            '429', 'resource exhausted', 'rate limit', 'quota', 
+                            'ratelimit', 'too many requests'
+                        ])
+                        
+                        if is_retryable and attempt < max_attempts:
+                            sleep_time = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
+                            logger.warning(
+                                f"Rate limit error (attempt {attempt}/{max_attempts}): {e}. "
+                                f"Retrying in {sleep_time:.1f}s"
+                            )
+                            time.sleep(sleep_time)
+                            continue
+                        else:
+                            logger.error(f"Google AI error (attempt {attempt}/{max_attempts}): {e}")
+                            raise
+                
+                raise RuntimeError(
+                    f"Google AI generate_consolidated_decision_multi failed after {max_attempts} attempts. "
+                    f"Last error: {last_exception}"
+                )
+
+            consolidated_text = _call_with_backoff(prompt)
+            return consolidated_text
+        except Exception as e:
+            logger.error(f"Google AI API error in multi-provider consolidation: {e}")
+            raise
+
+
+class GrokAnalyzer(BaseAnalyzer):
+    """Class to handle screenshot analysis using Grok API via OpenAI-compatible interface"""
+    
+    def __init__(self, api_key: Optional[str] = None):
+        """
+        Initialize the Grok analyzer
+        
+        Args:
+            api_key: Grok API key. If None, will try to get from environment variable
+        """
+        if not OPENAI_AVAILABLE or OpenAI is None:
+            raise ImportError("openai package is required. Install with: pip install openai")
+        
+        super().__init__(api_key)
+        
+        # Get API key from parameter or environment variable
+        self.api_key = api_key or os.getenv('GROK_API_KEY')
+        
+        if not self.api_key:
+            raise ValueError("Grok API key is required. Set GROK_API_KEY environment variable or pass api_key parameter")
+        
+        # Get model from environment variable or use default
+        self.model = os.getenv('GROK_MODEL', 'grok-2')
+        
+        # Initialize the OpenAI client with Grok's endpoint
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url="https://api.x.ai/v1"
+        )
+    
+    def analyze_screenshots(self, messages: list) -> str:
+        """Analyze screenshots using Grok API"""
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                max_tokens=4000,
+                temperature=0.2
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Grok API error: {e}")
+            raise
+
+
+class OpenAIAnalyzer(BaseAnalyzer):
+    """Class to handle screenshot analysis using OpenAI API"""
+    
+    def __init__(self, api_key: Optional[str] = None):
+        """
+        Initialize the OpenAI analyzer
+        
+        Args:
+            api_key: OpenAI API key. If None, will try to get from environment variable
+        """
+        if not OPENAI_AVAILABLE or OpenAI is None:
+            raise ImportError("openai package is required. Install with: pip install openai")
+        
+        super().__init__(api_key)
+        
+        # Get API key from parameter or environment variable
+        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
+        
+        if not self.api_key:
+            raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY environment variable or pass api_key parameter")
+        
+        # Get model from environment variable or use default
+        self.model = os.getenv('OPENAI_MODEL', 'gpt-4o')
+        
+        # Initialize the OpenAI client
+        self.client = OpenAI(api_key=self.api_key)
+    
+    def analyze_screenshots(self, messages: list) -> str:
+        """Analyze screenshots using OpenAI API"""
+        try:
+            # gpt-5.x models use max_completion_tokens instead of max_tokens
+            kwargs = {
+                "model": self.model,
+                "messages": messages,
+                "temperature": 0.2
+            }
+            
+            if "gpt-5" in self.model.lower():
+                kwargs["max_completion_tokens"] = 4000
+            else:
+                kwargs["max_tokens"] = 4000
+            
+            logger.info(f"[DEBUG] OpenAI calling model: {self.model}")
+            response = self.client.chat.completions.create(**kwargs)
+            
+            # Debug: log response structure
+            logger.info(f"[DEBUG] OpenAI response type: {type(response)}")
+            logger.info(f"[DEBUG] OpenAI response.choices: {len(response.choices) if response.choices else 0}")
+            if response.choices:
+                logger.info(f"[DEBUG] OpenAI choice[0].message: {response.choices[0].message}")
+                logger.info(f"[DEBUG] OpenAI content type: {type(response.choices[0].message.content)}")
+                logger.info(f"[DEBUG] OpenAI content length: {len(response.choices[0].message.content) if response.choices[0].message.content else 0}")
+            
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"OpenAI API error: {e}")
+            raise
+
 
 class AnalyzerFactory:
     """Factory class to create the appropriate analyzer based on configuration"""
@@ -558,6 +824,8 @@ class TradingAnalyzer:
         self.perplexity_enabled = os.getenv('PERPLEXITY_ENABLED', 'False').lower() == 'true'
         self.google_chart_enabled = os.getenv('GOOGLE_AI_CHART_ENABLED', 'False').lower() == 'true'
         self.google_consolidation_enabled = os.getenv('GOOGLE_AI_CONSOLIDATION_ENABLED', 'False').lower() == 'true'
+        self.grok_enabled = os.getenv('GROK_ENABLED', 'False').lower() == 'true'
+        self.openai_enabled = os.getenv('OPENAI_ENABLED', 'False').lower() == 'true'
         
         # Import the actual analysis methods from trading_analysis.py
         self.original_analyzer = None
@@ -578,14 +846,15 @@ class TradingAnalyzer:
         # Check Perplexity setup
         if self.perplexity_enabled:
             perplexity_key = os.getenv('PERPLEXITY_API_KEY')
-            if perplexity_key and self.original_analyzer:
-                self.providers['perplexity'] = None  # Use original analyzer
-                logger.info("Perplexity provider enabled")
+            if perplexity_key:
+                try:
+                    self.providers['perplexity'] = PerplexityAnalyzer(perplexity_key)
+                    logger.info("Perplexity provider enabled")
+                except Exception as e:
+                    logger.error(f"Failed to initialize Perplexity analyzer: {e}")
+                    self.perplexity_enabled = False
             else:
-                if not perplexity_key:
-                    logger.warning("PERPLEXITY_ENABLED=True but PERPLEXITY_API_KEY not found")
-                if not self.original_analyzer:
-                    logger.warning("Could not initialize Perplexity analyzer")
+                logger.warning("PERPLEXITY_ENABLED=True but PERPLEXITY_API_KEY not found")
                 self.perplexity_enabled = False
                 
         # Check Claude setup  
@@ -631,6 +900,34 @@ class TradingAnalyzer:
                 logger.warning("GOOGLE_AI_CONSOLIDATION_ENABLED=True but GOOGLE_AI_API_KEY not found")
                 self.google_consolidation_enabled = False
         
+        # Check Grok setup
+        if self.grok_enabled:
+            grok_key = os.getenv('GROK_API_KEY')
+            if grok_key:
+                try:
+                    self.providers['grok'] = GrokAnalyzer(grok_key)
+                    logger.info("Grok provider enabled")
+                except Exception as e:
+                    logger.error(f"Failed to initialize Grok analyzer: {e}")
+                    self.grok_enabled = False
+            else:
+                logger.warning("GROK_ENABLED=True but GROK_API_KEY not found")
+                self.grok_enabled = False
+        
+        # Check OpenAI setup
+        if self.openai_enabled:
+            openai_key = os.getenv('OPENAI_API_KEY')
+            if openai_key:
+                try:
+                    self.providers['openai'] = OpenAIAnalyzer(openai_key)
+                    logger.info("OpenAI provider enabled")
+                except Exception as e:
+                    logger.error(f"Failed to initialize OpenAI analyzer: {e}")
+                    self.openai_enabled = False
+            else:
+                logger.warning("OPENAI_ENABLED=True but OPENAI_API_KEY not found")
+                self.openai_enabled = False
+        
         if not self.providers:
             logger.warning("No AI providers enabled or properly configured. Check API keys and enable flags.")
     
@@ -650,102 +947,44 @@ class TradingAnalyzer:
         for provider_name in self.providers.keys():
             logger.info(f"Running analysis with {provider_name.title()}")
             
-            if provider_name == 'perplexity':
-                # Use original Perplexity analyzer directly - but skip prior analysis
-                analysis_text, change_analysis = self._analyze_with_perplexity_no_prior(
-                    screenshot_data, output_dir, stock_symbol
-                )
-            elif provider_name == 'google':
-                # Use Google AI analyzer for chart analysis
-                analysis_text, change_analysis = self._analyze_with_google_ai(
-                    screenshot_data, output_dir, stock_symbol
-                )
-            else:
-                # Use custom provider (Claude, etc.) - but skip prior analysis
-                analysis_text, change_analysis = self._analyze_with_custom_provider(
-                    screenshot_data, output_dir, stock_symbol, provider_name, prior_analysis=None
-                )
+            try:
+                if provider_name == 'google':
+                    # Use Google AI analyzer for chart analysis
+                    analysis_text, change_analysis = self._analyze_with_google_ai(
+                        screenshot_data, output_dir, stock_symbol
+                    )
+                else:
+                    # Use custom provider (Perplexity, Claude, Grok, OpenAI, etc.) - skip prior analysis
+                    analysis_text, change_analysis = self._analyze_with_custom_provider(
+                        screenshot_data, output_dir, stock_symbol, provider_name, prior_analysis=None
+                    )
+            except Exception as e:
+                logger.error(f"Error running {provider_name} analysis: {e}")
+                analysis_text, change_analysis = None, None
+            
+            logger.info(f"[DEBUG PRE-CHECK] {provider_name}: analysis_text={type(analysis_text).__name__}, change_analysis={type(change_analysis).__name__}")
+            logger.info(f"[DEBUG PRE-CHECK] {provider_name}: bool(analysis_text)={bool(analysis_text)}, bool(change_analysis)={bool(change_analysis)}")
             
             if analysis_text and change_analysis:
                 results[provider_name] = {
                     'analysis_text': analysis_text,
                     'change_analysis': change_analysis
                 }
+                logger.info(f"[DEBUG] Added {provider_name} to results (analysis_text length: {len(analysis_text)}, change_analysis keys: {list(change_analysis.keys()) if change_analysis else 'None'})")
                 
                 # For the first successful analysis, use as base
                 if combined_analysis is None:
                     combined_analysis = analysis_text
                     combined_change_analysis = change_analysis
+            else:
+                logger.warning(f"[DEBUG] {provider_name} returned invalid data - analysis_text: {analysis_text is not None}, change_analysis: {change_analysis is not None}")
         
-        # If we have multiple results, create a combined report
-        if len(results) > 1:
-            combined_analysis, combined_change_analysis = self._combine_multi_provider_results(
-                results, screenshot_data, output_dir, stock_symbol
-            )
-        
-        return combined_analysis, combined_change_analysis
-    
-    def _analyze_with_perplexity_no_prior(self, screenshot_data: dict, output_dir: str = None, stock_symbol: str = None):
-        """Analyze with Perplexity without prior analysis comparison"""
-        try:
-            # Filter out None/empty paths
-            valid_screenshots = {k: v for k, v in screenshot_data.items() if v and os.path.exists(v)}
-            
-            if not valid_screenshots:
-                logger.warning("No valid screenshots found for analysis")
-                return None, None
-
-            print(f"   📋 Analyzing current state only (no prior comparison)")
-
-            # Encode all images
-            image_data_uris = {}
-            for window_type, image_path in valid_screenshots.items():
-                try:
-                    image_data_uris[window_type] = self.original_analyzer.encode_image_to_base64(image_path)
-                except Exception as e:
-                    logger.error(f"Failed to encode {window_type} image {image_path}: {e}")
-                    continue
-            
-            if not image_data_uris:
-                logger.error("Failed to encode any images")
-                return None, None
-            
-            # Create prompt WITHOUT prior analysis
-            prompt = self.original_analyzer._create_analysis_prompt(list(image_data_uris.keys()), prior_analysis=None, stock_symbol=stock_symbol)
-            
-            # Build content array with text prompt and all images
-            content = [{"type": "text", "text": prompt}]
-            
-            # Add all images to the content
-            for window_type, image_uri in image_data_uris.items():
-                content.append({
-                    "type": "image_url",
-                    "image_url": {"url": image_uri}
-                })
-            
-            print(f"   🤖 Analyzing {len(image_data_uris)} screenshots...")
-            
-            # Make API request using the original analyzer's client
-            completion = self.original_analyzer.client.chat.completions.create(
-                model=self.original_analyzer.model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": content
-                    }
-                ]
-            )
-            
-            result = completion.choices[0].message.content
-            logger.info(f"Successfully analyzed {len(image_data_uris)} screenshots")
-            
-            # Parse response - no prior analysis so it will be treated as initial analysis
-            analysis_text, change_analysis = self.original_analyzer._parse_response(result, prior_analysis=None)
-            
-            return analysis_text, change_analysis
-            
-        except Exception as e:
-            logger.error(f"Perplexity analysis error: {e}")
+        # Combine all provider results into final output
+        if results:
+            logger.info(f"[DEBUG] Results contains {len(results)} providers: {list(results.keys())}")
+            return self._combine_multi_provider_results(results, screenshot_data, output_dir, stock_symbol)
+        else:
+            logger.warning("No successful analyses from any provider")
             return None, None
     
     def _combine_multi_provider_results(self, results: dict, screenshot_data: dict, output_dir: str, stock_symbol: str):
@@ -786,17 +1025,20 @@ class TradingAnalyzer:
         all_alerts = []
 
         for provider_name, result in results.items():
-            change_analysis = result['change_analysis']
-
+            change_analysis = result.get('change_analysis')
+            if not change_analysis or not isinstance(change_analysis, dict):
+                logger.warning(f"No valid change_analysis for provider {provider_name}, skipping consensus stats.")
+                continue
             # Collect probabilities and alerts for consensus
-            if change_analysis.get('trend_change_probability'):
-                all_probabilities.append(change_analysis['trend_change_probability'])
-
+            # Use 'is not None' to include 0 values
+            prob = change_analysis.get('trend_change_probability')
+            if prob is not None:
+                all_probabilities.append(prob)
             if change_analysis.get('has_changes'):
                 all_alerts.append({
                     'provider': provider_name,
-                    'alert_level': change_analysis['alert_level'],
-                    'summary': change_analysis['summary'],
+                    'alert_level': change_analysis.get('alert_level', 'unknown'),
+                    'summary': change_analysis.get('summary', ''),
                     'probability': change_analysis.get('trend_change_probability', 0)
                 })
 
@@ -940,34 +1182,87 @@ class TradingAnalyzer:
             # Send email alert ONLY from Google AI consensus (not from individual providers like Perplexity/Claude)
             try:
                 from trading_analysis import EmailAlertManager
-                print("   📧 Google AI Consensus: Evaluating email alert...")
+                print("   [EMAIL] Google AI Consensus: Evaluating email alert...")
                 email_manager = EmailAlertManager()
                 
                 if email_manager.is_configured and consensus_change_analysis.get('has_changes', False):
-                    print(f"   📧 Sending email alert from Google AI consensus")
-                    print(f"   📊 Alert Level: {consensus_change_analysis.get('alert_level', 'unknown').upper()}")
-                    print(f"   📊 Probability: {consensus_change_analysis.get('trend_change_probability', 0):.1f}%")
+                    print(f"   [EMAIL] Sending email alert from Google AI consensus")
+                    print(f"   [DATA] Alert Level: {consensus_change_analysis.get('alert_level', 'unknown').upper()}")
+                    print(f"   [DATA] Probability: {consensus_change_analysis.get('trend_change_probability', 0):.1f}%")
                     
                     email_sent = email_manager.send_trend_alert(consensus_change_analysis, ''.join(html), stock_symbol, output_dir)
                     
                     if email_sent:
-                        print(f"   ✅ Email alert sent successfully from Google AI consensus")
+                        print(f"   [OK] Email alert sent successfully from Google AI consensus")
                     else:
-                        print(f"   ⚠️ Email alert failed to send")
+                        print(f"   [WARN] Email alert failed to send")
                         logger.warning("Google AI consensus email alert failed to send")
                 elif not email_manager.is_configured:
-                    print("   📧 Email alerts not configured (check .env settings)")
+                    print("   [EMAIL] Email alerts not configured (check .env settings)")
                 else:
-                    print(f"   📧 No email sent - no significant changes detected by Google AI consensus")
+                    print(f"   [EMAIL] No email sent - no significant changes detected by Google AI consensus")
             except Exception as e:
-                print(f"   ❌ Error sending Google AI consensus email alert: {e}")
+                print(f"   [ERROR] Error sending Google AI consensus email alert: {e}")
                 logger.error(f"Failed to send Google AI consensus email alert: {e}")
         except Exception as e:
             print(f"[ERROR] Failed to write HTML report for {stock_symbol}: {e}")
             import traceback
             traceback.print_exc()
             logger.error(f"Failed to write HTML report for {stock_symbol}: {e}")
-        return ''.join(html), consensus_change_analysis
+        
+        # Generate text version with provider headers for the txt file
+        text_analysis = []
+        
+        # Add Google AI trading decision if available
+        if trading_decision:
+            text_analysis.append("GOOGLE AI CONSOLIDATED TRADING DECISION")
+            text_analysis.append("=" * 60)
+            text_analysis.append(trading_decision.strip())
+            text_analysis.append("")
+        
+        # Add individual provider analyses with headers
+        provider_order = ['claude', 'perplexity', 'google']
+        section_titles = {
+            'claude': 'CLAUDE ANALYSIS',
+            'perplexity': 'PERPLEXITY ANALYSIS',
+            'google': 'GOOGLE AI ANALYSIS'
+        }
+        
+        for provider_name in provider_order:
+            if provider_name in results:
+                result = results[provider_name]
+                analysis = result['analysis_text']
+                text_analysis.append(section_titles[provider_name])
+                text_analysis.append("=" * 60)
+                text_analysis.append(analysis.strip())
+                text_analysis.append("")
+        
+        # Add any other providers not in the ordered list (Grok, OpenAI, etc.)
+        for provider_name, result in results.items():
+            if provider_name not in provider_order:
+                analysis = result['analysis_text']
+                text_analysis.append(f"{provider_name.upper()} ANALYSIS")
+                text_analysis.append("=" * 60)
+                text_analysis.append(analysis.strip())
+                text_analysis.append("")
+        
+        # Add consensus summary at the end
+        text_analysis.append("MULTI-PROVIDER CONSENSUS SUMMARY")
+        text_analysis.append("=" * 60)
+        if all_probabilities:
+            text_analysis.append(f"Average Trend Change Probability: {avg_probability:.1f}%")
+            text_analysis.append(f"Probability Range: {min_probability:.1f}% - {max_probability:.1f}%")
+            text_analysis.append(f"Providers Used: {len(results)}")
+            text_analysis.append("")
+        
+        if all_alerts:
+            text_analysis.append(f"Alerts from {len(all_alerts)} provider(s):")
+            for alert in all_alerts:
+                text_analysis.append(f"  - {alert['provider'].title()}: {alert['alert_level'].upper()} ({alert['probability']}%) - {alert['summary']}")
+            text_analysis.append("")
+        
+        combined_text = "\n".join(text_analysis)
+        return combined_text, consensus_change_analysis
     
     def _parse_google_ai_email_decision(self, trading_decision: str) -> bool:
         """
@@ -1013,14 +1308,14 @@ class TradingAnalyzer:
             if pattern in decision_text:
                 from trading_analysis import logger
                 logger.info(f"Google AI email decision: SEND (matched pattern: '{pattern}')")
-                print(f"   📧 Google AI Decision: SEND EMAIL ALERT (matched: '{pattern}')")
+                print(f"   [EMAIL] Google AI Decision: SEND EMAIL ALERT (matched: '{pattern}')")
                 return True
         
         for pattern in no_patterns:
             if pattern in decision_text:
                 from trading_analysis import logger
                 logger.info(f"Google AI email decision: DO NOT SEND (matched pattern: '{pattern}')")
-                print(f"   📧 Google AI Decision: NO EMAIL (matched: '{pattern}')")
+                print(f"   [EMAIL] Google AI Decision: NO EMAIL (matched: '{pattern}')")
                 return False
         
         # Secondary heuristics: Look for key indicator words that suggest an alert
@@ -1035,20 +1330,20 @@ class TradingAnalyzer:
         if ("ALERT" in decision_text or "SIGNAL" in decision_text) and (bullish_count > bearish_count):
             from trading_analysis import logger
             logger.info("Google AI email decision: SEND (based on bullish signals and alert keywords)")
-            print("   📧 Google AI Decision: SEND EMAIL ALERT (based on bullish signals)")
+            print("   [EMAIL] Google AI Decision: SEND EMAIL ALERT (based on bullish signals)")
             return True
         
         # If there's significant bearish content with warning keywords, also alert
         if ("WARNING" in decision_text or "CAUTION" in decision_text) and bearish_count > 0:
             from trading_analysis import logger
             logger.info("Google AI email decision: SEND (based on bearish warnings)")
-            print("   📧 Google AI Decision: SEND EMAIL ALERT (based on bearish warnings)")
+            print("   [EMAIL] Google AI Decision: SEND EMAIL ALERT (based on bearish warnings)")
             return True
         
         # No clear pattern found - default to False for safety
         from trading_analysis import logger
         logger.info("Google AI email decision: UNCLEAR (defaulting to NO)")
-        print("   ⚠️ Google AI Decision: UNCLEAR (defaulting to NO EMAIL)")
+        print("   [WARN] Google AI Decision: UNCLEAR (defaulting to NO EMAIL)")
         return False
     
     def _generate_consolidated_trading_decision(self, results: list, avg_probability: float, all_alerts: list, stock_symbol: str = "UNKNOWN", output_dir: str = None, screenshot_data: dict = None):
@@ -1066,23 +1361,15 @@ class TradingAnalyzer:
             # Initialize Google AI analyzer
             google_analyzer = GoogleAIAnalyzer(google_api_key)
             
-            # Extract individual provider analyses
-            perplexity_analysis = ""
-            claude_analysis = ""
-            google_analysis = ""
-            
+            # Extract all provider analyses dynamically
+            provider_analyses = {}
             for provider_name, analysis_text, change_analysis in results:
-                if provider_name.lower() == 'perplexity':
-                    perplexity_analysis = analysis_text
-                elif provider_name.lower() == 'claude':
-                    claude_analysis = analysis_text
-                elif provider_name.lower() == 'google':
-                    google_analysis = analysis_text
+                provider_analyses[provider_name.lower()] = analysis_text
             
-            # Generate consolidated decision using Google AI
-            if perplexity_analysis or claude_analysis:
-                consolidated_decision = google_analyzer.generate_consolidated_decision(
-                    perplexity_analysis, claude_analysis, stock_symbol, output_dir, screenshot_data, google_analysis
+            # Generate consolidated decision using Google AI with all available providers
+            if provider_analyses:
+                consolidated_decision = google_analyzer.generate_consolidated_decision_multi(
+                    provider_analyses, stock_symbol, output_dir, screenshot_data
                 )
                 return f"\n{consolidated_decision}\n"
             else:
@@ -1191,7 +1478,7 @@ class TradingAnalyzer:
                 logger.warning("No valid screenshots found for Google AI analysis")
                 return None, None
             
-            print(f"   🤖 Google AI analyzing {len(valid_screenshots)} chart screenshot(s)...")
+            print(f"   [AI] Analyzing {len(valid_screenshots)} screenshots with Google AI...")
             
             # Encode all images
             image_data_uris = {}
@@ -1368,7 +1655,8 @@ Assess probability of significant trend change or reversal in the short term (0-
                 'probability': 0  # No change probability for chart analysis
             }
             
-            logger.info(f"Google AI chart analysis completed for {stock_symbol}")
+            logger.info(f"Successfully analyzed {len(image_data_uris)} screenshots with Google AI")
+            self._handle_alerts(change_analysis, analysis_text, stock_symbol, output_dir, 'google')
             return analysis_text, change_analysis
             
         except Exception as e:
@@ -1398,9 +1686,9 @@ Assess probability of significant trend change or reversal in the short term (0-
 
             # Use the passed prior analysis (which will be None for current state analysis)
             if prior_analysis:
-                print(f"   📋 Using prior analysis for comparison")
+                print(f"   [DATA] Using prior analysis for comparison")
             else:
-                print(f"   📋 Analyzing current state only (no prior comparison)")
+                print(f"   [DATA] Analyzing current state only (no prior comparison)")
 
             # Encode all images using our AI provider
             image_data_uris = {}
@@ -1421,14 +1709,21 @@ Assess probability of significant trend change or reversal in the short term (0-
             # Build messages for AI provider
             messages = self._build_messages_for_provider(prompt, image_data_uris)
             
-            print(f"   🤖 Analyzing {len(image_data_uris)} screenshots with {provider_name.title()}...")
+            print(f"   [AI] Analyzing {len(image_data_uris)} screenshots with {provider_name.title()}...")
             
             # Make API request using our provider
             result = ai_provider.analyze_screenshots(messages)
             logger.info(f"Successfully analyzed {len(image_data_uris)} screenshots with {provider_name}")
             
+            # Debug: log raw result length and first 200 chars
+            logger.info(f"[DEBUG] {provider_name} raw result length: {len(result) if result else 0}")
+            logger.info(f"[DEBUG] {provider_name} raw result preview: {result[:300] if result else 'None'}...")
+            
             # Parse response using original method
             analysis_text, change_analysis = self.original_analyzer._parse_response(result, prior_analysis)
+            
+            # Debug: log parsed result
+            logger.info(f"[DEBUG] {provider_name} parsed analysis_text length: {len(analysis_text) if analysis_text else 0}")
             
             # Handle alerts and email (same as original)
             self._handle_alerts(change_analysis, analysis_text, stock_symbol, output_dir, provider_name)
@@ -1460,15 +1755,16 @@ Assess probability of significant trend change or reversal in the short term (0-
         """Handle alert display and email notifications"""
         provider_label = f" ({provider_name.title()})" if provider_name else ""
         
-        if change_analysis['has_changes']:
-            alert_level = change_analysis['alert_level'].upper()
+        if change_analysis and change_analysis.get('has_changes'):
+            alert_level = change_analysis.get('alert_level', 'unknown').upper()
             probability = change_analysis.get('trend_change_probability', 0)
-            print(f"   🚨 {alert_level} ALERT{provider_label}: {change_analysis['summary']}")
-            print(f"   📊 Trend Change Probability: {probability}%")
-            print(f"   📧 Email will be sent from Google AI consensus (not individual providers)")
+            summary = change_analysis.get('summary', 'N/A')
+            print(f"   [ALERT] {alert_level} ALERT{provider_label}: {summary}")
+            print(f"   [DATA] Trend Change Probability: {probability}%")
+            print(f"   [EMAIL] Email will be sent from Google AI consensus (not individual providers)")
         else:
-            probability = change_analysis.get('trend_change_probability', 0)
-            print(f"   ✅ No significant trend changes detected{provider_label} (Probability: {probability}%)")
+            probability = change_analysis.get('trend_change_probability', 0) if change_analysis else 0
+            print(f"   [OK] No significant trend changes detected{provider_label} (Probability: {probability}%)")
     
     def save_combined_analysis_report(self, screenshot_data, analysis, output_dir, change_analysis):
         """Delegate to original analyzer"""

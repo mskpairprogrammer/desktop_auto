@@ -121,7 +121,7 @@ class PerplexityAnalyzer:
                     "image_url": {"url": image_uri}
                 })
             
-            print(f"   🤖 Analyzing {len(image_data_uris)} screenshots...")
+            print(f"   [AI] Analyzing {len(image_data_uris)} screenshots...")
             
             # Make API request
             completion = self.client.chat.completions.create(
@@ -144,12 +144,12 @@ class PerplexityAnalyzer:
             if change_analysis['has_changes']:
                 alert_level = change_analysis['alert_level'].upper()
                 probability = change_analysis.get('trend_change_probability', 0)
-                print(f"   🚨 {alert_level} ALERT: {change_analysis['summary']}")
-                print(f"   📊 Trend Change Probability: {probability}%")
-                print(f"   📧 Email will be sent from Google AI consensus (not individual providers)")
+                print(f"   [ALERT] {alert_level}: {change_analysis['summary']}")
+                print(f"   [DATA] Trend Change Probability: {probability}%")
+                print(f"   [EMAIL] Email will be sent from Google AI consensus (not individual providers)")
             else:
                 probability = change_analysis.get('trend_change_probability', 0)
-                print(f"   ✅ No significant trend changes detected (Probability: {probability}%)")
+                print(f"   [OK] No significant trend changes detected (Probability: {probability}%)")
             
             return analysis_text, change_analysis
             
@@ -307,26 +307,28 @@ You are an expert stock market analyst. Analyze these {len(window_types)} chart 
 
 CRITICAL INSTRUCTION: Only analyze what you can clearly see in the screenshots. If a chart window appears blank, contains no data, or is not loaded properly, explicitly state "Chart not loaded" or "No data visible" for that window. DO NOT make assumptions or provide analysis for charts that are not visible or contain no data.
 
+IMPORTANT: Provide a COMPREHENSIVE and DETAILED analysis. Each section should be thorough with specific observations from each chart. Do not summarize or abbreviate - include all relevant details you can observe.
+
 {chart_context}
-ANALYSIS FORMAT:
+ANALYSIS FORMAT (provide detailed content for each section):
 
 **MARKET OVERVIEW** (2-3 sentences)
 Current price, timeframe, and overall market condition.
 
 **KEY VISIBLE INDICATORS**
-List specific indicators visible:
-- For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
-- For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
-- For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
-- For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks
-- For Symbolik Workspace chart: ATM chart lines, ATM Elliott Waves/Projections, ATM Pressure alerts, TKT analysis/score, Variable Aggressive Sequential (Demark)
-- Moving averages, oscillators, volume data, support/resistance levels
+Provide DETAILED analysis for each chart. List specific indicators visible with their current readings and interpretations:
+- For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays - describe specific signal types, colors, and what they indicate
+- For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences - describe candle colors, trend direction, any divergence signals
+- For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals - describe each indicator's current state
+- For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks - describe volume levels, ratios, and key zones
+- For Symbolik Workspace chart: ATM chart lines, ATM Elliott Waves/Projections, ATM Pressure alerts, TKT analysis/score, Variable Aggressive Sequential (Demark) - describe wave counts, projections, and sequential numbers
+- Moving averages, oscillators, volume data, support/resistance levels - include specific price levels where visible
 
 **CRITICAL SIGNALS**
-Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions, ATM chart line alignments, Demark Sequential 9s or 13s if present)
+Most important actionable signals (include any +RD or -RD formations, MS overbought/oversold conditions, ATM chart line alignments, Demark Sequential 9s or 13s if present). Be specific about what you see and why it matters.
 
 **TRADING DECISION**
-Clear BUY/SELL/HOLD with rationale
+Clear BUY/SELL/HOLD with detailed rationale based on the indicators analyzed above.
 
 **TREND CHANGE EVALUATION**
 """
@@ -467,12 +469,12 @@ This is the INITIAL ANALYSIS.
                     has_changes = change_analysis.get('has_changes', False)
                     alert_level = change_analysis.get('alert_level', 'info')
                     
-                    f.write(f"📊 Trend Change Probability: {probability}%\n")
-                    f.write(f"🎯 Confidence Level: {confidence.upper()}\n")
-                    f.write(f"🚨 Alert Status: {'ALERT' if has_changes else 'NO ALERT'} ({alert_level.upper()})\n")
+                    f.write(f"[DATA] Trend Change Probability: {probability}%\n")
+                    f.write(f"[>>] Confidence Level: {confidence.upper()}\n")
+                    f.write(f"[ALERT] Status: {'ALERT' if has_changes else 'NO ALERT'} ({alert_level.upper()})\n")
                     
                     if 'summary' in change_analysis:
-                        f.write(f"📋 Summary: {change_analysis['summary']}\n")
+                        f.write(f"[SUMMARY] {change_analysis['summary']}\n")
                     
                     f.write(f"\n")
                 
@@ -482,7 +484,7 @@ This is the INITIAL ANALYSIS.
                 f.write(f"\n\n")
             
             logger.info(f"Combined analysis report saved: {report_path}")
-            print(f"   📄 Report saved to: {os.path.basename(report_path)}")
+            print(f"   [REPORT] Saved to: {os.path.basename(report_path)}")
             return report_path
             
         except Exception as e:
@@ -538,20 +540,20 @@ class EmailAlertManager:
                 server.sendmail(self.email_user, self.email_to, msg.as_string())
             
             logger.info(f"Email sent successfully to {self.email_to}")
-            print(f"   📧 Email alert sent to {self.email_to}")
+            print(f"   [EMAIL] Alert sent to {self.email_to}")
             return True
             
         except smtplib.SMTPAuthenticationError as e:
             logger.error(f"SMTP authentication failed: {e}")
-            print(f"   ✗ Email authentication failed - check credentials")
+            print(f"   [ERROR] Email authentication failed - check credentials")
             return False
         except smtplib.SMTPException as e:
             logger.error(f"SMTP error sending email: {e}")
-            print(f"   ✗ Failed to send email: {e}")
+            print(f"   [ERROR] Failed to send email: {e}")
             return False
         except Exception as e:
             logger.error(f"Unexpected error sending email: {e}")
-            print(f"   ✗ Failed to send email: {e}")
+            print(f"   [ERROR] Failed to send email: {e}")
             return False
     
     def _create_email_subject(self, change_analysis: Dict[str, Any], stock_symbol: str) -> str:
@@ -560,13 +562,13 @@ class EmailAlertManager:
         symbol_text = f" - {stock_symbol}" if stock_symbol else ""
         
         if alert_level == 'CRITICAL':
-            return f"🚨 CRITICAL STOCK ALERT{symbol_text} - Major Trend Changes"
+            return f"[CRITICAL] STOCK ALERT{symbol_text} - Major Trend Changes"
         elif alert_level == 'HIGH':
-            return f"⚠️ HIGH STOCK ALERT{symbol_text} - Significant Changes"
+            return f"[WARN] HIGH STOCK ALERT{symbol_text} - Significant Changes"
         elif alert_level == 'MEDIUM':
-            return f"📊 MEDIUM STOCK ALERT{symbol_text} - Notable Changes"
+            return f"[DATA] MEDIUM STOCK ALERT{symbol_text} - Notable Changes"
         else:
-            return f"📈 Stock Update{symbol_text} - Changes Detected"
+            return f"[INFO] Stock Update{symbol_text} - Changes Detected"
     
     def _create_email_body(self, change_analysis: Dict[str, Any], current_analysis: str, stock_symbol: str) -> str:
         """Create email body content"""
