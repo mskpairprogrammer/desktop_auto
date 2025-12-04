@@ -1,12 +1,20 @@
-"""
-Configuration constants for desktop_auto project
-"""
+"""Configuration constants for desktop_auto project"""
 import os
 import sys
 from dotenv import load_dotenv
 
-# Load .env file
-load_dotenv()
+# Determine project root - always points to desktop_auto folder
+# regardless of whether running as script or frozen executable
+if hasattr(sys, 'frozen'):
+    # Running as frozen executable - go up from dist folder to project root
+    _PROJECT_ROOT = os.path.dirname(os.path.dirname(sys.executable))
+else:
+    # Running as script
+    _PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Load .env file from project root (single source of truth)
+_env_path = os.path.join(_PROJECT_ROOT, '.env')
+load_dotenv(_env_path)
 
 # Screen coordinates for different operations
 # Note: These are read from .env for easy adjustment per screen resolution
