@@ -17,7 +17,7 @@ MULTI_PROVIDER_HTML_FILENAME = "multi_provider_analysis.html"
 WINDOW_TREND_ANALYSIS = "trend analysis"
 WINDOW_HEIKEN_ASHI = "Smoothed Heiken Ashi Candles"
 WINDOW_VOLUME_LAYOUT = "volume layout"
-WINDOW_VOLUME_PROFILE = "volumeprofile"
+WINDOW_UTBOT = "UT Bot -Lorentzian"
 WINDOW_SYMBOLIK = "workspace"
 
 

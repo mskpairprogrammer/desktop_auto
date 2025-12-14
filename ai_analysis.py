@@ -1556,23 +1556,23 @@ Pay special attention to:
 
 """
             
-            if 'volumeprofile' in window_types:
+            if 'utbot' in window_types or 'ut bot' in str(window_types).lower() or 'lorentzian' in str(window_types).lower():
                 chart_context += """
-CHART CONTEXT - Volume Profile Window:
+CHART CONTEXT - UT Bot -Lorentzian Window:
 This chart displays the following technical indicators:
-- RVOL: Relative Volume indicator showing volume compared to average
-- VOLD Ratio: Volume Delta ratio showing buying vs selling pressure
-- MS (Matrix Mod): Matrix momentum indicator with overbought/oversold levels
-- TTOB (Trapped Trader Order Blocks): Identifies trapped trader zones and order blocks
+- UT Bot Alert: Trend-following indicator with BUY/SELL signals based on ATR trailing stop
+- Lorentzian Classification: Machine learning-based trend classification using Lorentzian distance
+- Signal Line: Dynamic support/resistance based on ATR
+- Trend Direction: Color-coded candles showing bullish (green) or bearish (red) trend
 
 Pay special attention to:
-- RVOL levels (high relative volume confirms moves)
-- VOLD ratio (positive = buying pressure, negative = selling pressure)
-- **MS Matrix Mod overbought/oversold conditions**: If the MS indicator shows overbought or oversold conditions, clearly indicate this in the analysis as it signals potential reversal zones
-- TTOB order blocks (support/resistance from trapped traders)
-- Volume profile distribution (high volume nodes, value area)
-- Point of Control (POC) levels
-- Volume confirmation of price movements
+- UT Bot BUY/SELL signals (triangles or arrows marking entry points)
+- Lorentzian classification predictions (bullish/bearish probability)
+- Signal line crossovers (price crossing above/below the UT Bot line)
+- Trend color changes (transition from red to green or vice versa)
+- Confluence of UT Bot signals with Lorentzian predictions
+- Recent signal history and signal frequency
+- ATR-based stop loss levels indicated by the trailing line
 
 """
             
@@ -1616,7 +1616,7 @@ List specific indicators visible:
 - For Trend Analysis chart: LuxAlgo signals, price action concepts, overlays
 - For Smoothed Heiken Ashi chart: Heiken Ashi candles, HEMA trend, divergences
 - For Volume Layout chart: Money flow profile, CVD divergence, SQZMOM_LB, MA distance with StdDev bands, +RD/-RD signals
-- For Volume Profile chart: RVOL, VOLD ratio, MS (Matrix Mod) overbought/oversold, TTOB order blocks
+- For UT Bot -Lorentzian chart: UT Bot BUY/SELL signals, Lorentzian classification, signal line position, trend direction
 - For Symbolik Workspace chart: ATM chart lines, ATM Elliott Waves/Projections, ATM Pressure alerts, TKT analysis/score, Variable Aggressive Sequential (Demark)
 - Moving averages, oscillators, volume data, support/resistance levels
 

@@ -101,7 +101,7 @@ Configure 4 TradingView chart windows with these tab names:
 1. `trend analysis` - LuxAlgo indicators
 2. `Smoothed Heiken Ashi Candles` - Heiken Ashi analysis
 3. `volume layout` - Volume flow analysis
-4. `volumeprofile` - Volume profile & RVOL
+4. `UT Bot -Lorentzian` - UT Bot alerts with Lorentzian ML classification
 
 ## Output
 

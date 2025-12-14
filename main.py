@@ -470,7 +470,7 @@ def main() -> None:
                         screenshot_data['trend_analysis'] = os.path.join(folder, screenshot_name_tab1.format(symbol=symbol))
                         screenshot_data['heiken_ashi'] = os.path.join(folder, screenshot_name_tab2.format(symbol=symbol))
                         screenshot_data['volume_layout'] = os.path.join(folder, screenshot_name_tab3.format(symbol=symbol))
-                        screenshot_data['volumeprofile'] = os.path.join(folder, screenshot_name_tab4.format(symbol=symbol))
+                        screenshot_data['utbot'] = os.path.join(folder, screenshot_name_tab4.format(symbol=symbol))
                     
                     if symbolik_enabled:
                         screenshot_data['workspace'] = os.path.join(folder, screenshot_name_symbolik.format(symbol=symbol))

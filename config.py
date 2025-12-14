@@ -82,7 +82,7 @@ class Windows:
     TRADINGVIEW_TREND_ANALYSIS = os.getenv('TRADINGVIEW_WINDOW1', 'trend analysis')
     TRADINGVIEW_HEIKEN_ASHI = os.getenv('TRADINGVIEW_WINDOW2', 'Smoothed Heiken Ashi Candles')
     TRADINGVIEW_VOLUME_LAYOUT = os.getenv('TRADINGVIEW_WINDOW3', 'volume layout')
-    TRADINGVIEW_VOLUME_PROFILE = os.getenv('TRADINGVIEW_WINDOW4', 'volumeprofile')
+    TRADINGVIEW_UTBOT = os.getenv('TRADINGVIEW_WINDOW4', 'UT Bot -Lorentzian')
     SYMBOLIK = os.getenv('SYMBOLIK_WINDOW', 'workspace')
 
 
@@ -92,7 +92,7 @@ class Screenshots:
     TAB1 = os.getenv('SCREENSHOT_NAME_TAB1', '{symbol}_luxoalgo.png')
     TAB2 = os.getenv('SCREENSHOT_NAME_TAB2', '{symbol}_heiken.png')
     TAB3 = os.getenv('SCREENSHOT_NAME_TAB3', '{symbol}_volume_layout.png')
-    TAB4 = os.getenv('SCREENSHOT_NAME_TAB4', '{symbol}_rvol.png')
+    TAB4 = os.getenv('SCREENSHOT_NAME_TAB4', '{symbol}_utbot.png')
     SYMBOLIK = os.getenv('SCREENSHOT_NAME_SYMBOLIK', '{symbol}_symbolik.png')
 
 
