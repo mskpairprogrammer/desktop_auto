@@ -7,6 +7,7 @@ import logging
 import os
 import random
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Optional, Dict, Any
 
@@ -931,9 +932,35 @@ class TradingAnalyzer:
         if not self.providers:
             logger.warning("No AI providers enabled or properly configured. Check API keys and enable flags.")
     
+    def _run_single_provider(self, provider_name: str, screenshot_data: dict, output_dir: str, stock_symbol: str):
+        """
+        Run analysis for a single provider (used for parallel execution)
+        
+        Returns:
+            Tuple of (provider_name, analysis_text, change_analysis)
+        """
+        logger.info(f"Running analysis with {provider_name.title()}")
+        
+        try:
+            if provider_name == 'google':
+                # Use Google AI analyzer for chart analysis
+                analysis_text, change_analysis = self._analyze_with_google_ai(
+                    screenshot_data, output_dir, stock_symbol
+                )
+            else:
+                # Use custom provider (Perplexity, Claude, Grok, OpenAI, etc.) - skip prior analysis
+                analysis_text, change_analysis = self._analyze_with_custom_provider(
+                    screenshot_data, output_dir, stock_symbol, provider_name, prior_analysis=None
+                )
+        except Exception as e:
+            logger.error(f"Error running {provider_name} analysis: {e}")
+            analysis_text, change_analysis = None, None
+        
+        return provider_name, analysis_text, change_analysis
+
     def analyze_with_trend_alerts(self, screenshot_data: dict, output_dir: str = None, stock_symbol: str = None):
         """
-        Main analysis method that runs all enabled AI providers in sequence
+        Main analysis method that runs all enabled AI providers IN PARALLEL
         """
         if not self.providers:
             logger.error("No AI providers enabled")
@@ -943,41 +970,49 @@ class TradingAnalyzer:
         combined_analysis = None
         combined_change_analysis = None
         
-        # Run each enabled provider WITHOUT prior analysis - they focus on current state only
-        for provider_name in self.providers.keys():
-            logger.info(f"Running analysis with {provider_name.title()}")
+        # Run all enabled providers IN PARALLEL using ThreadPoolExecutor
+        provider_names = list(self.providers.keys())
+        logger.info(f"Starting parallel analysis with {len(provider_names)} providers: {provider_names}")
+        
+        with ThreadPoolExecutor(max_workers=len(provider_names)) as executor:
+            # Submit all provider tasks
+            future_to_provider = {
+                executor.submit(
+                    self._run_single_provider, 
+                    provider_name, 
+                    screenshot_data, 
+                    output_dir, 
+                    stock_symbol
+                ): provider_name 
+                for provider_name in provider_names
+            }
             
-            try:
-                if provider_name == 'google':
-                    # Use Google AI analyzer for chart analysis
-                    analysis_text, change_analysis = self._analyze_with_google_ai(
-                        screenshot_data, output_dir, stock_symbol
-                    )
-                else:
-                    # Use custom provider (Perplexity, Claude, Grok, OpenAI, etc.) - skip prior analysis
-                    analysis_text, change_analysis = self._analyze_with_custom_provider(
-                        screenshot_data, output_dir, stock_symbol, provider_name, prior_analysis=None
-                    )
-            except Exception as e:
-                logger.error(f"Error running {provider_name} analysis: {e}")
-                analysis_text, change_analysis = None, None
-            
-            logger.info(f"[DEBUG PRE-CHECK] {provider_name}: analysis_text={type(analysis_text).__name__}, change_analysis={type(change_analysis).__name__}")
-            logger.info(f"[DEBUG PRE-CHECK] {provider_name}: bool(analysis_text)={bool(analysis_text)}, bool(change_analysis)={bool(change_analysis)}")
-            
-            if analysis_text and change_analysis:
-                results[provider_name] = {
-                    'analysis_text': analysis_text,
-                    'change_analysis': change_analysis
-                }
-                logger.info(f"[DEBUG] Added {provider_name} to results (analysis_text length: {len(analysis_text)}, change_analysis keys: {list(change_analysis.keys()) if change_analysis else 'None'})")
-                
-                # For the first successful analysis, use as base
-                if combined_analysis is None:
-                    combined_analysis = analysis_text
-                    combined_change_analysis = change_analysis
-            else:
-                logger.warning(f"[DEBUG] {provider_name} returned invalid data - analysis_text: {analysis_text is not None}, change_analysis: {change_analysis is not None}")
+            # Collect results as they complete
+            for future in as_completed(future_to_provider):
+                provider_name = future_to_provider[future]
+                try:
+                    pname, analysis_text, change_analysis = future.result()
+                    
+                    logger.info(f"[DEBUG PRE-CHECK] {pname}: analysis_text={type(analysis_text).__name__}, change_analysis={type(change_analysis).__name__}")
+                    logger.info(f"[DEBUG PRE-CHECK] {pname}: bool(analysis_text)={bool(analysis_text)}, bool(change_analysis)={bool(change_analysis)}")
+                    
+                    if analysis_text and change_analysis:
+                        results[pname] = {
+                            'analysis_text': analysis_text,
+                            'change_analysis': change_analysis
+                        }
+                        logger.info(f"[DEBUG] Added {pname} to results (analysis_text length: {len(analysis_text)}, change_analysis keys: {list(change_analysis.keys()) if change_analysis else 'None'})")
+                        
+                        # For the first successful analysis, use as base
+                        if combined_analysis is None:
+                            combined_analysis = analysis_text
+                            combined_change_analysis = change_analysis
+                    else:
+                        logger.warning(f"[DEBUG] {pname} returned invalid data - analysis_text: {analysis_text is not None}, change_analysis: {change_analysis is not None}")
+                except Exception as e:
+                    logger.error(f"Exception getting result from {provider_name}: {e}")
+        
+        logger.info(f"Parallel analysis complete. Successful providers: {list(results.keys())}")
         
         # Combine all provider results into final output
         if results:
